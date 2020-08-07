@@ -1,8 +1,14 @@
 package com.qtc.hospitalcore.api;
 
 import com.qtc.hospitalcore.domain.query.ChangPinView;
+import com.qtc.hospitalcore.domain.query.YongHuViewRepository;
+import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.yonghu.DiJiaoJiBenXinXiCmd;
+import com.qtc.hospitalcore.domain.yonghu.YongHu;
+import com.qtc.hospitalcore.domain.yonghu.YongHuView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +25,12 @@ import java.util.UUID;
 public class YongHuController {
     @Autowired
     private CommandGateway commandGateway;
-    
+
+    @Autowired
+    YongHuViewRepository yongHuViewRepository;
+
     // query
+
     /**
      * 商品列表
      */
@@ -34,33 +44,12 @@ public class YongHuController {
     /**
      * 获取信息
      */
-    @GetMapping("/huoQuXinXi")
-    public PPResult<DTO_huoQuXinXi_R> huoQuXinXi(
-    ) {
-        // TODO: PP
-        DTO_huoQuXinXi_R result = new DTO_huoQuXinXi_R(
-                "s1",
-                "s2",
-                "s3",
-                "s4",
-                "s5",
-                123,
-                "s6"
-        );
+    @GetMapping("/huoQuXinXi/{id}")
+    public PPResult<YongHuView> huoQuXinXi(@PathVariable UUID id) {
+
+        YongHuView result = yongHuViewRepository.findById(id).get();
 
         return PPResult.getPPResultOK(result);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class DTO_huoQuXinXi_R {
-        String weiXinYongHuMingCheng;
-        String shouJiHaoMa;
-        String xingMing;
-        String shenFenZheng;
-        String xingBie;
-        long chuShengRiQi;
-        String diZhi;
     }
 
     /**
@@ -118,7 +107,7 @@ public class YongHuController {
     }
 
     @Data
-    static class DTO_RhuoQuWenZhenDan_R{
+    static class DTO_RhuoQuWenZhenDan_R {
         String wenZhenDanBianHao;
         String zhuangTai;
         String fuFeiZhuangTai;
@@ -142,7 +131,7 @@ public class YongHuController {
 
     @Data
     static class DTO_RxiaZaiZhenLiaoBaoGao_R {
-       // TODO: PP 所有报告下载成pdf格式
+        // TODO: PP 所有报告下载成pdf格式
     }
 
     /**
@@ -164,50 +153,30 @@ public class YongHuController {
     // query end
 
     // command
-    /**
-     * 获取手机绑定验证码
-     */
-    @PostMapping("/huoQuShouJiBangDingYanZhengMa")
-    public PPResult huoQuShouJiBangDingYanZhengMa(@Valid @RequestBody DTO_huoQuShouJiBangDingYanZhengMa dto) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @Data
-    static class DTO_huoQuShouJiBangDingYanZhengMa {
-       String shouJiHaoMa;
-    }
-
-    /**
-     * 递交手机绑定验证码
-     */
-    @PostMapping("/diJiaoShouJiBangDingYanZhengMa")
-    public PPResult diJiaoShouJiBangDingYanZhengMa(@Valid @RequestBody DTO_diJiaoShouJiBangDingYanZhengMa dto) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @Data
-    static class DTO_diJiaoShouJiBangDingYanZhengMa {
-        String shouJiHaoMa;
-        String yanZhengMa;
-    }
 
     /**
      * 递交基本信息
      */
     @PostMapping("/diJiaoJiBenXinXi")
-    public PPResult diJiaoJiBenXinXi(@Valid @RequestBody DTO_diJiaoJiBenXinXi dto) {
-        // TODO: PP
-
-        return null;
+    public PPResult c(@Valid @RequestBody DTO_diJiaoJiBenXinXi dto) {
+        commandGateway.sendAndWait(new DiJiaoJiBenXinXiCmd(
+                        dto.getYongHuId(),
+                        dto.getShouJiHao(),
+                        dto.getXingMing(),
+                        dto.getShenFenZheng(),
+                        dto.getJiBenXinXiNeiRong()
+                )
+        );
+        return PPResult.getPPOK();
     }
 
-    @Data
+    @Value
     static class DTO_diJiaoJiBenXinXi {
-        String jiBenXinXiNeiRong;
+        UUID yongHuId;
+        String shouJiHao;
+        String xingMing;
+        String shenFenZheng;
+        Map<String, Object> jiBenXinXiNeiRong;
     }
 
     /**

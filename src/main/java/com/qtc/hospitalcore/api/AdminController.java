@@ -2,17 +2,12 @@ package com.qtc.hospitalcore.api;
 
 import com.qtc.hospitalcore.domain.WenZhen;
 import com.qtc.hospitalcore.domain.YiHuRenYuan;
-import com.qtc.hospitalcore.domain.YongHu;
 import com.qtc.hospitalcore.domain.query.ChangPinView;
-import com.qtc.hospitalcore.domain.query.WenZhenView;
 import com.qtc.hospitalcore.domain.query.YiHuRenYuanView;
-import com.qtc.hospitalcore.domain.query.YongHuView;
+import com.qtc.hospitalcore.domain.yonghu.YongHuView;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -23,8 +23,8 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @Data
 public class ZhangHao {
     public static enum JueSe {
-        YONGHU,
-        YISHENG
+        YONG_HU,
+        YI_HU_REN_YUAN
     }
 
     @AggregateIdentifier

@@ -51,8 +51,4 @@ data class YiHuRenYuan_ChuangJianEvt(
         val quanXianSet: Set<YiHuRenYuan.QuanXian>,
         val xinXiMap: Map<String, Object>
 )
-/***********query***********/
 
-/**
- * TiKuProjection
- */
