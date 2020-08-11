@@ -1,6 +1,6 @@
-package com.qtc.hospitalcore.domain.query;
+package com.qtc.hospitalcore.domain.yihurenyuan;
 
-import com.qtc.hospitalcore.domain.YiHuRenYuan_ChuangJianEvt;
+import com.qtc.hospitalcore.domain.query.YiHuRenYuanViewRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 

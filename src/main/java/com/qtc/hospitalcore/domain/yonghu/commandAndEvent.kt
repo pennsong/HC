@@ -17,7 +17,6 @@ data class ChuangJianYongHuEvt(
 data class DiJiaoJiBenXinXiCmd(
         @TargetAggregateIdentifier
         var yongHuId: UUID,
-        var shouJiHao: String,
         var xingMing: String,
         var shenFenZheng: String,
         var jiBenXinXiNeiRong: Map<String, Any>
@@ -25,7 +24,6 @@ data class DiJiaoJiBenXinXiCmd(
 
 data class DiJiaoJiBenXinXiEvt(
         var yongHuId: UUID,
-        var shouJiHao: String,
         var xingMing: String,
         var shenFenZheng: String,
         var jiBenXinXiNeiRong: Map<String, Any>

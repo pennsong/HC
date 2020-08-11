@@ -1,4 +1,4 @@
-package com.qtc.hospitalcore.domain;
+package com.qtc.hospitalcore.domain.wenzhen;
 
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;

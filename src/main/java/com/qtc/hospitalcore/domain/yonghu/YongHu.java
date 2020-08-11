@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -42,20 +43,47 @@ public class YongHu {
     Map<String, Object> xinXi;
 
     @CommandHandler
-    public YongHu(ChuangJianYongHuCmd cmd) {
+    public YongHu(ChuangJianYongHuCmd cmd, MetaData metaData) {
         // 参数检查
 
         // 条件检查
 
-        apply(new ChuangJianYongHuEvt(
-                cmd.getYongHuId(),
-                cmd.getShouJiHaoMa()
-        ));
+        apply(
+                new ChuangJianYongHuEvt(
+                        cmd.getYongHuId(),
+                        cmd.getShouJiHaoMa()
+                ),
+                metaData
+        );
     }
 
     @EventSourcingHandler
     public void on(ChuangJianYongHuEvt evt) {
-       this.id = evt.getYongHuId();
-       this.shouJiHao = evt.getShouJiHaoMa();
+        this.id = evt.getYongHuId();
+        this.shouJiHao = evt.getShouJiHaoMa();
+    }
+
+    @CommandHandler
+    public void on(DiJiaoJiBenXinXiCmd cmd, MetaData metaData) {
+        // 参数检查
+
+        // 条件检查
+
+        apply(
+                new DiJiaoJiBenXinXiEvt(
+                        cmd.getYongHuId(),
+                        cmd.getXingMing(),
+                        cmd.getShenFenZheng(),
+                        cmd.getJiBenXinXiNeiRong()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(DiJiaoJiBenXinXiEvt evt) {
+        this.xingMing = evt.getXingMing();
+        this.shenFenZheng = evt.getShenFenZheng();
+        this.xinXi = evt.getJiBenXinXiNeiRong();
     }
 }

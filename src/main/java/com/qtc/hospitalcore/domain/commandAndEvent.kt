@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain
 
+import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.*
 
@@ -36,19 +37,4 @@ data class XinJianZhangHaoCmd3(
         val id: String
 )
 
-/**
- * YiHuRenYuan
- */
-data class YiHuRenYuan_ChuangJianCmd(
-        @TargetAggregateIdentifier
-        val id: UUID,
-        val quanXianSet: Set<YiHuRenYuan.QuanXian>,
-        val xinXiMap: Map<String, Object>
-)
-
-data class YiHuRenYuan_ChuangJianEvt(
-        val id: UUID,
-        val quanXianSet: Set<YiHuRenYuan.QuanXian>,
-        val xinXiMap: Map<String, Object>
-)
 

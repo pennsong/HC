@@ -1,7 +1,5 @@
-package com.qtc.hospitalcore.domain.query;
+package com.qtc.hospitalcore.domain.yihurenyuan;
 
-import com.qtc.hospitalcore.domain.YiHuRenYuan;
-import com.qtc.hospitalcore.domain.ZhangHao;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;

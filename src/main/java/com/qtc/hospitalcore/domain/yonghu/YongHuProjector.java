@@ -1,13 +1,12 @@
 package com.qtc.hospitalcore.domain.yonghu;
 
-import com.qtc.hospitalcore.domain.YiHuRenYuan_ChuangJianEvt;
 import com.qtc.hospitalcore.domain.query.YongHuViewRepository;
 import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuEvt;
 import com.qtc.hospitalcore.domain.yonghu.YongHu;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class YongHuProjector {
     private final YongHuViewRepository repository;
 

@@ -1,17 +1,22 @@
 package com.qtc.hospitalcore.api;
 
+import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
 import com.qtc.hospitalcore.domain.query.ChangPinView;
 import com.qtc.hospitalcore.domain.query.YongHuViewRepository;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
 import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuCmd;
 import com.qtc.hospitalcore.domain.yonghu.DiJiaoJiBenXinXiCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHu;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +27,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/yongHu")
+@Api(tags="用户操作")
 public class YongHuController {
     @Autowired
     private CommandGateway commandGateway;
@@ -31,73 +37,49 @@ public class YongHuController {
 
     // query
 
-    /**
-     * 商品列表
-     */
-    @GetMapping("/changPin")
-    public PPResult<List<ChangPinView>> ChangPin() {
+    @ApiOperation(value = "获取产品列表")
+    @GetMapping("/huoQuChanPinLB")
+    public PPResult<List<ChangPinView>> huoQuChanPinLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
     }
 
-    /**
-     * 获取信息
-     */
-    @GetMapping("/huoQuXinXi/{id}")
-    public PPResult<YongHuView> huoQuXinXi(@PathVariable UUID id) {
+    @ApiOperation(value = "获取用户信息")
+    @GetMapping("/huoQuYongHuXinXi")
+    public PPResult<YongHuView> huoQuYongHuXinXi() {
 
-        YongHuView result = yongHuViewRepository.findById(id).get();
+        // TODO: PP
+        // authentication中取得当前yongHuId
 
-        return PPResult.getPPResultOK(result);
+//        YongHuView result = yongHuViewRepository.findById(yongHuId).get();
+
+        return null;
     }
 
-    /**
-     * 获取健康档案列表
-     */
-    @GetMapping("/huoQuJianKangDangAnLB")
-    public PPResult<List<DTO_RhuoQuJianKangDangAnLB_R>> huoQuJianKangDangAnLB(
+    @ApiOperation(value = "获取用户健康档案列表")
+    @GetMapping("/huoQuYongHuJianKangDangAnLB")
+    public PPResult<List<JianKangDangAnView>> huoQuYongHuJianKangDangAnLB(
     ) {
         // TODO: PP
-        // session取yongHuId
+        // authentication中取得当前yongHuId
 
         return null;
     }
 
-    @Data
-    static class DTO_RhuoQuJianKangDangAnLB_R {
-        String xingMing;
-        int nianLing;
-        String xingBie;
-    }
-
-    /**
-     * 获取问诊单列表
-     */
-    @GetMapping("/huoQuWenZhenDanLB")
-    public PPResult<List<DTO_RhuoQuWenZhenDanLB_R>> huoQuYongHuWenZhenDanZuLB(
+    @ApiOperation(value = "获取用户问诊列表")
+    @GetMapping("/huoQuYongHuWenZhenLB")
+    public PPResult<List<WenZhenView>> huoQuYongHuWenZhenLB(
     ) {
         // TODO: PP
-        // session取yongHuId
+        // authentication中取得当前yongHuId
 
         return null;
     }
 
-    @Data
-    static class DTO_RhuoQuWenZhenDanLB_R {
-        String wenZhenDanBianHao;
-        String zhuangTai;
-        String fuFeiZhuangTai;
-        String chuFangZhuangTai;
-        UUID chanPinId;
-        Map<String, Object> yongHuTianXieNeiRong;
-    }
-
-    /**
-     * 获取问诊单
-     */
-    @GetMapping("/huoQuWenZhenDan/{wenZhenDanId}")
-    public PPResult<List<DTO_RhuoQuWenZhenDan_R>> huoQuYongHuWenZhenDan(
+    @ApiOperation(value = "获取问诊")
+    @GetMapping("/huoQuWenZhen/{wenZhenId}")
+    public PPResult<WenZhenView> huoQuWenZhen(
             @PathVariable UUID wenZhenDanId
     ) {
         // TODO: PP
@@ -106,23 +88,10 @@ public class YongHuController {
         return null;
     }
 
-    @Data
-    static class DTO_RhuoQuWenZhenDan_R {
-        String wenZhenDanBianHao;
-        String zhuangTai;
-        String fuFeiZhuangTai;
-        String chuFangZhuangTai;
-        UUID chanPinId;
-        // TODO: PP 是否要分 用户填写内容, 各个角色填写内容?
-        Map<String, Object> neiRong;
-    }
-
-    /**
-     * 下载诊疗报告
-     */
-    @GetMapping("/xiaZaiZhenLiaoBaoGao/{wenZhenDanId}")
+    @ApiOperation(value = "下载诊疗报告")
+    @GetMapping("/xiaZaiZhenLiaoBaoGao/{wenZhenId}")
     public DTO_RxiaZaiZhenLiaoBaoGao_R xiaZaiZhenLiaoBaoGao(
-            @PathVariable UUID wenZhenDanId
+            @PathVariable UUID wenZhenId
     ) {
         // TODO: PP
 
@@ -134,12 +103,10 @@ public class YongHuController {
         // TODO: PP 所有报告下载成pdf格式
     }
 
-    /**
-     * 下载处方单
-     */
-    @GetMapping("/xiaZaiChuFangDan/{wenZhenDanId}")
+    @ApiOperation(value = "下载处方单")
+    @GetMapping("/xiaZaiChuFangDan/{wenZhenId}")
     public DTO_RXiaZaiChuFangDan_R xiaZaiChuFangDan(
-            @PathVariable UUID wenZhenDanId
+            @PathVariable UUID wenZhenId
     ) {
         // TODO: PP
 
@@ -153,15 +120,11 @@ public class YongHuController {
     // query end
 
     // command
-
-    /**
-     * 递交基本信息
-     */
+    @ApiOperation(value = "递交基本信息")
     @PostMapping("/diJiaoJiBenXinXi")
-    public PPResult c(@Valid @RequestBody DTO_diJiaoJiBenXinXi dto) {
+    public PPResult diJiaoJiBenXinXi(@Valid @RequestBody DTO_diJiaoJiBenXinXi dto) {
         commandGateway.sendAndWait(new DiJiaoJiBenXinXiCmd(
                         dto.getYongHuId(),
-                        dto.getShouJiHao(),
                         dto.getXingMing(),
                         dto.getShenFenZheng(),
                         dto.getJiBenXinXiNeiRong()
@@ -170,7 +133,7 @@ public class YongHuController {
         return PPResult.getPPOK();
     }
 
-    @Value
+    @Data
     static class DTO_diJiaoJiBenXinXi {
         UUID yongHuId;
         String shouJiHao;
@@ -179,9 +142,7 @@ public class YongHuController {
         Map<String, Object> jiBenXinXiNeiRong;
     }
 
-    /**
-     * 发起问诊
-     */
+    @ApiOperation(value = "发起问诊")
     @PostMapping("/faQiWenZhen")
     public PPResult faQiWenZhen(@Valid @RequestBody DTO_faQiWenZhen dto) {
         // TODO: PP
@@ -194,9 +155,7 @@ public class YongHuController {
         Map<String, Object> wenZhenNeiRong;
     }
 
-    /**
-     * 取消问诊
-     */
+    @ApiOperation(value = "取消问诊")
     @PostMapping("/quXiaoWenZhen")
     public PPResult quXiaoWenZhen(@Valid @RequestBody DTO_quXiaoWenZhen dto) {
         // TODO: PP
@@ -209,9 +168,7 @@ public class YongHuController {
         UUID wenZhenDanId;
     }
 
-    /**
-     * 支付预付款
-     */
+    @ApiOperation(value = "支付预付款")
     @PostMapping("/zhiFuYuFuKuan")
     public PPResult zhiFuYuFuKuan(@Valid @RequestBody DTO_zhiFuYuFuKuan dto) {
         // TODO: PP
@@ -224,11 +181,9 @@ public class YongHuController {
         UUID wenZhenDanId;
     }
 
-    /**
-     * 获取健康档案手机绑定验证码
-     */
+    @ApiOperation(value = "获取健康档案手机绑定验证码")
     @PostMapping("/huoQuJianKangDangAnShouJiBangDingYanZhengMa")
-    public PPResult huoQuJianKangDangAnShouJiBangDingYanZhengMa(@Valid @RequestBody DTO_huoQuJianKangDangAnShouJiBangDingYanZhengMa dto) {
+    public PPResult<String> huoQuJianKangDangAnShouJiBangDingYanZhengMa(@Valid @RequestBody DTO_huoQuJianKangDangAnShouJiBangDingYanZhengMa dto) {
         // TODO: PP
 
         return null;
@@ -239,24 +194,20 @@ public class YongHuController {
         String shouJiHaoMa;
     }
 
-    /**
-     * 新建健康档案
-     */
-    @PostMapping("/xinJianJianKangDangAn")
-    public PPResult xinJianJianKangDangAn(@Valid @RequestBody DTO_xinJianJianKangDangAn dto) {
+    @ApiOperation(value = "创建健康档案")
+    @PostMapping("/chuangJianJianKangDangAn")
+    public PPResult chuangJianJianKangDangAn(@Valid @RequestBody DTO_chuangJianJianKangDangAn dto) {
         // TODO: PP
 
         return null;
     }
 
     @Data
-    static class DTO_xinJianJianKangDangAn {
+    static class DTO_chuangJianJianKangDangAn {
         Map<String, Object> shenFenXinXiNeiRong;
     }
 
-    /**
-     * 编辑健康信息
-     */
+    @ApiOperation(value = "编辑健康信息")
     @PostMapping("/bianJiJianKangXinXi")
     public PPResult bianJiJianKangXinXi(@Valid @RequestBody DTO_bianJiJianKangXinXi dto) {
         // TODO: PP

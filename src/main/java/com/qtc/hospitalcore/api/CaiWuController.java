@@ -1,10 +1,9 @@
 package com.qtc.hospitalcore.api;
 
-import com.qtc.hospitalcore.domain.YiHuRenYuan;
-import com.qtc.hospitalcore.domain.query.ChangPinView;
-import com.qtc.hospitalcore.domain.query.WenZhenView;
-import com.qtc.hospitalcore.domain.query.YiHuRenYuanView;
 import com.qtc.hospitalcore.domain.util.BiZhong;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhenFuKuanXinXiView;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -19,24 +18,21 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/caiWu")
+@Api(tags="财务操作")
 public class CaiWuController {
 
     // query
-    /**
-     * 获取问诊付款信息列表
-     */
+    @ApiOperation(value = "获取问诊付款信息列表")
     @GetMapping("/huoQuWenZhenFuKuanXinXiLB")
-    public PPResult huoQuWenZhenFuKuanXinXiLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<WenZhenFuKuanXinXiView>> huoQuWenZhenFuKuanXinXiLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
     }
 
-    /**
-     * 获取问诊付款信息
-     */
+    @ApiOperation(value = "获取问诊付款信息")
     @GetMapping("/huoQuWenZhenFuKuanXinXi/{wenZhenId}")
-    public PPResult huoQuWenZhenFuKuanXinXi(@PathVariable UUID wenZhenId) {
+    public PPResult<WenZhenFuKuanXinXiView> huoQuWenZhenFuKuanXinXi(@PathVariable UUID wenZhenId) {
         // TODO: PP
 
         return null;
@@ -44,6 +40,7 @@ public class CaiWuController {
     // query end
 
     // command
+    @ApiOperation(value = "补充问诊付款")
     @PostMapping("/buChongWenZhenFuKuan")
     public PPResult buChongWenZhenFuKuan(@Valid @RequestBody DTO_buChongWenZhenFuKuan dto) {
         // TODO: PP
@@ -64,6 +61,7 @@ public class CaiWuController {
         Map<String, Object> fuKuanXinXi;
     }
 
+    @ApiOperation(value = "发起问诊退款")
     @PostMapping("/faQiWenZhenTuiKuan")
     public PPResult faQiTuiKuan(@Valid @RequestBody DTO_faQiWenZhenTuiKuan dto) {
         // TODO: PP

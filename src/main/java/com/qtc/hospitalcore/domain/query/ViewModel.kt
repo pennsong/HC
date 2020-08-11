@@ -1,8 +1,8 @@
 package com.qtc.hospitalcore.domain.query
 
-import com.qtc.hospitalcore.domain.YiHuRenYuan
-import com.qtc.hospitalcore.domain.ZhangHao
 import com.qtc.hospitalcore.domain.util.HashMapConverter
+import com.qtc.hospitalcore.domain.wenzhen.WenZhenView
+import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView
 import com.qtc.hospitalcore.domain.yonghu.YongHuView
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -19,14 +19,6 @@ interface YongHuViewRepository : JpaRepository<YongHuView, UUID>
 
 @Repository
 interface YiHuRenYuanViewRepository : JpaRepository<YiHuRenYuanView, UUID>
-
-@Entity
-data class WenZhenView(
-        @Id
-        var id: UUID,
-        @Convert(converter = HashMapConverter::class)
-        var xinXiMap: Map<String, Object>
-)
 
 @Repository
 interface WenZhenViewRepository : JpaRepository<WenZhenView, UUID>

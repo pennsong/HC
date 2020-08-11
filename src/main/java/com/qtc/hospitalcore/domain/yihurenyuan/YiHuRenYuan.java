@@ -1,4 +1,4 @@
-package com.qtc.hospitalcore.domain;
+package com.qtc.hospitalcore.domain.yihurenyuan;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -32,6 +32,12 @@ public class YiHuRenYuan {
     @AggregateIdentifier
     UUID id;
 
+    String dengluMing;
+
+    String dengLuMiMa;
+
+    String xingMing;
+
     Set<QuanXian> quanXianSet;
 
     Map<String, Object> xinXiMap;
@@ -40,6 +46,9 @@ public class YiHuRenYuan {
     public YiHuRenYuan(YiHuRenYuan_ChuangJianCmd cmd) {
         apply(new YiHuRenYuan_ChuangJianEvt(
                 cmd.getId(),
+                cmd.getDengluMing(),
+                cmd.getDengLuMiMa(),
+                cmd.getXingMing(),
                 cmd.getQuanXianSet(),
                 cmd.getXinXiMap()
         ));
@@ -48,6 +57,9 @@ public class YiHuRenYuan {
     @EventSourcingHandler
     public void on(YiHuRenYuan_ChuangJianEvt evt) {
         this.id = evt.getId();
+        this.dengluMing = evt.getDengluMing();
+        this.dengLuMiMa = evt.getDengLuMiMa();
+        this.xingMing = evt.getXingMing();
         this.quanXianSet = evt.getQuanXianSet();
         this.xinXiMap = evt.getXinXiMap();
     }

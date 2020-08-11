@@ -1,5 +1,10 @@
 package com.qtc.hospitalcore;
 
+import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.common.transaction.TransactionManager;
+import org.axonframework.messaging.interceptors.CorrelationDataInterceptor;
+import org.axonframework.spring.config.AxonConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
