@@ -25,6 +25,8 @@ public class YongHuView {
     String shouJiHao;
     String xingMing;
     String shenFenZheng;
+    String weiXinOpenId;
+
     @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;
 }

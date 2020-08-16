@@ -1,5 +1,8 @@
 package com.qtc.hospitalcore.api;
 
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
+import com.qtc.hospitalcore.domain.exception.PPException;
+import org.axonframework.commandhandling.CommandExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -28,18 +31,22 @@ public class ControllerExceptionHandler {
 
         Map<String, Object> result = new HashMap<>();
 
+        result.put("code", "-1");
+        result.put("errorType", e.getClass().getName());
         result.put("errors", errors);
 
         return result;
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler({HttpMessageNotReadableException.class, PPException.class, CommandExecutionException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> on(HttpMessageNotReadableException e) {
+    public Map<String, Object> on(Exception e) {
 
         Map<String, Object> result = new HashMap<>();
 
+        result.put("code", "-1");
+        result.put("errorType", e.getClass().getName());
         result.put("errors", e.getMessage());
 
         return result;

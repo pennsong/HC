@@ -1,6 +1,9 @@
 package com.qtc.hospitalcore;
 
-import com.qtc.hospitalcore.domain.ZhangHao;
+import com.qtc.hospitalcore.domain.chongFuJianCe.YongHuShouJiHao;
+import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
+import com.qtc.hospitalcore.domain.yonghu.YongHu;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.modelling.command.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
     public void run(String...args) throws Exception {
         log.info("Application started");
         externalCommandHandler.setZhangHaoRepository((Repository<ZhangHao>) context.getBean("zhangHaoRepository"));
+        externalCommandHandler.setYongHuRepository((Repository<YongHu>) context.getBean("yongHuRepository"));
+        externalCommandHandler.setYiHuRenYuanRepository((Repository<YiHuRenYuan>) context.getBean("yiHuRenYuanRepository"));
 
 //        String[] beans = context.getBeanDefinitionNames();
 //        Arrays.sort(beans);

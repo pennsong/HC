@@ -1,22 +1,15 @@
 package com.qtc.hospitalcore.api;
 
 import com.qtc.hospitalcore.domain.util.PPCommandGateway;
-import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianCmd;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.CommandMessage;
-import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -33,9 +26,10 @@ public class ServerController {
     @PostMapping("/chuangJianYongHu")
     public PPResult chuangJianYongHu(@Valid @RequestBody DTO_chuangJianYongHu dto) {
         ppCommandGateway.sendAndWait(
-                new ChuangJianYongHuCmd(
+                new YongHu_ChuangJianCmd(
                         dto.getYongHuId(),
-                        dto.getShouJiHaoMa()
+                        dto.getShouJiHaoMa(),
+                        dto.getWeiXinOpenId()
                 )
         );
 
@@ -46,6 +40,7 @@ public class ServerController {
     static class DTO_chuangJianYongHu {
         UUID yongHuId;
         String shouJiHaoMa;
+        String weiXinOpenId;
     }
     // command end
 }

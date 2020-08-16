@@ -1,6 +1,6 @@
-package com.qtc.hospitalcore.domain.query;
+package com.qtc.hospitalcore.domain.zhanghao;
 
-import com.qtc.hospitalcore.domain.ZhangHao;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
 import lombok.Data;
 
 import javax.persistence.*;

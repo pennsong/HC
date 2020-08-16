@@ -1,45 +1,65 @@
 package com.qtc.hospitalcore.api;
 
+import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.chanpin.ChanPinView;
+import com.qtc.hospitalcore.domain.chongFuJianCe.YongHuOpenIdRepository;
+import com.qtc.hospitalcore.domain.chongFuJianCe.YongHuShouJiHaoRepository;
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
-import com.qtc.hospitalcore.domain.query.ChangPinView;
 import com.qtc.hospitalcore.domain.query.YongHuViewRepository;
+import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
-import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuCmd;
-import com.qtc.hospitalcore.domain.yonghu.DiJiaoJiBenXinXiCmd;
-import com.qtc.hospitalcore.domain.yonghu.YongHu;
+import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianJiBenXinXiCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
+import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
 @RestController
 @RequestMapping("/yongHu")
-@Api(tags="用户操作")
+@Api(tags = "用户操作")
 public class YongHuController {
+    public static final String YONG_HU_YAN_ZHENG_MA_KEY = "yongHuYanZhengMa";
+    public static final String YONG_HU_SHOU_JI_HAO_KEY = "yongHuShouJiHao";
+
     @Autowired
     private CommandGateway commandGateway;
 
     @Autowired
+    private YongHuShouJiHaoRepository yongHuShouJiHaoRepository;
+
+    @Autowired
+    private YongHuOpenIdRepository yongHuOpenIdRepository;
+
+    @Autowired
     YongHuViewRepository yongHuViewRepository;
+
+    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     // query
 
     @ApiOperation(value = "获取产品列表")
     @GetMapping("/huoQuChanPinLB")
-    public PPResult<List<ChangPinView>> huoQuChanPinLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<ChanPinView>> huoQuChanPinLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -120,10 +140,67 @@ public class YongHuController {
     // query end
 
     // command
+    @ApiOperation(value = "获取用户手机验证码")
+    @PostMapping("/huoQuYongHuShouJiYanZhengMa")
+    public PPResult huoQuYongHuShouJiYanZhengMa(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody DTO_huoQuYongHuShouJiYanZhengMa dto) {
+        // 校验
+        // 检测验证码
+        String code = String.format("%04d", new Random().nextInt(10000));
+        sessionStrategy.setAttribute(new ServletWebRequest(request), YONG_HU_YAN_ZHENG_MA_KEY, code);
+        sessionStrategy.setAttribute(new ServletWebRequest(request), YONG_HU_SHOU_JI_HAO_KEY, dto.getShouJiHao());
+
+        return PPResult.getPPResultOK(code);
+    }
+
+    @Data
+    static class DTO_huoQuYongHuShouJiYanZhengMa {
+        @NotBlank
+        String shouJiHao;
+    }
+
+    // 这里不可以用@Transactional, 因为检查重复的sql语句需要及时执行, 不能等到transaction递交的时候再执行
+    @ApiOperation(value = "递交用户手机验证码")
+    @PostMapping("/diJiaoYongHuShouJiYanZhengMa")
+    public PPResult diJiaoYongHuShouJiYanZhengMa(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody DTO_diJiaoYongHuShouJiYanZhengMa dto) {
+        // 校验
+        // 检测验证码
+        Object code = sessionStrategy.getAttribute(new ServletWebRequest(request), YONG_HU_YAN_ZHENG_MA_KEY);
+        if (code == null) {
+            throw new PPBusinessException("验证码已过期或没有获取过验证码");
+        }
+
+        if (!(code.toString().equals(dto.yanZhengMa))) {
+            throw new PPBusinessException("验证码不匹配");
+        }
+
+        // 校验 end
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new ExtChuangJianYongHuCmd(
+                                UUID.randomUUID(),
+                                "s1",
+                                "o1"
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        return PPResult.getPPOK();
+    }
+
+    @Data
+    static class DTO_diJiaoYongHuShouJiYanZhengMa {
+        @NotBlank
+        String shouJiHao;
+        @NotBlank
+        String yanZhengMa;
+        @NotBlank
+        String weiXinOpenId;
+    }
+
     @ApiOperation(value = "递交基本信息")
     @PostMapping("/diJiaoJiBenXinXi")
     public PPResult diJiaoJiBenXinXi(@Valid @RequestBody DTO_diJiaoJiBenXinXi dto) {
-        commandGateway.sendAndWait(new DiJiaoJiBenXinXiCmd(
+        commandGateway.sendAndWait(new YongHu_ChuangJianJiBenXinXiCmd(
                         dto.getYongHuId(),
                         dto.getXingMing(),
                         dto.getShenFenZheng(),

@@ -1,4 +1,4 @@
-package com.qtc.hospitalcore.domain;
+package com.qtc.hospitalcore.domain.chanpin;
 
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
@@ -10,24 +10,23 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-@Slf4j
-@Aggregate
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 @Data
-public class ChangPin {
+public class ChanPinView {
 
-    @AggregateIdentifier
+    @Id
     UUID id;
 
-    String fuWuDaFenLei;
-    String fuWuLeiXing;
-    String chanPingMing;
+    String chanPinMing;
+    String daLeiXing;
+    String xiaoLeiXing;
+
     BigDecimal yuFuFei;
     BigDecimal shiChangJia;
 

@@ -1,4 +1,4 @@
-package com.qtc.hospitalcore.domain.wenzhen;
+package com.qtc.hospitalcore.domain.paiban;
 
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
@@ -20,20 +20,24 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class WenZhen {
-    public static enum JieGuo {
-        CHENG_GONG,
-        JIE_SHU
-    }
+public class PaiBan {
 
     @AggregateIdentifier
     UUID id;
 
-    String chanPinMing;
-    BigDecimal yuFuKuan;
-    BigDecimal zongJia;
+    UUID chanPinId;
 
-    String chanPinJsonString;
-    String paiBanJsonString;
+    BigDecimal yuFuFei;
+    BigDecimal shiChangJia;
 
+    String yiSheng;
+
+    // 到小时
+    OffsetDateTime shiJian;
+
+    // 售出
+    boolean shouChu;
+
+    @Convert(converter = HashMapConverter.class)
+    Map<String, Object> xinXi;
 }

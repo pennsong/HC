@@ -1,18 +1,29 @@
 package com.qtc.hospitalcore.api;
 
+import com.qtc.hospitalcore.domain.ExtChuangJianYiHuRenYuanCmd;
+import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.chanpin.ChanPinView;
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
+import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
 import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
+import com.qtc.hospitalcore.domain.yaopin.YaoPinView;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_SheZhiMiMaCmd;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.GenericCommandMessage;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -24,99 +35,30 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/admin")
-@Api(tags="Admin操作")
+@Api(tags = "Admin操作")
 public class AdminController {
+
+    @Autowired
+    private CommandGateway commandGateway;
     // query
-    @ApiOperation(value = "获取用户列表")
-    @GetMapping("/huoQuYongHuLB")
-    public PPResult<List<YongHuView>> huoQuYongHuLB(@RequestParam(defaultValue="") String queryKey, @PageableDefault(page=0, size=20) Pageable pageable) {
-        // TODO: PP
 
-        return null;
-    }
-
-    @ApiOperation(value = "获取用户")
-    @GetMapping("/huoQuYongHu/{yongHuId}")
-    public PPResult<YongHuView> huoQuYongHu(@PathVariable UUID yongHuId) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @ApiOperation(value = "获取医护人员列表")
-    @GetMapping("/huoQuYiHuRenYuanLB")
-    public PPResult<List<YiHuRenYuanView>> huoQuYiHuRenYuanLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @ApiOperation(value = "获取医护人员")
-    @GetMapping("/huoQuYiHuRenYuan/{yiHuRenYuanId}")
-    public PPResult<YiHuRenYuanView> yiHuRenYuan(@PathVariable UUID yiHuRenYuanId) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @ApiOperation(value = "获取问诊列表")
-    @GetMapping("/huoQuWenZhenLB")
-    public PPResult<List<WenZhenView>> huoQuWenZhenLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @ApiOperation(value = "获取药品信息")
-    @GetMapping("/huoQuYaoPinXinXi")
-    public PPResult<DTO_huoQuYaoPinXinXi_R> huoQuJiuZhenRenLB() {
-        // TODO: PP
-
-        return null;
-    }
-
-    @Data
-    static class DTO_huoQuYaoPinXinXi_R {
-        String yaoPinXinXiJson;
-    }
-
-    @ApiOperation(value = "获取健康档案列表")
-    @GetMapping("/huoQuJianKangDangAnLB")
-    public PPResult<List<JianKangDangAnView>> huoQuJianKangDangAnLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @ApiOperation(value = "获取健康档案问诊列表")
-    @GetMapping("/huoQuJianKangDangAnWenZhenLB")
-    public PPResult<List<WenZhenView>> huoQuJianKangDangAnWenZhenLB(DTO_huoQuJiuZhenRenWenZhenLB dto) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @Data
-    static class DTO_huoQuJiuZhenRenWenZhenLB{
-        UUID jianKangDangAnId;
-    }
 
     // query end
 
     // command
     @ApiOperation(value = "创建产品")
-    @PostMapping("/chuangJianChangPin")
-    public PPResult<UUID> chuangJianChangPin(@Valid @RequestBody DTO_chuangJianChangPin dto) {
+    @PostMapping("/chuangJianChanPin")
+    public PPResult<UUID> chuangJianChanPin(@Valid @RequestBody DTO_chuangJianChanPin dto) {
         // TODO: PP
 
         return null;
     }
 
     @Data
-    static class DTO_chuangJianChangPin {
-        String fuWuDaFenLei;
-        String fuWuLeiXing;
+    static class DTO_chuangJianChanPin {
         String chanPingMing;
+        String daLeiXing;
+        String xiaoLeiXing;
         BigDecimal yuFuFei;
         BigDecimal shiChangJia;
     }
@@ -132,24 +74,124 @@ public class AdminController {
     @Data
     static class DTO_bianJichangPin {
         UUID changPinId;
-        String fuWuDaFenLei;
-        String fuWuLeiXing;
+        String daLeiXing;
+        String xiaoLeiXing;
         String chanPingMing;
         BigDecimal yuFuFei;
         BigDecimal shiChangJia;
     }
 
-    @ApiOperation(value = "删除产品")
-    @PostMapping("/shanChuChangPin")
-    public PPResult changPin(@Valid @RequestBody shanChuChangPin dto) {
+    @ApiOperation(value = "下架产品")
+    @PostMapping("/xiaJiaChanPin")
+    public PPResult xiaJiaChanPin(@Valid @RequestBody DTO_xiaJiaChanPin dto) {
         // TODO: PP
 
         return null;
     }
 
     @Data
-    static class shanChuChangPin {
+    static class DTO_xiaJiaChanPin {
         UUID changPinId;
+    }
+
+    @ApiOperation(value = "上架产品")
+    @PostMapping("/shangJiaChanPin")
+    public PPResult shangJiaChanPin(@Valid @RequestBody DTO_shangJiaChanPin dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_shangJiaChanPin {
+        UUID changPinId;
+    }
+
+    @ApiOperation(value = "删除产品")
+    @PostMapping("/shanChuChanPin")
+    public PPResult shanChuChanPin(@Valid @RequestBody DTO_shanChuChanPin dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_shanChuChanPin {
+        UUID changPinId;
+    }
+
+    @ApiOperation(value = "创建排班")
+    @PostMapping("/chuangJianPaiBan")
+    public PPResult<UUID> chuangJianPaiBan(@Valid @RequestBody DTO_chuangJianPaiBan dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_chuangJianPaiBan {
+        String chanPingMing;
+        String daLeiXing;
+        String xiaoLeiXing;
+        BigDecimal yuFuFei;
+        BigDecimal shiChangJia;
+    }
+
+    @ApiOperation(value = "编辑排班")
+    @PostMapping("/bianJiPaiBan")
+    public PPResult bianJiPaiBan(@Valid @RequestBody DTO_bianJiPaiBan dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_bianJiPaiBan {
+        UUID PaiBanId;
+        String daLeiXing;
+        String xiaoLeiXing;
+        String chanPingMing;
+        BigDecimal yuFuFei;
+        BigDecimal shiChangJia;
+    }
+
+    @ApiOperation(value = "下架排班")
+    @PostMapping("/xiaJiaPaiBan")
+    public PPResult xiaJiaPaiBan(@Valid @RequestBody DTO_xiaJiaPaiBan dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_xiaJiaPaiBan {
+        UUID PaiBanId;
+    }
+
+    @ApiOperation(value = "上架排班")
+    @PostMapping("/shangJiaPaiBan")
+    public PPResult shangJiaPaiBan(@Valid @RequestBody DTO_shangJiaPaiBan dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_shangJiaPaiBan {
+        UUID PaiBanId;
+    }
+
+    @ApiOperation(value = "删除排班")
+    @PostMapping("/shanChuPaiBan")
+    public PPResult shanChuPaiBan(@Valid @RequestBody DTO_shanChuPaiBan dto) {
+        // TODO: PP
+
+        return null;
+    }
+
+    @Data
+    static class DTO_shanChuPaiBan {
+        UUID PaiBanId;
     }
 
     @ApiOperation(value = "删除用户")
@@ -167,10 +209,24 @@ public class AdminController {
 
     @ApiOperation(value = "创建医护人员")
     @PostMapping("/chuangJianYiHuRenYuan")
-    public PPResult<UUID> chuangJianYiHuRenYuan(@Valid @RequestBody DTO_chuangJianYiHuRenYuan dto) {
-        // TODO: PP
+    public PPResult chuangJianYiHuRenYuan(@Valid @RequestBody DTO_chuangJianYiHuRenYuan dto) {
+        // 校验
 
-        return null;
+        // 校验 end
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new ExtChuangJianYiHuRenYuanCmd(
+                                UUID.randomUUID(),
+                                dto.getDengLuMing(),
+                                dto.getDengLuMiMa(),
+                                dto.getXingMing(),
+                                dto.getShenFenZhengHao(),
+                                dto.getYiHuRenYuanXinXiNeiRong()
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
@@ -224,6 +280,30 @@ public class AdminController {
     static class DTO_sheZhiYiHuRenYuanQuanXian {
         UUID yiHuRenYuanId;
         Set<YiHuRenYuan.QuanXian> quanXianZu;
+    }
+
+    @ApiOperation(value = "设置医护人员密码")
+    @PostMapping("/sheZhiYiHuRenYuanMiMa")
+    public PPResult sheZhiYiHuRenYuanMiMa(@Valid @RequestBody DTO_sheZhiYiHuRenYuanMiMa dto) {
+        // 校验
+
+        // 校验 end
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new ZhangHao_SheZhiMiMaCmd(
+                                dto.getYiHuRenYuanZhangHaoId(),
+                                dto.getMiMa()
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        return PPResult.getPPOK();
+    }
+
+    @Data
+    static class DTO_sheZhiYiHuRenYuanMiMa {
+        UUID yiHuRenYuanZhangHaoId;
+        String miMa;
     }
 
     @ApiOperation(value = "结束问诊")

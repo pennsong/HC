@@ -1,10 +1,7 @@
 package com.qtc.hospitalcore.domain.yonghu;
 
 import com.qtc.hospitalcore.domain.query.YongHuViewRepository;
-import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuEvt;
-import com.qtc.hospitalcore.domain.yonghu.YongHu;
 import org.axonframework.eventhandling.EventHandler;
-import org.springframework.stereotype.Component;
 
 
 public class YongHuProjector {
@@ -15,10 +12,11 @@ public class YongHuProjector {
     }
 
     @EventHandler
-    public void on(ChuangJianYongHuEvt evt) {
+    public void on(YongHu_ChuangJianEvt evt) {
         YongHuView entity = new YongHuView(
                 evt.getYongHuId(),
                 evt.getShouJiHaoMa(),
+                evt.getWeiXinOpenId(),
                 null,
                 null,
                 null

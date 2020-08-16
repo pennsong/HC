@@ -1,7 +1,6 @@
 package com.qtc.hospitalcore.domain.yonghu;
 
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
-import com.sun.scenario.effect.Offset;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,16 +10,10 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.UUIDCharType;
 
 import javax.persistence.Convert;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -38,52 +31,55 @@ public class YongHu {
     String shouJiHao;
     String xingMing;
     String shenFenZheng;
+    String weiXinOpenId;
 
     @Convert(converter = HashMapConverter.class)
-    Map<String, Object> xinXi;
+    Map<String, Object> xinXiMap;
 
     @CommandHandler
-    public YongHu(ChuangJianYongHuCmd cmd, MetaData metaData) {
-        // 参数检查
-
+    public YongHu(YongHu_ChuangJianCmd cmd, MetaData metaData) {
         // 条件检查
 
+        // 条件检查 end
+
         apply(
-                new ChuangJianYongHuEvt(
+                new YongHu_ChuangJianEvt(
                         cmd.getYongHuId(),
-                        cmd.getShouJiHaoMa()
+                        cmd.getShouJiHaoMa(),
+                        cmd.getWeiXinOpenId()
                 ),
                 metaData
         );
     }
 
     @EventSourcingHandler
-    public void on(ChuangJianYongHuEvt evt) {
+    public void on(YongHu_ChuangJianEvt evt) {
         this.id = evt.getYongHuId();
         this.shouJiHao = evt.getShouJiHaoMa();
+        this.weiXinOpenId = evt.getWeiXinOpenId();
     }
 
     @CommandHandler
-    public void on(DiJiaoJiBenXinXiCmd cmd, MetaData metaData) {
-        // 参数检查
-
+    public void on(YongHu_ChuangJianJiBenXinXiCmd cmd, MetaData metaData) {
         // 条件检查
 
+        // 条件检查 end
+
         apply(
-                new DiJiaoJiBenXinXiEvt(
+                new YongHu_ChuangJianJiBenXinXiEvt(
                         cmd.getYongHuId(),
                         cmd.getXingMing(),
                         cmd.getShenFenZheng(),
-                        cmd.getJiBenXinXiNeiRong()
+                        cmd.getJiBenXinXiMap()
                 ),
                 metaData
         );
     }
 
     @EventSourcingHandler
-    public void on(DiJiaoJiBenXinXiEvt evt) {
+    public void on(YongHu_ChuangJianJiBenXinXiEvt evt) {
         this.xingMing = evt.getXingMing();
         this.shenFenZheng = evt.getShenFenZheng();
-        this.xinXi = evt.getJiBenXinXiNeiRong();
+        this.xinXiMap = evt.getJiBenXinXiMap();
     }
 }

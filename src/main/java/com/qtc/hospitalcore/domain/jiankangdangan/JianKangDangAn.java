@@ -1,4 +1,4 @@
-package com.qtc.hospitalcore.domain.wenzhen;
+package com.qtc.hospitalcore.domain.jiankangdangan;
 
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
@@ -11,7 +11,6 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import javax.persistence.Convert;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,20 +19,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class WenZhen {
-    public static enum JieGuo {
-        CHENG_GONG,
-        JIE_SHU
-    }
+public class JianKangDangAn {
 
     @AggregateIdentifier
     UUID id;
 
-    String chanPinMing;
-    BigDecimal yuFuKuan;
-    BigDecimal zongJia;
+    String xingMing;
+    String shenFenZhengHao;
+    String shouJiHao;
 
-    String chanPinJsonString;
-    String paiBanJsonString;
+    @Convert(converter = HashMapConverter.class)
+    Map<String, Object> jiBenXinXiMap;
+
+    @Convert(converter = HashMapConverter.class)
+    Map<String, Object> jianKangXinXiMap;
 
 }

@@ -1,12 +1,8 @@
 package com.qtc.hospitalcore.domain.util;
 
-import com.qtc.hospitalcore.domain.yonghu.ChuangJianYongHuCmd;
-import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

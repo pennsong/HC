@@ -1,40 +1,25 @@
 package com.qtc.hospitalcore.domain
 
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.*
 
 /**
  * External
  */
-
-
-/**
- * ZhangHao
- */
-data class XinJianZhangHaoCmd(
+data class ExtChuangJianYongHuCmd(
         @TargetAggregateIdentifier
-        val id: String
+        var dummyId: UUID,
+        var shouJiHao: String,
+        var weiXinOpenId: String
 )
 
-data class XinJianZhangHaoEvt(
+data class ExtChuangJianYiHuRenYuanCmd(
         @TargetAggregateIdentifier
-        val id: String
+        var dummyId: UUID,
+        var username: String,
+        var password: String,
+        var xingMing: String,
+        var shenFenZhengHao: String,
+        var yiHuRenYuan_XinXiMap: Map<String, Any>
 )
-
-data class XinJianZhangHaoCmd2(
-        @TargetAggregateIdentifier
-        val id: String
-)
-
-data class XinJianZhangHaoEvt2(
-        @TargetAggregateIdentifier
-        val id: String
-)
-
-data class XinJianZhangHaoCmd3(
-        @TargetAggregateIdentifier
-        val id: String
-)
-
 
