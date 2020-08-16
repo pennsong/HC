@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain;
 
+import com.qtc.hospitalcore.domain.paiban.PaiBan;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.yihurenyuan.*;
 import com.qtc.hospitalcore.domain.yonghu.*;
@@ -16,21 +17,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class YiHuRenYuanTest {
     private FixtureConfiguration<YiHuRenYuan> fixture;
 
+    // mock data
+    UUID id = UUID.randomUUID();
+    String xingMing = "x";
+    String shenFenZhengHao = "s";
+    Set<YiHuRenYuan.QuanXian> quanXianSet = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.WEN_ZHEN, YiHuRenYuan.QuanXian.KAI_JU_CHU_FANG));
+    Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
+
+    // mock data end
+
+    private YiHuRenYuan getTemplate() {
+        YiHuRenYuan template = new YiHuRenYuan();
+        template.setId(id);
+        template.setXingMing(xingMing);
+        template.setShenFenZhengHao(shenFenZhengHao);
+        template.setQuanXianSet(quanXianSet);
+        template.setXinXiMap(xinXiMap);
+
+        return template;
+    }
+
     @BeforeEach
     public void setUp() {
         fixture = new AggregateTestFixture<>(YiHuRenYuan.class);
     }
 
     @Test
-    public void t_YiHuRenYuan_ChuangJianCmd() {
-        // mock data
-        UUID id = UUID.randomUUID();
-        String xingMing = "x1";
-        String shenFenZhengHao = "s1";
-        Set<YiHuRenYuan.QuanXian> quanXianSet = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.BIAN_JI_BING_LI, YiHuRenYuan.QuanXian.KAI_JU_CHU_FANG));
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:2");
-
-        // mock data end
+    public void test_YiHuRenYuan_ChuangJianCmd() {
 
         fixture.givenNoPriorActivity()
                 .when(new YiHuRenYuan_ChuangJianCmd(
@@ -49,24 +62,16 @@ public class YiHuRenYuanTest {
                         xinXiMap
                 ))
                 .expectState(state -> {
+                    YiHuRenYuan record = getTemplate();
+
                     // perform assertions
-                    assertEquals(id, state.getId());
-                    assertEquals(xingMing, state.getXingMing());
-                    assertEquals(shenFenZhengHao, state.getShenFenZhengHao());
-                    assertEquals(quanXianSet, state.getQuanXianSet());
-                    assertEquals(xinXiMap, state.getXinXiMap());
+                    assertEquals(record, state);
                 });
     }
 
     @Test
-    public void t_YiHuRenYuan_GengXinCmd() {
+    public void test_YiHuRenYuan_GengXinCmd() {
         // mock data
-        UUID id = UUID.randomUUID();
-        String xingMing1 = "x1";
-        String shenFenZhengHao1 = "s1";
-        Set<YiHuRenYuan.QuanXian> quanXianSet1 = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.BIAN_JI_BING_LI, YiHuRenYuan.QuanXian.KAI_JU_CHU_FANG));
-        Map<String, Object> xinXiMap1 = PPUtil.stringToMap("A:1, B:1");
-
         String xingMing2 = "x2";
         String shenFenZhengHao2 = "s2";
         Map<String, Object> xinXiMap2 = PPUtil.stringToMap("B:2, C:2");
@@ -74,12 +79,7 @@ public class YiHuRenYuanTest {
         // mock data end
 
         fixture.givenState(() -> {
-            YiHuRenYuan record = new YiHuRenYuan();
-            record.setId(id);
-            record.setXingMing(xingMing1);
-            record.setShenFenZhengHao(shenFenZhengHao1);
-            record.setQuanXianSet(quanXianSet1);
-            record.setXinXiMap(xinXiMap1);
+            YiHuRenYuan record = getTemplate();
 
             return record;
         })
@@ -97,34 +97,25 @@ public class YiHuRenYuanTest {
                         xinXiMap2
                 ))
                 .expectState(state -> {
+                    YiHuRenYuan record = getTemplate();
+                    record.setXingMing(xingMing2);
+                    record.setShenFenZhengHao(shenFenZhengHao2);
+                    record.setXinXiMap(xinXiMap2);
+
                     // perform assertions
-                    assertEquals(id, state.getId());
-                    assertEquals(xingMing2, state.getXingMing());
-                    assertEquals(shenFenZhengHao2, state.getShenFenZhengHao());
-                    assertEquals(xinXiMap2, state.getXinXiMap());
+                    assertEquals(record, state);
                 });
     }
 
     @Test
     public void t_YiHuRenYuan_SheZhiQuanXianCmd() {
         // mock data
-        UUID id = UUID.randomUUID();
-        String xingMing = "x1";
-        String shenFenZhengHao = "s1";
-        Set<YiHuRenYuan.QuanXian> quanXianSet = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.BIAN_JI_BING_LI, YiHuRenYuan.QuanXian.KAI_JU_CHU_FANG));
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
         Set<YiHuRenYuan.QuanXian> quanXianSet2 = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.BIAN_JI_BING_LI, YiHuRenYuan.QuanXian.QUE_REN_CHU_FANG));
 
         // mock data end
 
         fixture.givenState(() -> {
-            YiHuRenYuan record = new YiHuRenYuan();
-            record.setId(id);
-            record.setXingMing(xingMing);
-            record.setShenFenZhengHao(shenFenZhengHao);
-            record.setQuanXianSet(quanXianSet);
-            record.setXinXiMap(xinXiMap);
+            YiHuRenYuan record = getTemplate();
 
             return record;
         })
@@ -138,8 +129,11 @@ public class YiHuRenYuanTest {
                         quanXianSet2
                 ))
                 .expectState(state -> {
+                    YiHuRenYuan record = getTemplate();
+                    record.setQuanXianSet(quanXianSet2);
+
                     // perform assertions
-                    assertEquals(quanXianSet2, state.getQuanXianSet());
+                    assertEquals(record, state);
                 });
     }
 }

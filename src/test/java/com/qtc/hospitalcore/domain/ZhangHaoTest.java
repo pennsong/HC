@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain;
 
+import com.qtc.hospitalcore.domain.paiban.PaiBan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_GengXinCmd;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_GengXinEvt;
@@ -20,27 +21,44 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ZhangHaoTest {
     private FixtureConfiguration<ZhangHao> fixture;
 
+    // mock data
+    UUID id = UUID.randomUUID();
+
+    String username = "u";
+    String password = "p";
+    ZhangHao.JueSe jueSe = ZhangHao.JueSe.YONG_HU;
+    Set<ZhangHao.JueSe> jueSeSet = new HashSet<>(Arrays.asList(ZhangHao.JueSe.YONG_HU));
+    UUID yongHuId = UUID.randomUUID();
+    UUID yiHuRenYuanId = UUID.randomUUID();
+
+    ZhangHao.JueSe jueSe2 = ZhangHao.JueSe.YI_HU_REN_YUAN;
+    Set<ZhangHao.JueSe> jueSeSet2 = new HashSet<>(Arrays.asList(ZhangHao.JueSe.YI_HU_REN_YUAN));
+
+    // mock data end
+
+    private ZhangHao getTemplate() {
+        ZhangHao template = new ZhangHao();
+        template.setId(id);
+        template.setUsername(username);
+        template.setPassword(password);
+        template.setJueSeSet(jueSeSet);
+        template.setYongHuId(yongHuId);
+        template.setYiHuRenYuanId(yiHuRenYuanId);
+
+        return template;
+    }
+
     @BeforeEach
     public void setUp() {
         fixture = new AggregateTestFixture<>(ZhangHao.class);
     }
 
     @Test
-    public void test_ZhangHao_ChuangJianCmd() {
-        // mock data
-        UUID zhangHaoId = UUID.randomUUID();
-
-        UUID yongHuId = UUID.randomUUID();
-
-        String username = "u1";
-        String password = "p1";
-        ZhangHao.JueSe jueSe = ZhangHao.JueSe.YONG_HU;
-
-        // mock data end
+    public void test_ZhangHao_ChuangJianCmd_1() {
 
         fixture.givenNoPriorActivity()
                 .when(new ZhangHao_ChuangJianCmd(
-                        zhangHaoId,
+                        id,
                         username,
                         password,
                         jueSe,
@@ -49,7 +67,7 @@ public class ZhangHaoTest {
                 ))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new ZhangHao_ChuangJianEvt(
-                        zhangHaoId,
+                        id,
                         username,
                         password,
                         jueSe,
@@ -57,50 +75,73 @@ public class ZhangHaoTest {
                         null
                 ))
                 .expectState(state -> {
+                    ZhangHao record = getTemplate();
+                    record.setYiHuRenYuanId(null);
+
                     // perform assertions
-                    assertEquals(zhangHaoId, state.getId());
-                    assertEquals(username, state.getUsername());
-                    assertEquals(password, state.getPassword());
-                    assertEquals(new HashSet<>(Arrays.asList(ZhangHao.JueSe.YONG_HU)), state.getJueSeSet());
-                    assertEquals(yongHuId, state.getYongHuId());
-                    assertEquals(null, state.getYiHuRenYuanId());
+                    assertEquals(record, state);
                 });
     }
 
+    @Test
+    public void test_ZhangHao_ChuangJianCmd_2() {
+
+        fixture.givenNoPriorActivity()
+                .when(new ZhangHao_ChuangJianCmd(
+                        id,
+                        username,
+                        password,
+                        jueSe2,
+                        null,
+                        yiHuRenYuanId
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(new ZhangHao_ChuangJianEvt(
+                        id,
+                        username,
+                        password,
+                        jueSe2,
+                        null,
+                        yiHuRenYuanId
+                ))
+                .expectState(state -> {
+                    ZhangHao record = getTemplate();
+                    record.setYongHuId(null);
+                    record.setJueSeSet(jueSeSet2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
     public void test_ZhangHao_SheZhiMiMaCmd() {
         // mock data
-        UUID zhangHaoId = UUID.randomUUID();
-
-        String username = "u1";
-        String password = "p1";
-        Set<ZhangHao.JueSe> jueSeSet = new HashSet<>(Arrays.asList(ZhangHao.JueSe.YI_HU_REN_YUAN));
-
-        String password2 = "p1";
+        String password2 = "p2";
 
         // mock data end
 
         fixture.givenState(() -> {
-            ZhangHao record = new ZhangHao();
-            record.setId(zhangHaoId);
-            record.setUsername(username);
-            record.setPassword(password);
-            record.setJueSeSet(jueSeSet);
+            ZhangHao record = getTemplate();
 
             return record;
         })
                 .when(new ZhangHao_SheZhiMiMaCmd(
-                        zhangHaoId,
+                        id,
                         password2
 
                 ))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new ZhangHao_SheZhiMiMaEvt(
-                        zhangHaoId,
-                       password2
+                        id,
+                        password2
                 ))
                 .expectState(state -> {
+                    ZhangHao record = getTemplate();
+                    record.setPassword(password2);
+
                     // perform assertions
-                    assertEquals(password2, state.getPassword());
+                    assertEquals(record, state);
                 });
     }
 

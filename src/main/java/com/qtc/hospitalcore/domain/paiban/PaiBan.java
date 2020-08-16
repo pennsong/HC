@@ -142,6 +142,36 @@ public class PaiBan extends PPAggregate {
     }
 
     @CommandHandler
+    public void on(PaiBan_ShouChuCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 在售检查
+        if (this.zhuangTai != ZhuangTai.ZAI_SHOU) {
+            throw new PPBusinessException("非在售状态, 不能售出");
+        }
+
+        // 售出检查
+        if (this.shouChu) {
+            throw new PPBusinessException("已售出, 不能再次售出");
+        }
+        // 条件检查 end
+
+        apply(
+                new PaiBan_ShouChuEvt(
+                        cmd.getId()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(PaiBan_ShouChuEvt evt) {
+        this.shouChu = true;
+    }
+
+    @CommandHandler
     public void on(PaiBan_ShanChuCmd cmd, MetaData metaData) {
         // 条件检查
         // 删除检查

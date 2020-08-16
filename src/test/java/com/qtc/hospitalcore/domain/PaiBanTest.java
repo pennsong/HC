@@ -3,6 +3,8 @@ package com.qtc.hospitalcore.domain;
 import com.qtc.hospitalcore.domain.chanpin.*;
 import com.qtc.hospitalcore.domain.paiban.*;
 import com.qtc.hospitalcore.domain.util.PPUtil;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +19,44 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaiBanTest {
-    private FixtureConfiguration<PaiBan> fixture;
+    FixtureConfiguration<PaiBan> fixture;
+
+    // mock data
+    UUID id = UUID.randomUUID();
+
+    PaiBan.ZhuangTai zhuangTai = PaiBan.ZhuangTai.ZAI_SHOU;
+
+    UUID chanPinId = UUID.randomUUID();
+
+    BigDecimal yuFuFei = new BigDecimal("1.1");
+    BigDecimal shiChangJia = new BigDecimal("10.1");
+
+    String yiSheng = "y";
+
+    OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
+
+    boolean shouChu = false;
+
+    Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
+
+    // mock data end
+
+    private PaiBan getTemplate() {
+        PaiBan template = new PaiBan();
+        template.setId(id);
+        template.setZhuangTai(zhuangTai);
+        template.setChanPinId(chanPinId);
+        template.setYuFuFei(yuFuFei);
+        template.setShiChangJia(shiChangJia);
+        template.setYiSheng(yiSheng);
+        template.setShiJian(shiJian);
+        template.setShouChu(shouChu);
+        template.setXinXiMap(xinXiMap);
+
+        return template;
+    }
 
     @BeforeEach
     public void setUp() {
@@ -28,21 +65,6 @@ public class PaiBanTest {
 
     @Test
     public void test_PaiBan_ChuangJianCmd() {
-        // mock data
-        UUID id = UUID.randomUUID();
-
-        UUID chanPinId = UUID.randomUUID();
-
-        BigDecimal yuFuFei = new BigDecimal("1.1");
-        BigDecimal shiChangJia = new BigDecimal("10.1");
-
-        String yiSheng = "y";
-
-        OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
-
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
-        // mock data end
 
         fixture.givenNoPriorActivity()
                 .when(new PaiBan_ChuangJianCmd(
@@ -65,48 +87,19 @@ public class PaiBanTest {
                         xinXiMap
                 ))
                 .expectState(state -> {
-                    // perform assertions
-                    assertEquals(chanPinId, state.getChanPinId());
-                    assertEquals(yuFuFei, state.getYuFuFei());
-                    assertEquals(shiChangJia, state.getShiChangJia());
-                    assertEquals(yiSheng, state.getYiSheng());
-                    assertEquals(shiJian, state.getShiJian());
-                    assertEquals(xinXiMap, state.getXinXiMap());
+                    PaiBan record = getTemplate();
+                    record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
 
-                    assertEquals(false, state.isShouChu());
-                    assertEquals(PaiBan.ZhuangTai.TING_SHOU, state.getZhuangTai());
+                    // perform assertions
+                    assertEquals(record, state);
                 });
     }
 
     @Test
     public void test_PaiBan_ShangJiaCmd() {
-        // mock data
-        UUID id = UUID.randomUUID();
-
-        UUID chanPinId = UUID.randomUUID();
-
-        BigDecimal yuFuFei = new BigDecimal("1.1");
-        BigDecimal shiChangJia = new BigDecimal("10.1");
-
-        String yiSheng = "y";
-
-        OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
-
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
-        // mock data end
 
         fixture.givenState(() -> {
-            PaiBan record = new PaiBan();
-            record.setId(id);
-            record.setChanPinId(chanPinId);
-            record.setYuFuFei(yuFuFei);
-            record.setShiChangJia(shiChangJia);
-            record.setYiSheng(yiSheng);
-            record.setShiJian(shiJian);
-            record.setXinXiMap(xinXiMap);
-
-            record.setShouChu(false);
+            PaiBan record = getTemplate();
             record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
 
             return record;
@@ -120,49 +113,18 @@ public class PaiBanTest {
                         id
                 ))
                 .expectState(state -> {
-                    // perform assertions
-                    assertEquals(chanPinId, state.getChanPinId());
-                    assertEquals(yuFuFei, state.getYuFuFei());
-                    assertEquals(shiChangJia, state.getShiChangJia());
-                    assertEquals(yiSheng, state.getYiSheng());
-                    assertEquals(shiJian, state.getShiJian());
-                    assertEquals(xinXiMap, state.getXinXiMap());
+                    PaiBan record = getTemplate();
 
-                    assertEquals(false, state.isShouChu());
-                    assertEquals(PaiBan.ZhuangTai.ZAI_SHOU, state.getZhuangTai());
+                    // perform assertions
+                    assertEquals(record, state);
                 });
     }
 
     @Test
     public void test_PaiBan_ShangJiaCmd_失败() {
-        // mock data
-        UUID id = UUID.randomUUID();
-
-        UUID chanPinId = UUID.randomUUID();
-
-        BigDecimal yuFuFei = new BigDecimal("1.1");
-        BigDecimal shiChangJia = new BigDecimal("10.1");
-
-        String yiSheng = "y";
-
-        OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
-
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
-        // mock data end
 
         fixture.givenState(() -> {
-            PaiBan record = new PaiBan();
-            record.setId(id);
-            record.setChanPinId(chanPinId);
-            record.setYuFuFei(yuFuFei);
-            record.setShiChangJia(shiChangJia);
-            record.setYiSheng(yiSheng);
-            record.setShiJian(shiJian);
-            record.setXinXiMap(xinXiMap);
-
-            record.setShouChu(false);
-            record.setZhuangTai(PaiBan.ZhuangTai.ZAI_SHOU);
+            PaiBan record = getTemplate();
 
             return record;
         })
@@ -174,34 +136,9 @@ public class PaiBanTest {
 
     @Test
     public void test_PaiBan_XiaJiaCmd() {
-        // mock data
-        UUID id = UUID.randomUUID();
-
-        UUID chanPinId = UUID.randomUUID();
-
-        BigDecimal yuFuFei = new BigDecimal("1.1");
-        BigDecimal shiChangJia = new BigDecimal("10.1");
-
-        String yiSheng = "y";
-
-        OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
-
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
-        // mock data end
 
         fixture.givenState(() -> {
-            PaiBan record = new PaiBan();
-            record.setId(id);
-            record.setChanPinId(chanPinId);
-            record.setYuFuFei(yuFuFei);
-            record.setShiChangJia(shiChangJia);
-            record.setYiSheng(yiSheng);
-            record.setShiJian(shiJian);
-            record.setXinXiMap(xinXiMap);
-
-            record.setShouChu(false);
-            record.setZhuangTai(PaiBan.ZhuangTai.ZAI_SHOU);
+            PaiBan record = getTemplate();
 
             return record;
         })
@@ -214,48 +151,19 @@ public class PaiBanTest {
                         id
                 ))
                 .expectState(state -> {
-                    // perform assertions
-                    assertEquals(chanPinId, state.getChanPinId());
-                    assertEquals(yuFuFei, state.getYuFuFei());
-                    assertEquals(shiChangJia, state.getShiChangJia());
-                    assertEquals(yiSheng, state.getYiSheng());
-                    assertEquals(shiJian, state.getShiJian());
-                    assertEquals(xinXiMap, state.getXinXiMap());
+                    PaiBan record = getTemplate();
+                    record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
 
-                    assertEquals(false, state.isShouChu());
-                    assertEquals(PaiBan.ZhuangTai.TING_SHOU, state.getZhuangTai());
+                    // perform assertions
+                    assertEquals(record, state);
                 });
     }
 
     @Test
     public void test_PaiBan_XiaJiaCmd_失败() {
-        // mock data
-        UUID id = UUID.randomUUID();
-
-        UUID chanPinId = UUID.randomUUID();
-
-        BigDecimal yuFuFei = new BigDecimal("1.1");
-        BigDecimal shiChangJia = new BigDecimal("10.1");
-
-        String yiSheng = "y";
-
-        OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
-
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
-        // mock data end
 
         fixture.givenState(() -> {
-            PaiBan record = new PaiBan();
-            record.setId(id);
-            record.setChanPinId(chanPinId);
-            record.setYuFuFei(yuFuFei);
-            record.setShiChangJia(shiChangJia);
-            record.setYiSheng(yiSheng);
-            record.setShiJian(shiJian);
-            record.setXinXiMap(xinXiMap);
-
-            record.setShouChu(false);
+            PaiBan record = getTemplate();
             record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
 
             return record;
@@ -267,35 +175,65 @@ public class PaiBanTest {
     }
 
     @Test
-    public void test_PaiBan_ShanChuCmd() {
-        // mock data
-        UUID id = UUID.randomUUID();
-
-        UUID chanPinId = UUID.randomUUID();
-
-        BigDecimal yuFuFei = new BigDecimal("1.1");
-        BigDecimal shiChangJia = new BigDecimal("10.1");
-
-        String yiSheng = "y";
-
-        OffsetDateTime shiJian = OffsetDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS);
-
-        Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
-
-        // mock data end
+    public void test_PaiBan_ShouChuCmd() {
 
         fixture.givenState(() -> {
-            PaiBan record = new PaiBan();
-            record.setId(id);
-            record.setChanPinId(chanPinId);
-            record.setYuFuFei(yuFuFei);
-            record.setShiChangJia(shiChangJia);
-            record.setYiSheng(yiSheng);
-            record.setShiJian(shiJian);
-            record.setXinXiMap(xinXiMap);
+            PaiBan record = getTemplate();
 
-            record.setShouChu(false);
+            return record;
+        })
+                .when(new PaiBan_ShouChuCmd(
+                        id
+
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(new PaiBan_ShouChuEvt(
+                        id
+                ))
+                .expectState(state -> {
+                    PaiBan record = getTemplate();
+                    record.setShouChu(true);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_PaiBan_ShouChuCmd_失败_1() {
+
+        fixture.givenState(() -> {
+            PaiBan record = getTemplate();
             record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
+
+            return record;
+        })
+                .when(new PaiBan_ShouChuCmd(
+                        id
+                ))
+                .expectExceptionMessage("非在售状态, 不能售出");
+    }
+
+    @Test
+    public void test_PaiBan_ShouChuCmd_失败_2() {
+
+        fixture.givenState(() -> {
+            PaiBan record = getTemplate();
+            record.setShouChu(true);
+
+            return record;
+        })
+                .when(new PaiBan_ShouChuCmd(
+                        id
+                ))
+                .expectExceptionMessage("已售出, 不能再次售出");
+    }
+
+    @Test
+    public void test_PaiBan_ShanChuCmd() {
+
+        fixture.givenState(() -> {
+            PaiBan record = getTemplate();
 
             return record;
         })
@@ -308,18 +246,11 @@ public class PaiBanTest {
                         id
                 ))
                 .expectState(state -> {
+                    PaiBan record = getTemplate();
+                    record.delete();
+
                     // perform assertions
-                    assertEquals(chanPinId, state.getChanPinId());
-                    assertEquals(yuFuFei, state.getYuFuFei());
-                    assertEquals(shiChangJia, state.getShiChangJia());
-                    assertEquals(yiSheng, state.getYiSheng());
-                    assertEquals(shiJian, state.getShiJian());
-                    assertEquals(xinXiMap, state.getXinXiMap());
-
-                    assertEquals(false, state.isShouChu());
-                    assertEquals(PaiBan.ZhuangTai.TING_SHOU, state.getZhuangTai());
-
-                    assertEquals(true, state.isDeleted());
+                    assertEquals(record, state);
                 });
     }
 

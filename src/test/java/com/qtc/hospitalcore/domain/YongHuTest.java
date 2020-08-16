@@ -1,5 +1,8 @@
 package com.qtc.hospitalcore.domain;
 
+import com.qtc.hospitalcore.domain.paiban.PaiBan;
+import com.qtc.hospitalcore.domain.paiban.PaiBan_ShangJiaCmd;
+import com.qtc.hospitalcore.domain.paiban.PaiBan_ShangJiaEvt;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.yonghu.*;
 import org.axonframework.test.aggregate.AggregateTestFixture;
@@ -16,6 +19,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class YongHuTest {
     private FixtureConfiguration<YongHu> fixture;
 
+    // mock data
+    UUID id = UUID.randomUUID();
+    String shouJiHao = "s";
+    String xingMing = "x";
+    String shenFenZheng = "sf";
+    String weiXinOpenId = "weiXinOpenId1";
+    Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
+
+    // mock data end
+
+    private YongHu getTemplate() {
+        YongHu template = new YongHu();
+        template.setId(id);
+        template.setShouJiHao(shouJiHao);
+        template.setXingMing(xingMing);
+        template.setShenFenZheng(shenFenZheng);
+        template.setWeiXinOpenId(weiXinOpenId);
+        template.setXinXiMap(xinXiMap);
+
+        return template;
+    }
+
     @BeforeEach
     public void setUp() {
         fixture = new AggregateTestFixture<>(YongHu.class);
@@ -23,48 +48,59 @@ public class YongHuTest {
 
     @Test
     public void test_YongHu_ChuangJianCmd() {
-        // mock data
-        UUID uuid = UUID.randomUUID();
-        String shouJiHaoMa = "123";
-        String weiXinOpenId = "weiXinOpenId1";
-
-        // mock data end
 
         fixture.givenNoPriorActivity()
-                .when(new YongHu_ChuangJianCmd(uuid, shouJiHaoMa, weiXinOpenId))
+                .when(new YongHu_ChuangJianCmd(
+                        id,
+                        shouJiHao,
+                        weiXinOpenId
+                ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new YongHu_ChuangJianEvt(uuid, shouJiHaoMa, weiXinOpenId))
+                .expectEvents(new YongHu_ChuangJianEvt(
+                        id,
+                        shouJiHao,
+                        weiXinOpenId
+                ))
                 .expectState(state -> {
+                    YongHu record = getTemplate();
+                    record.setXingMing(null);
+                    record.setShenFenZheng(null);
+                    record.setXinXiMap(null);
+
                     // perform assertions
-                    assertEquals(shouJiHaoMa, state.getShouJiHao());
-                    assertEquals(weiXinOpenId, state.getWeiXinOpenId());
+                    assertEquals(record, state);
                 });
     }
 
     @Test
     public void test_YongHu_ChuangJianJiBenXinXiCmd() {
-        // mock data
-        UUID uuid = UUID.randomUUID();
-        String shouJiHaoMa = "123";
-        String weiXinOpenId = "weiXinOpenId1";
 
-        String xingMing = "x1";
-        String shenFenZheng = "s1";
-        Map map = PPUtil.stringToMap("A: 1, B: 2");
-        // mock data end
+        fixture.givenState(() -> {
+            YongHu record = getTemplate();
+            record.setXingMing(null);
+            record.setShenFenZheng(null);
+            record.setXinXiMap(null);
 
-        fixture.givenCommands(new YongHu_ChuangJianCmd(uuid, shouJiHaoMa, weiXinOpenId))
-                .when(new YongHu_ChuangJianJiBenXinXiCmd(uuid, xingMing, shenFenZheng, map))
+            return record;
+        })
+                .when(new YongHu_ChuangJianJiBenXinXiCmd(
+                        id,
+                        xingMing,
+                        shenFenZheng,
+                        xinXiMap
+                ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new YongHu_ChuangJianJiBenXinXiEvt(uuid, xingMing, shenFenZheng, map))
+                .expectEvents(new YongHu_ChuangJianJiBenXinXiEvt(
+                        id,
+                        xingMing,
+                        shenFenZheng,
+                        xinXiMap
+                ))
                 .expectState(state -> {
-                    // perform assertions
-                    assertEquals(shouJiHaoMa, state.getShouJiHao());
-                    assertEquals(weiXinOpenId, state.getWeiXinOpenId());
+                    YongHu record = getTemplate();
 
-                    assertEquals(xingMing, state.getXingMing());
-                    assertEquals(shenFenZheng, state.getShenFenZheng());
-                    assertEquals(map, state.getXinXiMap());
+                    // perform assertions
+                    assertEquals(record, state);
                 });
     }
 }

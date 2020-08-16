@@ -44,6 +44,15 @@ data class PaiBan_XiaJiaEvt(
         var id: UUID
 )
 
+data class PaiBan_ShouChuCmd(
+        @TargetAggregateIdentifier
+        var id: UUID
+)
+
+data class PaiBan_ShouChuEvt(
+        var id: UUID
+)
+
 data class PaiBan_ShanChuCmd(
         @TargetAggregateIdentifier
         var id: UUID
