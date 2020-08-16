@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.yonghu;
 
+import com.qtc.hospitalcore.domain.PPAggregate;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -23,7 +24,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class YongHu {
+public class YongHu extends PPAggregate {
 
     @AggregateIdentifier
     UUID id;
@@ -39,6 +40,8 @@ public class YongHu {
     @CommandHandler
     public YongHu(YongHu_ChuangJianCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 
@@ -62,6 +65,8 @@ public class YongHu {
     @CommandHandler
     public void on(YongHu_ChuangJianJiBenXinXiCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 

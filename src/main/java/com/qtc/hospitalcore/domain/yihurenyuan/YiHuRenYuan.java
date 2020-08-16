@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.yihurenyuan;
 
+import com.qtc.hospitalcore.domain.PPAggregate;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class YiHuRenYuan {
+public class YiHuRenYuan extends PPAggregate {
     public static enum QuanXian {
         WEN_ZHEN,
         KAI_JU_CHU_FANG,
@@ -44,6 +45,8 @@ public class YiHuRenYuan {
     @CommandHandler
     public YiHuRenYuan(YiHuRenYuan_ChuangJianCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 
@@ -68,6 +71,8 @@ public class YiHuRenYuan {
     @CommandHandler
     public void on(YiHuRenYuan_GengXinCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 
@@ -89,6 +94,8 @@ public class YiHuRenYuan {
     @CommandHandler
     public void on(YiHuRenYuan_SheZhiQuanXianCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 

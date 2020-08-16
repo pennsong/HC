@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.wenzhen;
 
+import com.qtc.hospitalcore.domain.PPAggregate;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class WenZhen {
+public class WenZhen extends PPAggregate {
     public static enum JieGuo {
         CHENG_GONG,
         JIE_SHU

@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.zhanghao;
 
+import com.qtc.hospitalcore.domain.PPAggregate;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.markDeleted
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class ZhangHao {
+public class ZhangHao extends PPAggregate {
     public static enum JueSe {
         YONG_HU,
         YI_HU_REN_YUAN
@@ -42,6 +43,8 @@ public class ZhangHao {
     @CommandHandler
     public ZhangHao(ZhangHao_ChuangJianCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 
@@ -73,6 +76,8 @@ public class ZhangHao {
     @CommandHandler
     public void on(ZhangHao_SheZhiMiMaCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 
@@ -93,6 +98,8 @@ public class ZhangHao {
     @CommandHandler
     public void on(ZhangHao_ShanChuCmd cmd, MetaData metaData) {
         // 条件检查
+		// 删除检查
+        checkDeleted();
 
         // 条件检查 end
 
@@ -106,6 +113,6 @@ public class ZhangHao {
 
     @EventSourcingHandler
     public void on(ZhangHao_ShanChuEvt evt) {
-       markDeleted();
+        delete();
     }
 }

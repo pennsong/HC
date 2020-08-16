@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.yaopin;
 
+import com.qtc.hospitalcore.domain.PPAggregate;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class YaoPin {
+public class YaoPin extends PPAggregate {
 
     @AggregateIdentifier
     UUID id;

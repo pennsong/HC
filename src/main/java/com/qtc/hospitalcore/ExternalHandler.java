@@ -48,6 +48,7 @@ public class ExternalHandler {
     @CommandHandler
     public void on(ExtChuangJianYongHuCmd cmd, MetaData metaData) throws Exception {
         // 条件检查
+
         // 检测手机号
         YongHuShouJiHao yongHuShouJiHao = new YongHuShouJiHao(cmd.getShouJiHao());
         try {
@@ -92,6 +93,7 @@ public class ExternalHandler {
     @CommandHandler
     public void on(ExtChuangJianYiHuRenYuanCmd cmd, MetaData metaData) throws Exception {
         // 条件检查
+
         // 检查身份证号
         YiHuRenYuanShenFenZhengHao yiHuRenYuanShenFenZhengHao = new YiHuRenYuanShenFenZhengHao(cmd.getShenFenZhengHao());
 
