@@ -1,6 +1,7 @@
 package com.qtc.hospitalcore.domain.yihurenyuan;
 
 import com.qtc.hospitalcore.domain.PPAggregate;
+import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
+import javax.persistence.Convert;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -40,6 +42,7 @@ public class YiHuRenYuan extends PPAggregate {
 
     Set<QuanXian> quanXianSet;
 
+    @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;
 
     @CommandHandler

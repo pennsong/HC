@@ -1,9 +1,7 @@
 package com.qtc.hospitalcore.domain;
 
 import com.qtc.hospitalcore.domain.chanpin.*;
-import com.qtc.hospitalcore.domain.paiban.PaiBan;
 import com.qtc.hospitalcore.domain.util.PPUtil;
-import com.qtc.hospitalcore.domain.zhanghao.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.axonframework.test.aggregate.AggregateTestFixture;
@@ -12,12 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChanPinTest {
+public class YaoPinTest {
     private FixtureConfiguration<ChanPin> fixture;
 
     // mock data

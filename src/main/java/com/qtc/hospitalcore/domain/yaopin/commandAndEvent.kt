@@ -1,4 +1,4 @@
-package com.qtc.hospitalcore.domain.chanpin
+package com.qtc.hospitalcore.domain.yaopin
 
 import com.qtc.hospitalcore.domain.util.HashMapConverter
 import org.axonframework.modelling.command.TargetAggregateIdentifier
@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.util.*
 import javax.persistence.Convert
 
-data class ChanPin_ChuangJianCmd(
+data class YaoPin_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var mingCheng: String,
@@ -17,7 +17,7 @@ data class ChanPin_ChuangJianCmd(
         var xinXiMap: Map<String, Any>
 )
 
-data class ChanPin_ChuangJianEvt(
+data class YaoPin_ChuangJianEvt(
         var id: UUID,
         var mingCheng: String,
         var daLeiXing: String,
@@ -27,7 +27,7 @@ data class ChanPin_ChuangJianEvt(
         var xinXiMap: Map<String, Any>
 )
 
-data class ChanPin_GengXinCmd(
+data class YaoPin_GengXinCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var mingCheng: String,
@@ -38,7 +38,7 @@ data class ChanPin_GengXinCmd(
         var xinXiMap: Map<String, Any>
 )
 
-data class ChanPin_GengXinEvt(
+data class YaoPin_GengXinEvt(
         var id: UUID,
         var mingCheng: String,
         var daLeiXing: String,
@@ -48,29 +48,29 @@ data class ChanPin_GengXinEvt(
         var xinXiMap: Map<String, Any>
 )
 
-data class ChanPin_ShangJiaCmd(
+data class YaoPin_ShangJiaCmd(
         @TargetAggregateIdentifier
         var id: UUID
 )
 
-data class ChanPin_ShangJiaEvt(
+data class YaoPin_ShangJiaEvt(
         var id: UUID
 )
 
-data class ChanPin_XiaJiaCmd(
+data class YaoPin_XiaJiaCmd(
         @TargetAggregateIdentifier
         var id: UUID
 )
 
-data class ChanPin_XiaJiaEvt(
+data class YaoPin_XiaJiaEvt(
         var id: UUID
 )
 
-data class ChanPin_ShanChuCmd(
+data class YaoPin_ShanChuCmd(
         @TargetAggregateIdentifier
         var id: UUID
 )
 
-data class ChanPin_ShanChuEvt(
+data class YaoPin_ShanChuEvt(
         var id: UUID
 )

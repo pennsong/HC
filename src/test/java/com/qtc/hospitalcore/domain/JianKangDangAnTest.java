@@ -38,6 +38,8 @@ public class JianKangDangAnTest {
         template.setJiBenXinXiMap(jiBenXinXiMap);
         template.setJianKangXinXiMap(jianKangXinXiMap);
 
+        template.setZhuangTai(JianKangDangAn.ZhuangTai.YI_CHUANG_JIAN);
+
         return template;
     }
 
@@ -97,6 +99,7 @@ public class JianKangDangAnTest {
                 .expectState(state -> {
                     JianKangDangAn record = getTemplate();
                     record.setJianKangXinXiMap(jianKangXinXiMap2);
+                    record.setZhuangTai(JianKangDangAn.ZhuangTai.JIAN_KANG_XIN_XI_YI_GENG_XIN);
 
                     // perform assertions
                     assertEquals(record, state);

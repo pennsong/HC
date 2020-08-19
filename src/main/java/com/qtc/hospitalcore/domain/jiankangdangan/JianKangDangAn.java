@@ -25,9 +25,14 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public class JianKangDangAn extends PPAggregate {
-
+    public static enum ZhuangTai {
+        YI_CHUANG_JIAN,
+        JIAN_KANG_XIN_XI_YI_GENG_XIN
+    }
     @AggregateIdentifier
     UUID id;
+
+    ZhuangTai zhuangTai;
 
     String xingMing;
     String shenFenZhengHao;
@@ -67,6 +72,8 @@ public class JianKangDangAn extends PPAggregate {
         this.shenFenZhengHao = evt.getShenFenZhengHao();
         this.shouJiHao = evt.getShouJiHao();
         this.jiBenXinXiMap = evt.getJiBenXinXiMap();
+
+        this.zhuangTai = ZhuangTai.YI_CHUANG_JIAN;
     }
 
     @CommandHandler
@@ -89,5 +96,7 @@ public class JianKangDangAn extends PPAggregate {
     @EventSourcingHandler
     public void on(JianKangDangAn_GengXinJianKangXinXiEvt evt) {
         this.jianKangXinXiMap = evt.getJianKangXinXiMap();
+
+        this.zhuangTai = ZhuangTai.JIAN_KANG_XIN_XI_YI_GENG_XIN;
     }
 }

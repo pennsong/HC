@@ -39,7 +39,7 @@ public class ChanPin extends PPAggregate {
 
     ZhuangTai zhuangTai;
 
-    String chanPinMing;
+    String mingCheng;
     String daLeiXing;
     String xiaoLeiXing;
 
@@ -60,7 +60,7 @@ public class ChanPin extends PPAggregate {
         apply(
                 new ChanPin_ChuangJianEvt(
                         cmd.getId(),
-                        cmd.getChanPinMing(),
+                        cmd.getMingCheng(),
                         cmd.getDaLeiXing(),
                         cmd.getXiaoLeiXing(),
                         cmd.getYuFuFei(),
@@ -74,7 +74,7 @@ public class ChanPin extends PPAggregate {
     @EventSourcingHandler
     public void on(ChanPin_ChuangJianEvt evt) {
         this.id = evt.getId();
-        this.chanPinMing = evt.getChanPinMing();
+        this.mingCheng = evt.getMingCheng();
         this.daLeiXing = evt.getDaLeiXing();
         this.xiaoLeiXing = evt.getXiaoLeiXing();
         this.yuFuFei = evt.getYuFuFei();
@@ -95,7 +95,7 @@ public class ChanPin extends PPAggregate {
         apply(
                 new ChanPin_GengXinEvt(
                         cmd.getId(),
-                        cmd.getChanPinMing(),
+                        cmd.getMingCheng(),
                         cmd.getDaLeiXing(),
                         cmd.getXiaoLeiXing(),
                         cmd.getYuFuFei(),
@@ -108,7 +108,7 @@ public class ChanPin extends PPAggregate {
 
     @EventSourcingHandler
     public void on(ChanPin_GengXinEvt evt) {
-        this.chanPinMing = evt.getChanPinMing();
+        this.mingCheng = evt.getMingCheng();
         this.daLeiXing = evt.getDaLeiXing();
         this.xiaoLeiXing = evt.getXiaoLeiXing();
         this.yuFuFei = evt.getYuFuFei();

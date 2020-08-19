@@ -23,7 +23,7 @@ public class ChanPinView {
     @Id
     UUID id;
 
-    String chanPinMing;
+    String mingCheng;
     String daLeiXing;
     String xiaoLeiXing;
 
