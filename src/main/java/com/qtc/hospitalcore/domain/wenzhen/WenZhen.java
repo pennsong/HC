@@ -3,8 +3,6 @@ package com.qtc.hospitalcore.domain.wenzhen;
 import com.qtc.hospitalcore.domain.PPAggregate;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
-import com.qtc.hospitalcore.domain.yaopin.YaoPin_ChuangJianCmd;
-import com.qtc.hospitalcore.domain.yaopin.YaoPin_ChuangJianEvt;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +18,6 @@ import org.axonframework.spring.stereotype.Aggregate;
 import javax.persistence.Convert;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -74,15 +71,29 @@ public class WenZhen extends PPAggregate {
         List<String> pingZheng;
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class HuiZhen {
+        LocalDateTime shiJian;
+        String lianJie;
+        String huiYiId;
+        String huanFangCanYuRenYuan;
+        String beiZhu;
+
+        String shiPinLianJie;
+    }
+
     public static enum ZhuangTai {
         YI_CHUANG_JIAN,
         YI_AN_PAI_YI_SHENG,
-        YI_WAN_CHENG
+        YI_CHENG_GONG_WAN_CHENG,
+        YI_ZHONG_DUAN_WAN_CHENG
     }
 
     public static enum FuFeiZhuangTai {
-        YI_YU_FU_FEI_ZHI_FU,
-        YI_QUAN_KUAN_ZHI_FU
+        YI_ZHI_FU_YU_FU_FEI,
+        YI_ZHI_FU_QUAN_KUAN
     }
 
     public static enum HuiZhenZhuangTai {
@@ -93,6 +104,8 @@ public class WenZhen extends PPAggregate {
     UUID id;
 
     ZhuangTai zhuangTai;
+    String wanChengBeiZhu;
+
     FuFeiZhuangTai fuFeiZhuangTai;
     HuiZhenZhuangTai huiZhenZhuangTai;
 
@@ -146,6 +159,30 @@ public class WenZhen extends PPAggregate {
     YuFuKuan yuFuKuan;
     List<BuChongKuan> buChongKuanList = new LinkedList<>();
     List<TuiKuan> tuiKuanList = new LinkedList<>();
+
+    // 会诊
+    HuiZhen huiZhen;
+
+    public double jiSuanBlance() {
+        double balance = 0;
+        if (yuFuKuan != null) {
+            balance += yuFuKuan.getJinE().doubleValue();
+        }
+
+        if (buChongKuanList != null) {
+            for (BuChongKuan item : buChongKuanList) {
+                balance += item.getJinE().doubleValue() * item.getFuKuanDangRiHuiLv();
+            }
+        }
+
+        if (tuiKuanList != null) {
+            for (TuiKuan item : tuiKuanList) {
+                balance -= item.getJinE().doubleValue();
+            }
+        }
+
+        return balance;
+    }
 
     @CommandHandler
     public WenZhen(WenZhen_ChuangJianCmd cmd, MetaData metaData) {
@@ -241,7 +278,7 @@ public class WenZhen extends PPAggregate {
                 evt.getBeiZhu()
         );
 
-        fuFeiZhuangTai = FuFeiZhuangTai.YI_YU_FU_FEI_ZHI_FU;
+        fuFeiZhuangTai = FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI;
     }
 
     @CommandHandler
@@ -252,29 +289,17 @@ public class WenZhen extends PPAggregate {
 
         // 状态
         if (zhuangTai != ZhuangTai.YI_CHUANG_JIAN) {
-            throw new PPBusinessException("只有在已创建状态才能接收预付款");
+            throw new PPBusinessException("只有在已创建状态才能退款");
+        }
+
+        // 付费状态
+        if (fuFeiZhuangTai != FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI) {
+            throw new PPBusinessException("只有在已支付预付费状态才能退款");
         }
 
         // 金额
         // balance
-        double balance = 0;
-        if (yuFuKuan != null) {
-            balance += yuFuKuan.getJinE().doubleValue();
-        }
-
-        if (buChongKuanList != null) {
-            for (BuChongKuan item : buChongKuanList) {
-                balance += item.getJinE().doubleValue() * item.getFuKuanDangRiHuiLv();
-            }
-        }
-
-        if (tuiKuanList != null) {
-            for (TuiKuan item : tuiKuanList) {
-                balance -= item.getJinE().doubleValue();
-            }
-        }
-
-        if (balance < cmd.getJinE().doubleValue()) {
+        if (jiSuanBlance() < cmd.getJinE().doubleValue()) {
             throw new PPBusinessException("退款额度太大");
         }
         // 金额 end
@@ -312,25 +337,25 @@ public class WenZhen extends PPAggregate {
     }
 
     @CommandHandler
-    public void on(WenZhen_JianKangDangAnGengXinCmd cmd, MetaData metaData) {
+    public void on(WenZhen_GengXinJianKangDangAnCmd cmd, MetaData metaData) {
         // 条件检查
         // 删除检查
         checkDeleted();
 
         // 状态
-        if (zhuangTai == ZhuangTai.YI_WAN_CHENG) {
+        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG) {
             throw new PPBusinessException("只有在非已完成状态才能更新健康档案");
         }
 
         // 付费状态
-        if (fuFeiZhuangTai != FuFeiZhuangTai.YI_YU_FU_FEI_ZHI_FU) {
-            throw new PPBusinessException("只有在已预付费支付状态才能更新健康档案");
+        if (fuFeiZhuangTai == null) {
+            throw new PPBusinessException("只有在已付费状态才能更新健康档案");
         }
 
         // 条件检查 end
 
         apply(
-                new WenZhen_JianKangDangAnGengXinEvt(
+                new WenZhen_GengXinJianKangDangAnEvt(
                         cmd.getId(),
                         cmd.getJianKangDangAnMap()
                 ),
@@ -339,7 +364,259 @@ public class WenZhen extends PPAggregate {
     }
 
     @EventSourcingHandler
-    public void on(WenZhen_JianKangDangAnGengXinEvt evt) {
-       this.jianKangDangAnMap = evt.getJianKangDangAnMap();
+    public void on(WenZhen_GengXinJianKangDangAnEvt evt) {
+        this.jianKangDangAnMap = evt.getJianKangDangAnMap();
+    }
+
+    @CommandHandler
+    public void on(WenZhen_ZhiFuBuChongKuanCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG) {
+            throw new PPBusinessException("只有在非已完成状态才能支付补充款");
+        }
+
+        // 付费状态
+        if (fuFeiZhuangTai != FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI) {
+            throw new PPBusinessException("只有在已支付预付费状态才能支付补充款");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_ZhiFuBuChongKuanEvt(
+                        cmd.getId(),
+                        cmd.getLiuShuiHao(),
+                        cmd.getShiJian(),
+                        cmd.getFuKuanFang(),
+                        cmd.getBiZhong(),
+                        cmd.getJinE(),
+                        cmd.getFuKuanDangRiHuiLv(),
+                        cmd.getBeiZhu(),
+                        cmd.getPingZheng()
+                ),
+                metaData
+        );
+
+        if (jiSuanBlance() + cmd.getFuKuanDangRiHuiLv() * cmd.getJinE().doubleValue() >= zongJia.doubleValue()) {
+            apply(
+                    new WenZhen_ZhiFuQuanKuanEvt(
+                            cmd.getId()
+                    )
+            );
+        }
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_ZhiFuBuChongKuanEvt evt) {
+        BuChongKuan buChongKuan = new BuChongKuan(
+                evt.getLiuShuiHao(),
+                evt.getShiJian(),
+                evt.getFuKuanFang(),
+                evt.getBiZhong(),
+                evt.getJinE(),
+                evt.getFuKuanDangRiHuiLv(),
+                evt.getBeiZhu(),
+                evt.getPingZheng()
+        );
+
+        this.buChongKuanList.add(buChongKuan);
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_ZhiFuQuanKuanEvt evt) {
+        this.setFuFeiZhuangTai(FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+    }
+
+    @CommandHandler
+    public void on(WenZhen_GengXinMuQianZhuYaoZhenDuanCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai != ZhuangTai.YI_AN_PAI_YI_SHENG) {
+            throw new PPBusinessException("只有在已安排医生状态才能递交目前主要诊断");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_GengXinMuQianZhuYaoZhenDuanEvt(
+                        cmd.getId(),
+                        cmd.getZhenDuan()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_GengXinMuQianZhuYaoZhenDuanEvt evt) {
+        this.muQianZhuYaoZhenDuan = evt.getZhenDuan();
+    }
+
+    @CommandHandler
+    public void on(WenZhen_AnPaiYiShengCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai != ZhuangTai.YI_CHUANG_JIAN) {
+            throw new PPBusinessException("只有在已创建状态才能安排医生");
+        }
+
+        // 付费状态
+        if (fuFeiZhuangTai != FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN) {
+            throw new PPBusinessException("只有在已支付全款状态才能安排医生");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_AnPaiYiShengEvt(
+                        cmd.getId(),
+                        cmd.getWenZhenZhangHaoId(),
+                        cmd.getBingLiBianJiZhangHaoId(),
+                        cmd.getKaiJuChuFangZhangHaoId(),
+                        cmd.getQueRenChuFangZhangHaoId()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_AnPaiYiShengEvt evt) {
+        this.wenZhenZhangHaoId = evt.getWenZhenZhangHaoId();
+        this.bingLiBianJiZhangHaoId = evt.getBingLiBianJiZhangHaoId();
+        this.kaiJuChuFangZhangHaoId = evt.getKaiJuChuFangZhangHaoId();
+        this.queRenChuFangZhangHaoId = evt.getQueRenChuFangZhangHaoId();
+
+        this.zhuangTai = ZhuangTai.YI_AN_PAI_YI_SHENG;
+    }
+
+    @CommandHandler
+    public void on(WenZhen_ZhuanZhenCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai != ZhuangTai.YI_AN_PAI_YI_SHENG) {
+            throw new PPBusinessException("只有在已安排医生状态才能转诊");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_ZhuanZhenEvt(
+                        cmd.getId(),
+                        cmd.getWenZhenZhangHaoId(),
+                        cmd.getBingLiBianJiZhangHaoId(),
+                        cmd.getKaiJuChuFangZhangHaoId(),
+                        cmd.getQueRenChuFangZhangHaoId()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_ZhuanZhenEvt evt) {
+        this.wenZhenZhangHaoId = evt.getWenZhenZhangHaoId();
+        this.bingLiBianJiZhangHaoId = evt.getBingLiBianJiZhangHaoId();
+        this.kaiJuChuFangZhangHaoId = evt.getKaiJuChuFangZhangHaoId();
+        this.queRenChuFangZhangHaoId = evt.getQueRenChuFangZhangHaoId();
+    }
+
+    @CommandHandler
+    public void on(WenZhen_AnPaiHuiZhenCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai != ZhuangTai.YI_AN_PAI_YI_SHENG) {
+            throw new PPBusinessException("只有在已安排医生状态才能安排会诊");
+        }
+
+        // 付费状态
+        if (fuFeiZhuangTai != FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN) {
+            throw new PPBusinessException("只有在已支付全款状态才能安排会诊");
+        }
+
+        // 会诊状态
+        if (huiZhenZhuangTai != null) {
+            throw new PPBusinessException("只有在没有安排会诊时才能安排会诊");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_AnPaiHuiZhenEvt(
+                        cmd.getId(),
+                        cmd.getShiJian(),
+                        cmd.getLianJie(),
+                        cmd.getHuiYiId(),
+                        cmd.getHuanFangCanYuRenYuan(),
+                        cmd.getBeiZhu()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_AnPaiHuiZhenEvt evt) {
+        HuiZhen huiZhen = new HuiZhen(
+                evt.getShiJian(),
+                evt.getLianJie(),
+                evt.getHuiYiId(),
+                evt.getHuanFangCanYuRenYuan(),
+                evt.getBeiZhu(),
+                null
+        );
+
+        this.huiZhen = huiZhen;
+
+        this.setHuiZhenZhuangTai(HuiZhenZhuangTai.YI_AN_PAI);
+    }
+
+    @CommandHandler
+    public void on(WenZhen_SheZhiHuiZhenShiPinCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai != ZhuangTai.YI_AN_PAI_YI_SHENG) {
+            throw new PPBusinessException("只有在已安排医生状态才能设置会诊视频链接");
+        }
+
+        // 付费状态
+        if (fuFeiZhuangTai != FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN) {
+            throw new PPBusinessException("只有在已支付全款状态才能设置会诊视频链接");
+        }
+
+        // 会诊状态
+        if (huiZhenZhuangTai != HuiZhenZhuangTai.YI_AN_PAI) {
+            throw new PPBusinessException("只有在安排会诊后才能设置会诊视频链接");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_SheZhiHuiZhenShiPinEvt(
+                        cmd.getId(),
+                        cmd.getShiPinLianJie()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_SheZhiHuiZhenShiPinEvt evt) {
+        this.getHuiZhen().setShiPinLianJie(evt.getShiPinLianJie());
     }
 }

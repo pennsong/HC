@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain;
 
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.*;
 import org.axonframework.test.aggregate.AggregateTestFixture;
@@ -118,6 +119,23 @@ public class WenZhenTest {
             )
     );
 
+    // 会诊
+    LocalDateTime huiZhenShiJian = mockNow;
+    String huiZhenLianJie = "l";
+    String huiZhenHuiYiId = "hId";
+    String huiZhenHuanFangCanYuRenYuan = "r";
+    String huiZhenBeiZhu = "b";
+    String huiZhenShiPinLianJie = "sl";
+
+    WenZhen.HuiZhen huiZhen = new WenZhen.HuiZhen(
+            huiZhenShiJian,
+            huiZhenLianJie,
+            huiZhenHuiYiId,
+            huiZhenHuanFangCanYuRenYuan,
+            huiZhenBeiZhu,
+            huiZhenShiPinLianJie
+    );
+
     // mock data end
 
     private WenZhen getTemplate() {
@@ -134,10 +152,10 @@ public class WenZhenTest {
         template.setPaiBanJsonString(paiBanJsonString);
 
         // 付费状态
-        template.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_YU_FU_FEI_ZHI_FU);
+        template.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI);
 
         // 会诊状态
-
+        template.setHuiZhenZhuangTai(null);
 
         // 保险
         template.setBaoXianDanHao(baoXianDanHao);
@@ -218,6 +236,7 @@ public class WenZhenTest {
                     record.setPaiBanJsonString(paiBanJsonString);
                     record.setJianKangDangAnMap(jianKangDangAnMap);
                     record.setXiaDanShiJian(xiaDanShiJian);
+
                     record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
 
                     // perform assertions
@@ -230,19 +249,9 @@ public class WenZhenTest {
     public void test_WenZhen_ZhiFuYuFuKuanCmd() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
+            WenZhen record = getTemplate();
             record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+            record.setYuFuKuan(null);
 
             return record;
         })
@@ -261,21 +270,9 @@ public class WenZhenTest {
                         mockNow
                 ))
                 .expectState(state -> {
-                    WenZhen record = new WenZhen();
-                    record.setId(id);
-                    record.setJianKangDangAnId(jianKangDangAnId);
-                    record.setChanPinId(chanPinId);
-                    record.setPaiBanId(paiBanId);
-                    record.setYuFuFei(yuFuFei);
-                    record.setZongJia(zongJia);
-                    record.setChanPinMingCheng(chanPinMingCheng);
-                    record.setChanPinJsonString(chanPinJsonString);
-                    record.setPaiBanJsonString(paiBanJsonString);
-                    record.setJianKangDangAnMap(jianKangDangAnMap);
-                    record.setXiaDanShiJian(xiaDanShiJian);
-                    record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
-                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_YU_FU_FEI_ZHI_FU);
+                    WenZhen record = getTemplate();
 
+                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI);
                     record.setYuFuKuan(yuFuKuan);
                     // perform assertions
                     assertEquals(record, state);
@@ -287,20 +284,9 @@ public class WenZhenTest {
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_1() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
+            WenZhen record = getTemplate();
             record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+            record.setYuFuKuan(null);
 
             return record;
         })
@@ -318,20 +304,8 @@ public class WenZhenTest {
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_2() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+            WenZhen record = getTemplate();
+            record.setYuFuKuan(null);
 
             return record;
         })
@@ -349,20 +323,8 @@ public class WenZhenTest {
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_3() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+            WenZhen record = getTemplate();
+            record.setYuFuKuan(null);
 
             return record;
         })
@@ -376,25 +338,10 @@ public class WenZhenTest {
     }
 
     @Test
-    public void test_WenZhen_ZhiXingTuiKuanCmd_1() {
+    public void test_WenZhen_ZhiXingTuiKuanCmd() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setYuFuKuan(yuFuKuan);
-
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+            WenZhen record = getTemplate();
 
             return record;
         })
@@ -420,120 +367,9 @@ public class WenZhenTest {
                         tuiKuan.getPingZheng()
                 ))
                 .expectState(state -> {
-                    WenZhen record = new WenZhen();
-                    record.setId(id);
-                    record.setJianKangDangAnId(jianKangDangAnId);
-                    record.setChanPinId(chanPinId);
-                    record.setPaiBanId(paiBanId);
-                    record.setYuFuFei(yuFuFei);
-                    record.setZongJia(zongJia);
-                    record.setChanPinMingCheng(chanPinMingCheng);
-                    record.setChanPinJsonString(chanPinJsonString);
-                    record.setPaiBanJsonString(paiBanJsonString);
-                    record.setJianKangDangAnMap(jianKangDangAnMap);
-                    record.setXiaDanShiJian(xiaDanShiJian);
-
-                    record.setYuFuKuan(yuFuKuan);
-
-                    record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+                    WenZhen record = getTemplate();
 
                     record.getTuiKuanList().add(tuiKuan);
-
-                    // perform assertions
-                    assertEquals(record, state);
-                });
-    }
-
-    @Test
-    public void test_WenZhen_ZhiXingTuiKuanCmd_2() {
-
-        double balance = 0;
-        balance += yuFuKuan.getJinE().doubleValue();
-
-        for (WenZhen.BuChongKuan item : buChongKuanList) {
-            balance += item.getJinE().doubleValue() * item.getFuKuanDangRiHuiLv();
-        }
-
-        for (WenZhen.TuiKuan item : tuiKuanList) {
-            balance -= item.getJinE().doubleValue();
-        }
-
-        final BigDecimal balanceBigDecimal = new BigDecimal(balance);
-
-        fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setYuFuKuan(yuFuKuan);
-            record.setBuChongKuanList(buChongKuanList);
-            record.setTuiKuanList(tuiKuanList);
-
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
-
-            return record;
-        })
-                .when(new WenZhen_ZhiXingTuiKuanCmd(
-                        id,
-                        tuiKuan.getLiuShuiHao(),
-                        tuiKuan.getShiJian(),
-                        tuiKuan.getShouKuanZhangHuMing(),
-                        tuiKuan.getShouKuanZhangHu(),
-                        new BigDecimal(balance),
-                        tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
-                ))
-                .expectSuccessfulHandlerExecution()
-                .expectEvents(new WenZhen_ZhiXingTuiKuanEvt(
-                        id,
-                        tuiKuan.getLiuShuiHao(),
-                        tuiKuan.getShiJian(),
-                        tuiKuan.getShouKuanZhangHuMing(),
-                        tuiKuan.getShouKuanZhangHu(),
-                        new BigDecimal(balance),
-                        tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
-                ))
-                .expectState(state -> {
-                    WenZhen record = new WenZhen();
-                    record.setId(id);
-                    record.setJianKangDangAnId(jianKangDangAnId);
-                    record.setChanPinId(chanPinId);
-                    record.setPaiBanId(paiBanId);
-                    record.setYuFuFei(yuFuFei);
-                    record.setZongJia(zongJia);
-                    record.setChanPinMingCheng(chanPinMingCheng);
-                    record.setChanPinJsonString(chanPinJsonString);
-                    record.setPaiBanJsonString(paiBanJsonString);
-                    record.setJianKangDangAnMap(jianKangDangAnMap);
-                    record.setXiaDanShiJian(xiaDanShiJian);
-
-                    record.setYuFuKuan(yuFuKuan);
-                    record.setBuChongKuanList(buChongKuanList);
-                    record.setTuiKuanList(tuiKuanList);
-
-                    record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
-
-                    record.getTuiKuanList().add(
-                            new WenZhen.TuiKuan(
-                                    tuiKuan.getLiuShuiHao(),
-                                    tuiKuan.getShiJian(),
-                                    tuiKuan.getShouKuanZhangHuMing(),
-                                    tuiKuan.getShouKuanZhangHu(),
-                                    balanceBigDecimal,
-                                    tuiKuan.getBeiZhu(),
-                                    tuiKuan.getPingZheng()
-                            )
-                    );
 
                     // perform assertions
                     assertEquals(record, state);
@@ -544,21 +380,7 @@ public class WenZhenTest {
     public void test_WenZhen_ZhiXingTuiKuanCmd_失败_1() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setYuFuKuan(yuFuKuan);
-
+            WenZhen record = getTemplate();
             record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
 
             return record;
@@ -573,29 +395,38 @@ public class WenZhenTest {
                         tuiKuan.getBeiZhu(),
                         tuiKuan.getPingZheng()
                 ))
-                .expectExceptionMessage("只有在已创建状态才能接收预付款");
+                .expectExceptionMessage("只有在已创建状态才能退款");
     }
 
     @Test
     public void test_WenZhen_ZhiXingTuiKuanCmd_失败_2() {
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
+            WenZhen record = getTemplate();
+            record.setFuFeiZhuangTai(null);
 
-            record.setYuFuKuan(yuFuKuan);
+            return record;
+        })
+                .when(new WenZhen_ZhiXingTuiKuanCmd(
+                        id,
+                        tuiKuan.getLiuShuiHao(),
+                        tuiKuan.getShiJian(),
+                        tuiKuan.getShouKuanZhangHuMing(),
+                        tuiKuan.getShouKuanZhangHu(),
+                        tuiKuan.getJinE(),
+                        tuiKuan.getBeiZhu(),
+                        tuiKuan.getPingZheng()
+                ))
+                .expectExceptionMessage("只有在已支付预付费状态才能退款");
+    }
 
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+    @Test
+    public void test_WenZhen_ZhiXingTuiKuanCmd_失败_3() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setTuiKuanList(new LinkedList<>());
+            record.setBuChongKuanList(new LinkedList<>());
 
             return record;
         })
@@ -613,7 +444,7 @@ public class WenZhenTest {
     }
 
     @Test
-    public void test_WenZhen_ZhiXingTuiKuanCmd_失败_3() {
+    public void test_WenZhen_ZhiXingTuiKuanCmd_失败_4() {
         double balance = 0;
         balance += yuFuKuan.getJinE().doubleValue();
 
@@ -626,25 +457,7 @@ public class WenZhenTest {
         }
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setYuFuKuan(yuFuKuan);
-
-            record.setBuChongKuanList(buChongKuanList);
-            record.setTuiKuanList(tuiKuanList);
-
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+            WenZhen record = getTemplate();
 
             return record;
         })
@@ -667,63 +480,753 @@ public class WenZhenTest {
         Map<String, Object> jianKangDangAnMap2 = PPUtil.stringToMap("B:2, C:2");
 
         fixture.givenState(() -> {
-            WenZhen record = new WenZhen();
-            record.setId(id);
-            record.setJianKangDangAnId(jianKangDangAnId);
-            record.setChanPinId(chanPinId);
-            record.setPaiBanId(paiBanId);
-            record.setYuFuFei(yuFuFei);
-            record.setZongJia(zongJia);
-            record.setChanPinMingCheng(chanPinMingCheng);
-            record.setChanPinJsonString(chanPinJsonString);
-            record.setPaiBanJsonString(paiBanJsonString);
-            record.setJianKangDangAnMap(jianKangDangAnMap);
-            record.setXiaDanShiJian(xiaDanShiJian);
-
-            record.setYuFuKuan(yuFuKuan);
-
-            record.setBuChongKuanList(buChongKuanList);
-            record.setTuiKuanList(tuiKuanList);
-
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
-            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_YU_FU_FEI_ZHI_FU);
+            WenZhen record = getTemplate();
 
             return record;
         })
-                .when(new WenZhen_JianKangDangAnGengXinCmd(
+                .when(new WenZhen_GengXinJianKangDangAnCmd(
                         id,
                         jianKangDangAnMap2
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new WenZhen_JianKangDangAnGengXinEvt(
+                .expectEvents(new WenZhen_GengXinJianKangDangAnEvt(
                         id,
                         jianKangDangAnMap2
                 ))
                 .expectState(state -> {
-                    WenZhen record = new WenZhen();
-                    record.setId(id);
-                    record.setJianKangDangAnId(jianKangDangAnId);
-                    record.setChanPinId(chanPinId);
-                    record.setPaiBanId(paiBanId);
-                    record.setYuFuFei(yuFuFei);
-                    record.setZongJia(zongJia);
-                    record.setChanPinMingCheng(chanPinMingCheng);
-                    record.setChanPinJsonString(chanPinJsonString);
-                    record.setPaiBanJsonString(paiBanJsonString);
-                    record.setJianKangDangAnMap(jianKangDangAnMap);
-                    record.setXiaDanShiJian(xiaDanShiJian);
-
-                    record.setYuFuKuan(yuFuKuan);
-                    record.setBuChongKuanList(buChongKuanList);
-                    record.setTuiKuanList(tuiKuanList);
-
-                    record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
-                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_YU_FU_FEI_ZHI_FU);
+                    WenZhen record = getTemplate();
 
                     record.setJianKangDangAnMap(jianKangDangAnMap2);
 
                     // perform assertions
                     assertEquals(record, state);
                 });
+    }
+
+    @Test
+    public void test_WenZhen_JianKangDangAnGengXinCmd_失败_1() {
+
+        Map<String, Object> jianKangDangAnMap2 = PPUtil.stringToMap("B:2, C:2");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHENG_GONG_WAN_CHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinJianKangDangAnCmd(
+                        id,
+                        jianKangDangAnMap2
+                ))
+                .expectExceptionMessage("只有在非已完成状态才能更新健康档案");
+    }
+
+    @Test
+    public void test_WenZhen_JianKangDangAnGengXinCmd_失败_2() {
+
+        Map<String, Object> jianKangDangAnMap2 = PPUtil.stringToMap("B:2, C:2");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinJianKangDangAnCmd(
+                        id,
+                        jianKangDangAnMap2
+                ))
+                .expectExceptionMessage("只有在非已完成状态才能更新健康档案");
+    }
+
+    @Test
+    public void test_WenZhen_JianKangDangAnGengXinCmd_失败_3() {
+
+        Map<String, Object> jianKangDangAnMap2 = PPUtil.stringToMap("B:2, C:2");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setFuFeiZhuangTai(null);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinJianKangDangAnCmd(
+                        id,
+                        jianKangDangAnMap2
+                ))
+                .expectExceptionMessage("只有在已付费状态才能更新健康档案");
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_1() {
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(10),
+                2,
+                "bbz3",
+                Arrays.asList("bp3_1", "bp3_2")
+        );
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(new WenZhen_ZhiFuBuChongKuanEvt(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+
+                    record.getBuChongKuanList().add(buChongKuan3);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_2() {
+
+        WenZhen record = getTemplate();
+        double huiLv = 2;
+        double leftJinE = (record.getZongJia().doubleValue() - record.jiSuanBlance()) / huiLv;
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(leftJinE / huiLv),
+                huiLv,
+                "bbz3",
+                Arrays.asList("bp3_1", "bp3_2")
+        );
+
+        fixture.givenState(() -> {
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_ZhiFuBuChongKuanEvt(
+                                id,
+                                buChongKuan3.getLiuShuiHao(),
+                                buChongKuan3.getShiJian(),
+                                buChongKuan3.getFuKuanFang(),
+                                buChongKuan3.getBiZhong(),
+                                buChongKuan3.getJinE(),
+                                buChongKuan3.getFuKuanDangRiHuiLv(),
+                                buChongKuan3.getBeiZhu(),
+                                buChongKuan3.getPingZheng()
+                        ),
+                        new WenZhen_ZhiFuQuanKuanEvt(
+                                id
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record2 = getTemplate();
+
+                    record2.getBuChongKuanList().add(buChongKuan3);
+                    record2.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_失败_1() {
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(10),
+                2,
+                "bbz3",
+                Arrays.asList("bp3_1", "bp3_2")
+        );
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHENG_GONG_WAN_CHENG);
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectExceptionMessage("只有在非已完成状态才能支付补充款");
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_失败_2() {
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(10),
+                2,
+                "bbz3",
+                Arrays.asList("bp3_1", "bp3_2")
+        );
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG);
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectExceptionMessage("只有在非已完成状态才能支付补充款");
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_失败_3() {
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(10),
+                2,
+                "bbz3",
+                Arrays.asList("bp3_1", "bp3_2")
+        );
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setFuFeiZhuangTai(null);
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectExceptionMessage("只有在已支付预付费状态才能支付补充款");
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_失败_4() {
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(10),
+                2,
+                "bbz3",
+                Arrays.asList("bp3_1", "bp3_2")
+        );
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan3.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        buChongKuan3.getPingZheng()
+                ))
+                .expectExceptionMessage("只有在已支付预付费状态才能支付补充款");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinMuQianZhuYaoZhenDuanCmd() {
+
+        String zhenDuan2 = "m2";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
+                        id,
+                        zhenDuan2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinMuQianZhuYaoZhenDuanEvt(
+                                id,
+                                zhenDuan2
+
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setMuQianZhuYaoZhenDuan(zhenDuan2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinMuQianZhuYaoZhenDuanCmd_失败() {
+
+        String zhenDuan2 = "m2";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
+                        id,
+                        zhenDuan2
+                ))
+                .expectExceptionMessage("只有在已安排医生状态才能递交目前主要诊断");
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiYiShengCmd() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setWenZhenZhangHaoId(null);
+            record.setBingLiBianJiZhangHaoId(null);
+            record.setKaiJuChuFangZhangHaoId(null);
+            record.setQueRenChuFangZhangHaoId(null);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiYiShengCmd(
+                        id,
+                        wenZhenZhangHaoId,
+                        bingLiBianJiZhangHaoId,
+                        kaiJuChuFangZhangHaoId,
+                        queRenChuFangZhangHaoId
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_AnPaiYiShengEvt(
+                                id,
+                                wenZhenZhangHaoId,
+                                bingLiBianJiZhangHaoId,
+                                kaiJuChuFangZhangHaoId,
+                                queRenChuFangZhangHaoId
+
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+
+                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiYiShengCmd_失败_1() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setWenZhenZhangHaoId(null);
+            record.setBingLiBianJiZhangHaoId(null);
+            record.setKaiJuChuFangZhangHaoId(null);
+            record.setQueRenChuFangZhangHaoId(null);
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiYiShengCmd(
+                        id,
+                        wenZhenZhangHaoId,
+                        bingLiBianJiZhangHaoId,
+                        kaiJuChuFangZhangHaoId,
+                        queRenChuFangZhangHaoId
+                ))
+                .expectExceptionMessage("只有在已创建状态才能安排医生");
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiYiShengCmd_失败_2() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setWenZhenZhangHaoId(null);
+            record.setBingLiBianJiZhangHaoId(null);
+            record.setKaiJuChuFangZhangHaoId(null);
+            record.setQueRenChuFangZhangHaoId(null);
+
+            record.setFuFeiZhuangTai(null);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiYiShengCmd(
+                        id,
+                        wenZhenZhangHaoId,
+                        bingLiBianJiZhangHaoId,
+                        kaiJuChuFangZhangHaoId,
+                        queRenChuFangZhangHaoId
+                ))
+                .expectExceptionMessage("只有在已支付全款状态才能安排医生");
+    }
+
+    @Test
+    public void test_WenZhen_ZhuanZhenCmd() {
+        UUID wenZhenZhangHaoId2 = UUID.randomUUID();
+        UUID bingLiBianJiZhangHaoId2 = UUID.randomUUID();
+        UUID kaiJuChuFangZhangHaoId2 = UUID.randomUUID();
+        UUID queRenChuFangZhangHaoId2 = UUID.randomUUID();
+
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+
+            return record;
+        })
+                .when(new WenZhen_ZhuanZhenCmd(
+                        id,
+                        wenZhenZhangHaoId2,
+                        bingLiBianJiZhangHaoId2,
+                        kaiJuChuFangZhangHaoId2,
+                        queRenChuFangZhangHaoId2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_ZhuanZhenEvt(
+                                id,
+                                wenZhenZhangHaoId2,
+                                bingLiBianJiZhangHaoId2,
+                                kaiJuChuFangZhangHaoId2,
+                                queRenChuFangZhangHaoId2
+
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+                    record.setWenZhenZhangHaoId(wenZhenZhangHaoId2);
+                    record.setBingLiBianJiZhangHaoId(bingLiBianJiZhangHaoId2);
+                    record.setKaiJuChuFangZhangHaoId(kaiJuChuFangZhangHaoId2);
+                    record.setQueRenChuFangZhangHaoId(queRenChuFangZhangHaoId2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_ZhuanZhenCmd_失败() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setWenZhenZhangHaoId(null);
+            record.setBingLiBianJiZhangHaoId(null);
+            record.setKaiJuChuFangZhangHaoId(null);
+            record.setQueRenChuFangZhangHaoId(null);
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+
+            return record;
+        })
+                .when(new WenZhen_ZhuanZhenCmd(
+                        id,
+                        wenZhenZhangHaoId,
+                        bingLiBianJiZhangHaoId,
+                        kaiJuChuFangZhangHaoId,
+                        queRenChuFangZhangHaoId
+                ))
+                .expectExceptionMessage("只有在已安排医生状态才能转诊");
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiHuiZhenCmd() {
+
+        WenZhen.HuiZhen huiZhen2 = huiZhen;
+        huiZhen2.setShiPinLianJie(null);
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiHuiZhenCmd(
+                        id,
+                        huiZhenShiJian,
+                        huiZhenLianJie,
+                        huiZhenHuiYiId,
+                        huiZhenHuanFangCanYuRenYuan,
+                        huiZhenBeiZhu
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_AnPaiHuiZhenEvt(
+                                id,
+                                huiZhenShiJian,
+                                huiZhenLianJie,
+                                huiZhenHuiYiId,
+                                huiZhenHuanFangCanYuRenYuan,
+                                huiZhenBeiZhu
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+                    record.setHuiZhenZhuangTai(WenZhen.HuiZhenZhuangTai.YI_AN_PAI);
+                    record.setHuiZhen(huiZhen2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiHuiZhenCmd_失败_1() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiHuiZhenCmd(
+                        id,
+                        huiZhenShiJian,
+                        huiZhenLianJie,
+                        huiZhenHuiYiId,
+                        huiZhenHuanFangCanYuRenYuan,
+                        huiZhenBeiZhu
+                ))
+                .expectExceptionMessage("只有在已安排医生状态才能安排会诊");
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiHuiZhenCmd_失败_2() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiHuiZhenCmd(
+                        id,
+                        huiZhenShiJian,
+                        huiZhenLianJie,
+                        huiZhenHuiYiId,
+                        huiZhenHuanFangCanYuRenYuan,
+                        huiZhenBeiZhu
+                ))
+                .expectExceptionMessage("只有在已支付全款状态才能安排会诊");
+    }
+
+    @Test
+    public void test_WenZhen_AnPaiHuiZhenCmd_失败_3() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+            record.setHuiZhenZhuangTai(WenZhen.HuiZhenZhuangTai.YI_AN_PAI);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiHuiZhenCmd(
+                        id,
+                        huiZhenShiJian,
+                        huiZhenLianJie,
+                        huiZhenHuiYiId,
+                        huiZhenHuanFangCanYuRenYuan,
+                        huiZhenBeiZhu
+                ))
+                .expectExceptionMessage("只有在没有安排会诊时才能安排会诊");
+    }
+
+    @Test
+    public void test_WenZhen_SheZhiHuiZhenShiPinCmd() {
+
+        String huiZhenShiPinLianJie2 = "sl2";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+            record.setHuiZhenZhuangTai(WenZhen.HuiZhenZhuangTai.YI_AN_PAI);
+            record.setHuiZhen(huiZhen);
+
+            return record;
+        })
+                .when(new WenZhen_SheZhiHuiZhenShiPinCmd(
+                        id,
+                        huiZhenShiPinLianJie2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_SheZhiHuiZhenShiPinEvt(
+                                id,
+                                huiZhenShiPinLianJie2
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+                    record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+                    record.setHuiZhenZhuangTai(WenZhen.HuiZhenZhuangTai.YI_AN_PAI);
+                    huiZhen.setShiPinLianJie(huiZhenShiPinLianJie2);
+                    record.setHuiZhen(huiZhen);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_SheZhiHuiZhenShiPinCmd_失败_1() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+
+            return record;
+        })
+                .when(new WenZhen_SheZhiHuiZhenShiPinCmd(
+                        id,
+                        huiZhenShiPinLianJie
+                ))
+                .expectExceptionMessage("只有在已安排医生状态才能设置会诊视频链接");
+    }
+
+    @Test
+    public void test_WenZhen_SheZhiHuiZhenShiPinCmd_失败_2() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_SheZhiHuiZhenShiPinCmd(
+                        id,
+                        huiZhenShiPinLianJie
+                ))
+                .expectExceptionMessage("只有在已支付全款状态才能设置会诊视频链接");
+    }
+
+    @Test
+    public void test_WenZhen_SheZhiHuiZhenShiPinCmd_失败_3() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+
+            return record;
+        })
+                .when(new WenZhen_AnPaiHuiZhenCmd(
+                        id,
+                        huiZhenShiJian,
+                        huiZhenLianJie,
+                        huiZhenHuiYiId,
+                        huiZhenHuanFangCanYuRenYuan,
+                        huiZhenBeiZhu
+                ))
+                .expectExceptionMessage("只有在安排会诊后才能设置会诊视频链接!");
     }
 }
