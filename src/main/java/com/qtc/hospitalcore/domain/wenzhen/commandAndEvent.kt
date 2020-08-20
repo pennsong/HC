@@ -121,17 +121,6 @@ data class WenZhen_ZhiFuQuanKuanEvt(
         var id: UUID
 )
 
-data class WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
-        @TargetAggregateIdentifier
-        var id: UUID,
-        var zhenDuan: String
-)
-
-data class WenZhen_GengXinMuQianZhuYaoZhenDuanEvt(
-        var id: UUID,
-        var zhenDuan: String
-)
-
 data class WenZhen_AnPaiYiShengCmd(
         @TargetAggregateIdentifier
         var id: UUID,
@@ -194,4 +183,72 @@ data class WenZhen_SheZhiHuiZhenShiPinCmd(
 data class WenZhen_SheZhiHuiZhenShiPinEvt(
         var id: UUID,
         var shiPinLianJie: String
+)
+
+
+data class WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var zhenDuan: String
+)
+
+data class WenZhen_GengXinMuQianZhuYaoZhenDuanEvt(
+        var id: UUID,
+        var zhenDuan: String
+)
+
+
+data class WenZhen_GengXinXiangXiZhiLiaoJingGuoCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var xiangXiZhiLiaoJingGuoMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinXiangXiZhiLiaoJingGuoEvt(
+        var id: UUID,
+        var xiangXiZhiLiaoJingGuoMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinJianChaZongJieCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var jianChaZongJieMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinJianChaZongJieEvt(
+        var id: UUID,
+        var jianChaZongJieMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinDianZiYingXiangCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var dianZiYingXiangMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinDianZiYingXiangEvt(
+        var id: UUID,
+        var dianZiYingXiangMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinQiTaCaiLiaoCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var qiTaCaiLiaoMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinQiTaCaiLiaoEvt(
+        var id: UUID,
+        var qiTaCaiLiaoMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinWenZhenZongJieCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var wenZhenZongJieMap: Map<String, Any>
+)
+
+data class WenZhen_GengXinWenZhenZongJieEvt(
+        var id: UUID,
+        var wenZhenZongJieMap: Map<String, Any>
 )

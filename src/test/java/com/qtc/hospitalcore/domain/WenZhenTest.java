@@ -296,6 +296,7 @@ public class WenZhenTest {
                         yuFuKuan.getBeiZhu(),
                         yuFuKuan.getJinE()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已创建状态才能接收预付款");
     }
 
@@ -315,6 +316,7 @@ public class WenZhenTest {
                         yuFuKuan.getBeiZhu(),
                         new BigDecimal(yuFuFei.doubleValue() - 0.1)
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("预付款不足");
     }
 
@@ -334,6 +336,7 @@ public class WenZhenTest {
                         yuFuKuan.getBeiZhu(),
                         new BigDecimal(zongJia.doubleValue() + 0.1)
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("预付款不能超过总价");
     }
 
@@ -395,6 +398,7 @@ public class WenZhenTest {
                         tuiKuan.getBeiZhu(),
                         tuiKuan.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已创建状态才能退款");
     }
 
@@ -417,6 +421,7 @@ public class WenZhenTest {
                         tuiKuan.getBeiZhu(),
                         tuiKuan.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付预付费状态才能退款");
     }
 
@@ -440,6 +445,7 @@ public class WenZhenTest {
                         tuiKuan.getBeiZhu(),
                         tuiKuan.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("退款额度太大");
     }
 
@@ -471,6 +477,7 @@ public class WenZhenTest {
                         tuiKuan.getBeiZhu(),
                         tuiKuan.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("退款额度太大");
     }
 
@@ -518,6 +525,7 @@ public class WenZhenTest {
                         id,
                         jianKangDangAnMap2
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在非已完成状态才能更新健康档案");
     }
 
@@ -536,6 +544,7 @@ public class WenZhenTest {
                         id,
                         jianKangDangAnMap2
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在非已完成状态才能更新健康档案");
     }
 
@@ -554,6 +563,7 @@ public class WenZhenTest {
                         id,
                         jianKangDangAnMap2
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已付费状态才能更新健康档案");
     }
 
@@ -700,6 +710,7 @@ public class WenZhenTest {
                         buChongKuan3.getBeiZhu(),
                         buChongKuan3.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在非已完成状态才能支付补充款");
     }
 
@@ -734,6 +745,7 @@ public class WenZhenTest {
                         buChongKuan3.getBeiZhu(),
                         buChongKuan3.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在非已完成状态才能支付补充款");
     }
 
@@ -768,6 +780,7 @@ public class WenZhenTest {
                         buChongKuan3.getBeiZhu(),
                         buChongKuan3.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付预付费状态才能支付补充款");
     }
 
@@ -802,58 +815,8 @@ public class WenZhenTest {
                         buChongKuan3.getBeiZhu(),
                         buChongKuan3.getPingZheng()
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付预付费状态才能支付补充款");
-    }
-
-    @Test
-    public void test_WenZhen_GengXinMuQianZhuYaoZhenDuanCmd() {
-
-        String zhenDuan2 = "m2";
-
-        fixture.givenState(() -> {
-            WenZhen record = getTemplate();
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
-
-            return record;
-        })
-                .when(new WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
-                        id,
-                        zhenDuan2
-                ))
-                .expectSuccessfulHandlerExecution()
-                .expectEvents(
-                        new WenZhen_GengXinMuQianZhuYaoZhenDuanEvt(
-                                id,
-                                zhenDuan2
-
-                        )
-                )
-                .expectState(state -> {
-                    WenZhen record = getTemplate();
-                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
-
-                    record.setMuQianZhuYaoZhenDuan(zhenDuan2);
-
-                    // perform assertions
-                    assertEquals(record, state);
-                });
-    }
-
-    @Test
-    public void test_WenZhen_GengXinMuQianZhuYaoZhenDuanCmd_失败() {
-
-        String zhenDuan2 = "m2";
-
-        fixture.givenState(() -> {
-            WenZhen record = getTemplate();
-
-            return record;
-        })
-                .when(new WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
-                        id,
-                        zhenDuan2
-                ))
-                .expectExceptionMessage("只有在已安排医生状态才能递交目前主要诊断");
     }
 
     @Test
@@ -921,6 +884,7 @@ public class WenZhenTest {
                         kaiJuChuFangZhangHaoId,
                         queRenChuFangZhangHaoId
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已创建状态才能安排医生");
     }
 
@@ -946,6 +910,7 @@ public class WenZhenTest {
                         kaiJuChuFangZhangHaoId,
                         queRenChuFangZhangHaoId
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付全款状态才能安排医生");
     }
 
@@ -1020,6 +985,7 @@ public class WenZhenTest {
                         kaiJuChuFangZhangHaoId,
                         queRenChuFangZhangHaoId
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已安排医生状态才能转诊");
     }
 
@@ -1087,6 +1053,7 @@ public class WenZhenTest {
                         huiZhenHuanFangCanYuRenYuan,
                         huiZhenBeiZhu
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已安排医生状态才能安排会诊");
     }
 
@@ -1108,6 +1075,7 @@ public class WenZhenTest {
                         huiZhenHuanFangCanYuRenYuan,
                         huiZhenBeiZhu
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付全款状态才能安排会诊");
     }
 
@@ -1131,6 +1099,7 @@ public class WenZhenTest {
                         huiZhenHuanFangCanYuRenYuan,
                         huiZhenBeiZhu
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在没有安排会诊时才能安排会诊");
     }
 
@@ -1188,6 +1157,7 @@ public class WenZhenTest {
                         id,
                         huiZhenShiPinLianJie
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已安排医生状态才能设置会诊视频链接");
     }
 
@@ -1205,6 +1175,7 @@ public class WenZhenTest {
                         id,
                         huiZhenShiPinLianJie
                 ))
+                .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付全款状态才能设置会诊视频链接");
     }
 
@@ -1219,14 +1190,318 @@ public class WenZhenTest {
 
             return record;
         })
-                .when(new WenZhen_AnPaiHuiZhenCmd(
+                .when(new WenZhen_SheZhiHuiZhenShiPinCmd(
                         id,
-                        huiZhenShiJian,
-                        huiZhenLianJie,
-                        huiZhenHuiYiId,
-                        huiZhenHuanFangCanYuRenYuan,
-                        huiZhenBeiZhu
+                        huiZhenShiPinLianJie
                 ))
-                .expectExceptionMessage("只有在安排会诊后才能设置会诊视频链接!");
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在安排会诊后才能设置会诊视频链接");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinMuQianZhuYaoZhenDuanCmd() {
+
+        String zhenDuan2 = "m2";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
+                        id,
+                        zhenDuan2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinMuQianZhuYaoZhenDuanEvt(
+                                id,
+                                zhenDuan2
+
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setMuQianZhuYaoZhenDuan(zhenDuan2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinMuQianZhuYaoZhenDuanCmd_失败() {
+
+        String zhenDuan2 = "m2";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
+                        id,
+                        zhenDuan2
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在已安排医生状态才能递交目前主要诊断");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinXiangXiZhiLiaoJingGuoCmd() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinXiangXiZhiLiaoJingGuoCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinXiangXiZhiLiaoJingGuoEvt(
+                                id,
+                                xiangXiZhiLiaoJingGuoMap2
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setXiangXiZhiLiaoJingGuoMap(xiangXiZhiLiaoJingGuoMap2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinXiangXiZhiLiaoJingGuoCmd_失败() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinXiangXiZhiLiaoJingGuoCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在已安排医生状态才能更新详细治疗经过");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinJianChaZongJieCmd() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinJianChaZongJieCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinJianChaZongJieEvt(
+                                id,
+                                xiangXiZhiLiaoJingGuoMap2
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setJianChaZongJieMap(xiangXiZhiLiaoJingGuoMap2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinJianChaZongJieCmd_失败() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinJianChaZongJieCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在已安排医生状态才能更新检查总结");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinDianZiYingXiangCmd() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinDianZiYingXiangCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinDianZiYingXiangEvt(
+                                id,
+                                xiangXiZhiLiaoJingGuoMap2
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setDianZiYingXiangMap(xiangXiZhiLiaoJingGuoMap2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinDianZiYingXiangCmd_失败() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinDianZiYingXiangCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在已安排医生状态才能更新电子影像");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinQiTaCaiLiaoCmd() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinQiTaCaiLiaoCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinQiTaCaiLiaoEvt(
+                                id,
+                                xiangXiZhiLiaoJingGuoMap2
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setQiTaCaiLiaoMap(xiangXiZhiLiaoJingGuoMap2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinQiTaCaiLiaoCmd_失败() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinQiTaCaiLiaoCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在已安排医生状态才能更新其他材料");
+    }
+
+    @Test
+    public void test_WenZhen_GengXinWenZhenZongJieCmd() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+            return record;
+        })
+                .when(new WenZhen_GengXinWenZhenZongJieCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_GengXinWenZhenZongJieEvt(
+                                id,
+                                xiangXiZhiLiaoJingGuoMap2
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+
+                    record.setWenZhenZongJieMap(xiangXiZhiLiaoJingGuoMap2);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_GengXinWenZhenZongJieCmd_失败() {
+
+        Map<String, Object> xiangXiZhiLiaoJingGuoMap2 = PPUtil.stringToMap("XA:1, XB: 1");
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_GengXinWenZhenZongJieCmd(
+                        id,
+                        xiangXiZhiLiaoJingGuoMap2
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在已安排医生状态才能更新问诊总结");
     }
 }

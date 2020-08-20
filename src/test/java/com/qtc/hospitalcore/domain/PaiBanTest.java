@@ -1,6 +1,7 @@
 package com.qtc.hospitalcore.domain;
 
 import com.qtc.hospitalcore.domain.chanpin.*;
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.paiban.*;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import lombok.AccessLevel;
@@ -131,7 +132,8 @@ public class PaiBanTest {
                 .when(new PaiBan_ShangJiaCmd(
                         id
                 ))
-                .expectExceptionMessage("不在停售状态, 不能上架");
+                   .expectException(PPBusinessException.class)
+.expectExceptionMessage("不在停售状态, 不能上架");
     }
 
     @Test
@@ -171,7 +173,8 @@ public class PaiBanTest {
                 .when(new PaiBan_XiaJiaCmd(
                         id
                 ))
-                .expectExceptionMessage("不在在售状态, 不能下架");
+                   .expectException(PPBusinessException.class)
+.expectExceptionMessage("不在在售状态, 不能下架");
     }
 
     @Test
@@ -211,7 +214,8 @@ public class PaiBanTest {
                 .when(new PaiBan_ShouChuCmd(
                         id
                 ))
-                .expectExceptionMessage("非在售状态, 不能售出");
+                   .expectException(PPBusinessException.class)
+.expectExceptionMessage("非在售状态, 不能售出");
     }
 
     @Test
@@ -226,7 +230,8 @@ public class PaiBanTest {
                 .when(new PaiBan_ShouChuCmd(
                         id
                 ))
-                .expectExceptionMessage("已售出, 不能再次售出");
+                   .expectException(PPBusinessException.class)
+.expectExceptionMessage("已售出, 不能再次售出");
     }
 
     @Test

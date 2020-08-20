@@ -1,6 +1,7 @@
 package com.qtc.hospitalcore.domain;
 
 import com.qtc.hospitalcore.domain.chanpin.*;
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.paiban.PaiBan;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.zhanghao.*;
@@ -170,7 +171,8 @@ public class ChanPinTest {
                 .when(new ChanPin_ShangJiaCmd(
                         id
                 ))
-                .expectExceptionMessage("不在停售状态, 不能上架");
+                   .expectException(PPBusinessException.class)
+.expectExceptionMessage("不在停售状态, 不能上架");
     }
 
     @Test
@@ -210,7 +212,8 @@ public class ChanPinTest {
                 .when(new ChanPin_XiaJiaCmd(
                         id
                 ))
-                .expectExceptionMessage("不在在售状态, 不能下架");
+                   .expectException(PPBusinessException.class)
+.expectExceptionMessage("不在在售状态, 不能下架");
     }
 
     @Test
