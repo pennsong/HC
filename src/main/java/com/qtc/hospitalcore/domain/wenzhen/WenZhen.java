@@ -14,8 +14,11 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.hibernate.annotations.TypeDef;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -244,6 +247,11 @@ public class WenZhen extends PPAggregate {
         if (zhuangTai != ZhuangTai.YI_CHUANG_JIAN) {
             throw new PPBusinessException("只有在已创建状态才能接收预付款");
         }
+
+//        // 付费状态
+//        if (fuFeiZhuangTai != null) {
+//            throw new PPBusinessException("只有在没有付费时才能接收预付款");
+//        }
 
         // 金额
         if (cmd.getJinE().doubleValue() < yuFuFei.doubleValue()) {

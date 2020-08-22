@@ -80,7 +80,7 @@ public class ExternalHandler {
         // 创建帐号
         zhangHaoRepository.newInstance(() -> new ZhangHao(
                 new ZhangHao_ChuangJianCmd(
-                        UUID.randomUUID(),
+                        cmd.getZhangHaoId(),
                         null,
                         null,
                         ZhangHao.JueSe.YONG_HU,
@@ -129,7 +129,7 @@ public class ExternalHandler {
         // 创建帐号
         zhangHaoRepository.newInstance(() -> new ZhangHao(
                 new ZhangHao_ChuangJianCmd(
-                        UUID.randomUUID(),
+                        cmd.getZhangHaoId(),
                         cmd.getUsername(),
                         cmd.getPassword(),
                         ZhangHao.JueSe.YI_HU_REN_YUAN,

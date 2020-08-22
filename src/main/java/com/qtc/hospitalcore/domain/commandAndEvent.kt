@@ -8,14 +8,14 @@ import java.util.*
  */
 data class ExtChuangJianYongHuCmd(
         @TargetAggregateIdentifier
-        var dummyId: UUID,
+        var zhangHaoId: UUID,
         var shouJiHao: String,
         var weiXinOpenId: String
 )
 
 data class ExtChuangJianYiHuRenYuanCmd(
         @TargetAggregateIdentifier
-        var dummyId: UUID,
+        var zhangHaoId: UUID,
         var username: String,
         var password: String,
         var xingMing: String,

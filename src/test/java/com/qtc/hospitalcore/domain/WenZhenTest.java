@@ -252,6 +252,7 @@ public class WenZhenTest {
             WenZhen record = getTemplate();
             record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
             record.setYuFuKuan(null);
+            record.setFuFeiZhuangTai(null);
 
             return record;
         })
@@ -306,6 +307,29 @@ public class WenZhenTest {
 
         fixture.givenState(() -> {
             WenZhen record = getTemplate();
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+            record.setYuFuKuan(null);
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI);
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuYuFuKuanCmd(
+                        id,
+                        yuFuKuan.getLiuShuiHao(),
+                        yuFuKuan.getBeiZhu(),
+                        yuFuKuan.getJinE()
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("只有在没有付费时才能接收预付款");
+    }
+
+    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    @Test
+    public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_3() {
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setFuFeiZhuangTai(null);
             record.setYuFuKuan(null);
 
             return record;
@@ -322,11 +346,12 @@ public class WenZhenTest {
 
     // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
-    public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_3() {
+    public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_4() {
 
         fixture.givenState(() -> {
             WenZhen record = getTemplate();
             record.setYuFuKuan(null);
+            record.setFuFeiZhuangTai(null);
 
             return record;
         })

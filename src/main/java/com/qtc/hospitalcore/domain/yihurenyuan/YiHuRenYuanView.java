@@ -22,6 +22,7 @@ public class YiHuRenYuanView {
     @Enumerated(EnumType.STRING)
     Set<YiHuRenYuan.QuanXian> quanXianSet;
 
+    @Column(columnDefinition = "json")
     @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;
 }

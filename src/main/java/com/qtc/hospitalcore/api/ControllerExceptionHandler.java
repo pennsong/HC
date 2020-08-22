@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -38,7 +39,11 @@ public class ControllerExceptionHandler {
         return result;
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, PPException.class, CommandExecutionException.class})
+    @ExceptionHandler({HttpMessageNotReadableException.class,
+            PPException.class,
+            CommandExecutionException.class,
+            NoSuchElementException.class
+    })
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> on(Exception e) {

@@ -1,6 +1,5 @@
 package com.qtc.hospitalcore;
 
-import com.qtc.hospitalcore.domain.chongFuJianCe.YongHuShouJiHao;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yonghu.YongHu;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;

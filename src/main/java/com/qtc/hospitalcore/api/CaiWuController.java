@@ -1,7 +1,6 @@
 package com.qtc.hospitalcore.api;
 
 import com.qtc.hospitalcore.domain.util.BiZhong;
-import com.qtc.hospitalcore.domain.wenzhen.WenZhenFuKuanXinXiView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
@@ -21,23 +20,23 @@ import java.util.UUID;
 @Api(tags="财务操作")
 public class CaiWuController {
 
-    // query
-    @ApiOperation(value = "获取问诊付款信息列表")
-    @GetMapping("/huoQuWenZhenFuKuanXinXiLB")
-    public PPResult<List<WenZhenFuKuanXinXiView>> huoQuWenZhenFuKuanXinXiLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @ApiOperation(value = "获取问诊付款信息")
-    @GetMapping("/huoQuWenZhenFuKuanXinXi/{wenZhenId}")
-    public PPResult<WenZhenFuKuanXinXiView> huoQuWenZhenFuKuanXinXi(@PathVariable UUID wenZhenId) {
-        // TODO: PP
-
-        return null;
-    }
-    // query end
+//    // query
+//    @ApiOperation(value = "获取问诊付款信息列表")
+//    @GetMapping("/huoQuWenZhenFuKuanXinXiLB")
+//    public PPResult<List<WenZhenFuKuanXinXiView>> huoQuWenZhenFuKuanXinXiLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+//        // TODO: PP
+//
+//        return null;
+//    }
+//
+//    @ApiOperation(value = "获取问诊付款信息")
+//    @GetMapping("/huoQuWenZhenFuKuanXinXi/{wenZhenId}")
+//    public PPResult<WenZhenFuKuanXinXiView> huoQuWenZhenFuKuanXinXi(@PathVariable UUID wenZhenId) {
+//        // TODO: PP
+//
+//        return null;
+//    }
+//    // query end
 
     // command
     @ApiOperation(value = "补充问诊付款")

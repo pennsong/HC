@@ -1,25 +1,27 @@
 package com.qtc.hospitalcore.domain;
 
-import com.qtc.hospitalcore.domain.paiban.PaiBan;
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_GengXinCmd;
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_GengXinEvt;
 import com.qtc.hospitalcore.domain.zhanghao.*;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoEventListener;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ZhangHaoTest {
+
     private FixtureConfiguration<ZhangHao> fixture;
+
+    private ZhangHaoViewRepository repository = mock(ZhangHaoViewRepository.class);
+
+    private ZhangHaoEventListener eventListener;
 
     // mock data
     UUID id = UUID.randomUUID();
@@ -43,7 +45,17 @@ public class ZhangHaoTest {
         template.setPassword(password);
         template.setJueSeSet(jueSeSet);
         template.setYongHuId(yongHuId);
-        template.setYiHuRenYuanId(yiHuRenYuanId);
+
+        return template;
+    }
+
+    private ZhangHaoView getViewTemplate() {
+        ZhangHaoView template = new ZhangHaoView();
+        template.setId(id);
+        template.setUsername(username);
+        template.setPassword(password);
+        template.setJueSeSet(jueSeSet);
+        template.setYongHuId(yongHuId);
 
         return template;
     }
@@ -51,10 +63,22 @@ public class ZhangHaoTest {
     @BeforeEach
     public void setUp() {
         fixture = new AggregateTestFixture<>(ZhangHao.class);
+
+        eventListener = new ZhangHaoEventListener(repository);
     }
 
     @Test
-    public void test_ZhangHao_ChuangJianCmd_1() {
+    public void test_ZhangHao_ChuangJianCmd() {
+        // mock data
+        ZhangHao_ChuangJianEvt evt = new ZhangHao_ChuangJianEvt(
+                id,
+                username,
+                password,
+                jueSe,
+                yongHuId,
+                null
+        );
+        // mock data end
 
         fixture.givenNoPriorActivity()
                 .when(new ZhangHao_ChuangJianCmd(
@@ -66,14 +90,7 @@ public class ZhangHaoTest {
                         null
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new ZhangHao_ChuangJianEvt(
-                        id,
-                        username,
-                        password,
-                        jueSe,
-                        yongHuId,
-                        null
-                ))
+                .expectEvents(evt)
                 .expectState(state -> {
                     ZhangHao record = getTemplate();
                     record.setYiHuRenYuanId(null);
@@ -81,10 +98,35 @@ public class ZhangHaoTest {
                     // perform assertions
                     assertEquals(record, state);
                 });
+
+        // query model update
+        eventListener.on(evt);
+
+        // 修改record到预期结果
+        ZhangHaoView record2 = getViewTemplate();
+        // 修改record到预期结果 end
+
+        ArgumentCaptor<ZhangHaoView> captor = ArgumentCaptor.forClass(ZhangHaoView.class);
+
+        verify(repository).saveAndFlush(captor.capture());
+
+        ZhangHaoView result = captor.getValue();
+
+        assertEquals(record2, result);
     }
 
     @Test
     public void test_ZhangHao_ChuangJianCmd_2() {
+        // mock data
+        ZhangHao_ChuangJianEvt evt = new ZhangHao_ChuangJianEvt(
+                id,
+                username,
+                password,
+                jueSe2,
+                null,
+                yiHuRenYuanId
+        );
+        // mock data end
 
         fixture.givenNoPriorActivity()
                 .when(new ZhangHao_ChuangJianCmd(
@@ -96,22 +138,34 @@ public class ZhangHaoTest {
                         yiHuRenYuanId
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new ZhangHao_ChuangJianEvt(
-                        id,
-                        username,
-                        password,
-                        jueSe2,
-                        null,
-                        yiHuRenYuanId
-                ))
+                .expectEvents(evt)
                 .expectState(state -> {
                     ZhangHao record = getTemplate();
                     record.setYongHuId(null);
+                    record.setYiHuRenYuanId(yiHuRenYuanId);
                     record.setJueSeSet(jueSeSet2);
 
                     // perform assertions
                     assertEquals(record, state);
                 });
+
+        // query model update
+        eventListener.on(evt);
+
+        // 修改record到预期结果
+        ZhangHaoView record2 = getViewTemplate();
+        record2.setYongHuId(null);
+        record2.setJueSeSet(jueSeSet2);
+        record2.setYiHuRenYuanId(yiHuRenYuanId);
+        // 修改record到预期结果 end
+
+        ArgumentCaptor<ZhangHaoView> captor = ArgumentCaptor.forClass(ZhangHaoView.class);
+
+        verify(repository).saveAndFlush(captor.capture());
+
+        ZhangHaoView result = captor.getValue();
+
+        assertEquals(record2, result);
     }
 
     @Test
@@ -119,6 +173,10 @@ public class ZhangHaoTest {
         // mock data
         String password2 = "p2";
 
+        ZhangHao_SheZhiMiMaEvt evt = new ZhangHao_SheZhiMiMaEvt(
+                id,
+                password2
+        );
         // mock data end
 
         fixture.givenState(() -> {
@@ -129,13 +187,9 @@ public class ZhangHaoTest {
                 .when(new ZhangHao_SheZhiMiMaCmd(
                         id,
                         password2
-
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new ZhangHao_SheZhiMiMaEvt(
-                        id,
-                        password2
-                ))
+                .expectEvents(evt)
                 .expectState(state -> {
                     ZhangHao record = getTemplate();
                     record.setPassword(password2);
@@ -143,7 +197,78 @@ public class ZhangHaoTest {
                     // perform assertions
                     assertEquals(record, state);
                 });
+
+        // query model update
+        ZhangHaoView record = getViewTemplate();
+        record.setPassword(password2);
+
+        Mockito.when(repository.findById(evt.getId()))
+                .thenReturn(Optional.of(record));
+
+        eventListener.on(evt);
+
+        // 修改record到预期结果
+        ZhangHaoView record2 = getViewTemplate();
+        record2.setPassword(password2);
+        // 修改record到预期结果 end
+
+        ArgumentCaptor<ZhangHaoView> captor = ArgumentCaptor.forClass(ZhangHaoView.class);
+
+        verify(repository).saveAndFlush(captor.capture());
+        ZhangHaoView result = captor.getValue();
+
+        assertEquals(record2, result);
     }
 
+    @Test
+    public void test_ZhangHao_ShanChuCmd() {
+        // mock data
+        String password2 = "p2";
 
+        ZhangHao_ShanChuEvt evt = new ZhangHao_ShanChuEvt(
+                id
+        );
+        // mock data end
+
+        fixture.givenState(() -> {
+            ZhangHao record = getTemplate();
+
+            return record;
+        })
+                .when(new ZhangHao_ShanChuCmd(
+                        id
+
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(evt)
+                .expectState(state -> {
+                    ZhangHao record = getTemplate();
+                    record.delete();
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+
+        // query model update
+        ZhangHaoView record = getViewTemplate();
+        record.delete();
+
+        Mockito.when(repository.findById(evt.getId()))
+                .thenReturn(Optional.of(record));
+
+        eventListener.on(evt);
+
+        // 修改record到预期结果
+        ZhangHaoView record2 = getViewTemplate();
+        record2.delete();
+        // 修改record到预期结果 end
+
+        ArgumentCaptor<ZhangHaoView> captor = ArgumentCaptor.forClass(ZhangHaoView.class);
+        verify(repository).saveAndFlush(captor.capture());
+        ZhangHaoView result = captor.getValue();
+
+        assertEquals(record2, result);
+        // deleted是父类属性, 靠assertEquals(record2, result)判断不出来, 所以要单独判断
+        assertEquals(record2.isDeleted(), result.isDeleted());
+    }
 }

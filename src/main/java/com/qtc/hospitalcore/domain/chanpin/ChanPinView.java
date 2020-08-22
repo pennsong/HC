@@ -1,7 +1,9 @@
 package com.qtc.hospitalcore.domain.chanpin;
 
+import com.qtc.hospitalcore.domain.query.PPEntity;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,10 +21,17 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class ChanPinView {
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ChanPinView extends PPEntity {
 
     @Id
+    @Column(columnDefinition = "varchar(128) not null")
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID id;
+
+    ChanPin.ZhuangTai zhuangTai;
 
     String mingCheng;
     String daLeiXing;
@@ -30,6 +40,7 @@ public class ChanPinView {
     BigDecimal yuFuFei;
     BigDecimal shiChangJia;
 
+    @Column(columnDefinition = "json")
     @Convert(converter = HashMapConverter.class)
-    Map<String, Object> xinXi;
+    Map<String, Object> xinXiMap;
 }

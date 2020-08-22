@@ -12,6 +12,7 @@ import com.qtc.hospitalcore.domain.yaopin.YaoPinView;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ShanChuCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_SheZhiMiMaCmd;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -209,14 +210,16 @@ public class AdminController {
 
     @ApiOperation(value = "创建医护人员")
     @PostMapping("/chuangJianYiHuRenYuan")
-    public PPResult chuangJianYiHuRenYuan(@Valid @RequestBody DTO_chuangJianYiHuRenYuan dto) {
+    public PPResult<UUID> chuangJianYiHuRenYuan(@Valid @RequestBody DTO_chuangJianYiHuRenYuan dto) {
         // 校验
 
         // 校验 end
+        UUID result = UUID.randomUUID();
+
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
                         new ExtChuangJianYiHuRenYuanCmd(
-                                UUID.randomUUID(),
+                                result,
                                 dto.getDengLuMing(),
                                 dto.getDengLuMiMa(),
                                 dto.getXingMing(),
@@ -226,7 +229,7 @@ public class AdminController {
                 ).withMetaData(PPUtil.stringToMap(""))
         );
 
-        return PPResult.getPPOK();
+        return PPResult.getPPResultOK(result);
     }
 
     @Data
@@ -238,17 +241,24 @@ public class AdminController {
         Map<String, Object> yiHuRenYuanXinXiNeiRong;
     }
 
-    @ApiOperation(value = "删除医护人员")
-    @PostMapping("/shanChuYiHuRenYuan")
-    public PPResult shanChuYiHuRenYuan(@Valid @RequestBody DTO_shanChuYiHuRenYuan dto) {
-        // TODO: PP
+    @ApiOperation(value = "删除医护人员帐号")
+    @PostMapping("/shanChuYiHuRenYuanZhangHao")
+    public PPResult shanChuYiHuRenYuanZhangHao(@Valid @RequestBody DTO_shanChuYiHuRenYuanZhangHao dto) {
 
-        return null;
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new ZhangHao_ShanChuCmd(
+                             dto.getYiHuRenYuanZhangHaoId()
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
-    static class DTO_shanChuYiHuRenYuan {
-        UUID yiHuRenYuanId;
+    static class DTO_shanChuYiHuRenYuanZhangHao {
+        UUID yiHuRenYuanZhangHaoId;
     }
 
     @ApiOperation(value = "编辑医护人员")
