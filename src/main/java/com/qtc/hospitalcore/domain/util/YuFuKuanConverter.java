@@ -2,6 +2,8 @@ package com.qtc.hospitalcore.domain.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +16,7 @@ public class YuFuKuanConverter implements AttributeConverter<WenZhen.YuFuKuan, S
 
     @Override
     public String convertToDatabaseColumn(WenZhen.YuFuKuan customerInfo) {
+        objectMapper.registerModule(new JavaTimeModule());
 
         String customerInfoJson = null;
         try {
@@ -27,6 +30,7 @@ public class YuFuKuanConverter implements AttributeConverter<WenZhen.YuFuKuan, S
 
     @Override
     public WenZhen.YuFuKuan convertToEntityAttribute(String customerInfoJSON) {
+        objectMapper.registerModule(new JavaTimeModule());
 
         WenZhen.YuFuKuan customerInfo = null;
         try {

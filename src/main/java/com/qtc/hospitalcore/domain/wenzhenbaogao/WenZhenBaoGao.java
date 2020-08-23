@@ -14,7 +14,7 @@ import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class WenZhenBaoGao extends PPAggregate {
     String zhengWen;
 
     UUID kaiJuZhangHaoId;
-    LocalDateTime kaiJuShiJian;
+    OffsetDateTime kaiJuShiJian;
 
     @CommandHandler
     public WenZhenBaoGao(WenZhenBaoGao_KaiJuCmd cmd, MetaData metaData) {
@@ -49,7 +49,7 @@ public class WenZhenBaoGao extends PPAggregate {
                         cmd.getWenZhenId(),
                         cmd.getZhengWen(),
                         cmd.getKaiJuZhangHaoId(),
-                        LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
+                        OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)
                 ),
                 metaData
         );

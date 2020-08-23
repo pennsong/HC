@@ -1,5 +1,12 @@
 package com.qtc.hospitalcore.domain.wenzhen;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetTimeSerializer;
 import com.qtc.hospitalcore.domain.PPAggregate;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
@@ -9,18 +16,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -32,66 +39,74 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public class WenZhen extends PPAggregate {
-    public static enum JieGuo {
-        CHENG_GONG,
-        JIE_SHU
-    }
-
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Embeddable
     public static class YuFuKuan {
         String liuShuiHao;
-        LocalDateTime shiJian;
+        @Column(name = "yuFuKuanShiJian")
+        OffsetDateTime shiJian;
         BigDecimal jinE;
+        @Column(name = "yuFuKuanBeiZhu")
         String beiZhu;
     }
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Embeddable
     public static class BuChongKuan {
         String liuShuiHao;
-        LocalDateTime shiJian;
+        OffsetDateTime shiJian;
         String fuKuanFang;
         String biZhong;
         BigDecimal jinE;
         double fuKuanDangRiHuiLv;
         String beiZhu;
-        List<String> pingZheng;
+        String pingZhengList;
     }
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Embeddable
     public static class TuiKuan {
         String liuShuiHao;
-        LocalDateTime shiJian;
+        OffsetDateTime shiJian;
         String shouKuanZhangHuMing;
         String shouKuanZhangHu;
         BigDecimal jinE;
         String beiZhu;
-        List<String> pingZheng;
+        String pingZhengList;
     }
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Embeddable
     public static class HuiZhen {
-        LocalDateTime shiJian;
+        @Column(name = "huiZhenShiJian")
+        OffsetDateTime shiJian;
         String lianJie;
         String huiYiId;
         String huanFangCanYuRenYuan;
+        @Column(name = "huiZhenBeiZhu")
         String beiZhu;
 
         String shiPinLianJie;
+    }
+
+    public static enum JieGuo {
+        CHENG_GONG,
+        ZHONG_DUAN
     }
 
     public static enum ZhuangTai {
         YI_CHUANG_JIAN,
         YI_AN_PAI_YI_SHENG,
         YI_CHENG_GONG_WAN_CHENG,
-        YI_ZHONG_DUAN_WAN_CHENG
+        YI_JIE_SHU_WAN_CHENG
     }
 
     public static enum FuFeiZhuangTai {
@@ -112,7 +127,7 @@ public class WenZhen extends PPAggregate {
     FuFeiZhuangTai fuFeiZhuangTai;
     HuiZhenZhuangTai huiZhenZhuangTai;
 
-    LocalDateTime xiaDanShiJian;
+    OffsetDateTime xiaDanShiJian;
     BigDecimal yuFuFei;
     BigDecimal zongJia;
 
@@ -211,7 +226,7 @@ public class WenZhen extends PPAggregate {
                         cmd.getPaiBanJsonString(),
                         cmd.getJianKangDangAnMap(),
                         // TODO: PP 正式发布时去掉truncatedTo(ChronoUnit.MINUTES), 这里是为了测试方便
-                        LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
+                        OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)
                 ),
                 metaData
         );
@@ -248,10 +263,10 @@ public class WenZhen extends PPAggregate {
             throw new PPBusinessException("只有在已创建状态才能接收预付款");
         }
 
-//        // 付费状态
-//        if (fuFeiZhuangTai != null) {
-//            throw new PPBusinessException("只有在没有付费时才能接收预付款");
-//        }
+        // 付费状态
+        if (fuFeiZhuangTai != null) {
+            throw new PPBusinessException("只有在没有付费时才能接收预付款");
+        }
 
         // 金额
         if (cmd.getJinE().doubleValue() < yuFuFei.doubleValue()) {
@@ -271,7 +286,7 @@ public class WenZhen extends PPAggregate {
                         cmd.getBeiZhu(),
                         cmd.getJinE(),
                         // TODO: PP 正式发布时去掉truncatedTo(ChronoUnit.MINUTES), 这里是为了测试方便
-                        LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
+                        OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)
                 ),
                 metaData
         );
@@ -312,6 +327,13 @@ public class WenZhen extends PPAggregate {
         }
         // 金额 end
 
+        // 流水号当前list中不能重复
+        for(TuiKuan item: tuiKuanList) {
+            if (item.getLiuShuiHao() == cmd.getLiuShuiHao()) {
+                throw new PPBusinessException("流水号不能重复");
+            }
+        }
+
         // 条件检查 end
 
         apply(
@@ -323,7 +345,7 @@ public class WenZhen extends PPAggregate {
                         cmd.getShouKuanZhangHu(),
                         cmd.getJinE(),
                         cmd.getBeiZhu(),
-                        cmd.getPingZheng()
+                        cmd.getPingZhengList()
                 ),
                 metaData
         );
@@ -338,7 +360,7 @@ public class WenZhen extends PPAggregate {
                 evt.getShouKuanZhangHu(),
                 evt.getJinE(),
                 evt.getBeiZhu(),
-                evt.getPingZheng()
+                Strings.join(evt.getPingZhengList(), ',')
         );
 
         this.tuiKuanList.add(tuiKuan);
@@ -351,7 +373,7 @@ public class WenZhen extends PPAggregate {
         checkDeleted();
 
         // 状态
-        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG) {
+        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_JIE_SHU_WAN_CHENG) {
             throw new PPBusinessException("只有在非已完成状态才能更新健康档案");
         }
 
@@ -383,7 +405,7 @@ public class WenZhen extends PPAggregate {
         checkDeleted();
 
         // 状态
-        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG) {
+        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_JIE_SHU_WAN_CHENG) {
             throw new PPBusinessException("只有在非已完成状态才能支付补充款");
         }
 
@@ -392,7 +414,20 @@ public class WenZhen extends PPAggregate {
             throw new PPBusinessException("只有在已支付预付费状态才能支付补充款");
         }
 
+        // 流水号当前list中不能重复
+        for(BuChongKuan item: buChongKuanList) {
+            if (item.getLiuShuiHao() == cmd.getLiuShuiHao()) {
+                throw new PPBusinessException("流水号不能重复");
+            }
+        }
+
         // 条件检查 end
+        boolean finished = false;
+
+        // 这里一定要预先判断, 如果在if (finished)处判断, 会导致在WenZhen_ZhiFuBuChongKuanEvt生效后计算balance从而重复计算当前这一笔
+        if (jiSuanBlance() + cmd.getFuKuanDangRiHuiLv() * cmd.getJinE().doubleValue() >= zongJia.doubleValue()) {
+           finished = true;
+        }
 
         apply(
                 new WenZhen_ZhiFuBuChongKuanEvt(
@@ -404,12 +439,12 @@ public class WenZhen extends PPAggregate {
                         cmd.getJinE(),
                         cmd.getFuKuanDangRiHuiLv(),
                         cmd.getBeiZhu(),
-                        cmd.getPingZheng()
+                        cmd.getPingZhengList()
                 ),
                 metaData
         );
 
-        if (jiSuanBlance() + cmd.getFuKuanDangRiHuiLv() * cmd.getJinE().doubleValue() >= zongJia.doubleValue()) {
+        if (finished) {
             apply(
                     new WenZhen_ZhiFuQuanKuanEvt(
                             cmd.getId()
@@ -428,7 +463,7 @@ public class WenZhen extends PPAggregate {
                 evt.getJinE(),
                 evt.getFuKuanDangRiHuiLv(),
                 evt.getBeiZhu(),
-                evt.getPingZheng()
+                Strings.join(evt.getPingZhengList(), ',')
         );
 
         this.buChongKuanList.add(buChongKuan);
@@ -762,6 +797,64 @@ public class WenZhen extends PPAggregate {
     public void on(WenZhen_GengXinWenZhenZongJieEvt evt) {
         this.wenZhenZongJieMap = evt.getWenZhenZongJieMap();
     }
-    
+
+    @CommandHandler
+    public void on(WenZhen_ChengGongWanChengCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_JIE_SHU_WAN_CHENG) {
+            throw new PPBusinessException("只有在未完成时才能完成问诊");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_ChengGongWanChengEvt(
+                        cmd.getId(),
+                        cmd.getBeiZhu()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_ChengGongWanChengEvt evt) {
+        this.wanChengBeiZhu = evt.getBeiZhu();
+
+        this.zhuangTai = ZhuangTai.YI_CHENG_GONG_WAN_CHENG;
+    }
+
+    @CommandHandler
+    public void on(WenZhen_ZhongDuanWanChengCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 状态
+        if (zhuangTai == ZhuangTai.YI_CHENG_GONG_WAN_CHENG || zhuangTai == ZhuangTai.YI_JIE_SHU_WAN_CHENG) {
+            throw new PPBusinessException("只有在未完成时才能完成问诊");
+        }
+
+        // 条件检查 end
+
+        apply(
+                new WenZhen_ZhongDuanWanChengEvt(
+                        cmd.getId(),
+                        cmd.getBeiZhu()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(WenZhen_ZhongDuanWanChengEvt evt) {
+        this.wanChengBeiZhu = evt.getBeiZhu();
+
+        this.zhuangTai = ZhuangTai.YI_JIE_SHU_WAN_CHENG;
+    }
+
 
 }

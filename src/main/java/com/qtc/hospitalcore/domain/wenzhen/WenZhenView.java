@@ -1,9 +1,8 @@
 package com.qtc.hospitalcore.domain.wenzhen;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.qtc.hospitalcore.domain.query.PPEntity;
-import com.qtc.hospitalcore.domain.util.HashMapConverter;
-import com.qtc.hospitalcore.domain.util.ObjectConverter;
-import com.qtc.hospitalcore.domain.util.YuFuKuanConverter;
+import com.qtc.hospitalcore.domain.util.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class WenZhenView extends PPEntity {
     @Enumerated(EnumType.STRING)
     WenZhen.HuiZhenZhuangTai huiZhenZhuangTai;
 
-    LocalDateTime xiaDanShiJian;
+    OffsetDateTime xiaDanShiJian;
     BigDecimal yuFuFei;
     BigDecimal zongJia;
 
@@ -108,19 +107,16 @@ public class WenZhenView extends PPEntity {
     Map<String, Object> wenZhenZongJieMap;
 
     // 款
-    @Column(columnDefinition = "json")
-    @Convert(converter = YuFuKuanConverter.class)
+    @Embedded
     WenZhen.YuFuKuan yuFuKuan;
 
-    @Column(columnDefinition = "json")
-    @Convert(converter = ObjectConverter.class)
+    @ElementCollection
     List<WenZhen.BuChongKuan> buChongKuanList = new LinkedList<>();
 
-    @Column(columnDefinition = "json")
-    @Convert(converter = ObjectConverter.class)
+    @ElementCollection
     List<WenZhen.TuiKuan> tuiKuanList = new LinkedList<>();
 
-    @Column(columnDefinition = "json")
-    @Convert(converter = ObjectConverter.class)
+    // 会诊
+    @Embedded
     WenZhen.HuiZhen huiZhen;
 }

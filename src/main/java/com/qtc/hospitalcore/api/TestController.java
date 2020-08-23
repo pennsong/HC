@@ -5,9 +5,7 @@ import com.qtc.hospitalcore.domain.chanpin.ChanPinView;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.exception.PPException;
 import com.qtc.hospitalcore.domain.util.PPUtil;
-import com.qtc.hospitalcore.domain.wenzhen.WenZhen_ChuangJianCmd;
-import com.qtc.hospitalcore.domain.wenzhen.WenZhen_ZhiFuYuFuKuanCmd;
-import com.qtc.hospitalcore.domain.wenzhen.WenZhen_ZhiXingTuiKuanCmd;
+import com.qtc.hospitalcore.domain.wenzhen.*;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoView;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ShanChuCmd;
@@ -29,7 +27,7 @@ import org.springframework.web.servlet.resource.HttpResource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +42,9 @@ public class TestController {
 
     @Autowired
     ZhangHaoViewRepository repository;
+
+    @Autowired
+    WenZhenViewRepository wenZhenViewRepository;
 
     private static final String SESSION_KEY = "PP_KEY";
 
@@ -91,7 +92,7 @@ public class TestController {
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
                         new WenZhen_ChuangJianCmd(
-                               id,
+                                id,
                                 UUID.randomUUID(),
                                 UUID.randomUUID(),
                                 UUID.randomUUID(),
@@ -108,35 +109,44 @@ public class TestController {
         return PPResult.getPPResultOK(id);
     }
 
-    @GetMapping("/t6/{id}")
-    public PPResult<UUID> test6(@PathVariable UUID id) {
-
+    @GetMapping("/t8/{id}")
+    public PPResult<WenZhenView> test8(@PathVariable UUID id) {
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
                         new WenZhen_ZhiFuYuFuKuanCmd(
                                 id,
                                 "l1",
                                 "b1",
-                                new BigDecimal("1.1")
+                                new BigDecimal("1")
                         )
                 ).withMetaData(PPUtil.stringToMap(""))
         );
 
-        return PPResult.getPPResultOK(id);
-    }
-
-    @GetMapping("/t7/{id}")
-    public PPResult<UUID> test7(@PathVariable UUID id) {
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new WenZhen_ZhiFuBuChongKuanCmd(
+                                id,
+                                "ll1",
+                                OffsetDateTime.now(),
+                                "fkf1",
+                                "b1",
+                                new BigDecimal("98"),
+                                1,
+                                "b1",
+                                Arrays.asList("p1", "p2")
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
 
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
                         new WenZhen_ZhiXingTuiKuanCmd(
                                 id,
                                 "l2",
-                                LocalDateTime.now(),
+                                OffsetDateTime.now(),
                                 "zhm",
                                 "zh",
-                                new BigDecimal("1.1"),
+                                new BigDecimal("1"),
                                 "b1",
                                 Arrays.asList("pz", "pz2")
 
@@ -144,6 +154,76 @@ public class TestController {
                 ).withMetaData(PPUtil.stringToMap(""))
         );
 
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new WenZhen_ZhiFuBuChongKuanCmd(
+                                id,
+                                "ll2",
+                                OffsetDateTime.now(),
+                                "fkf1",
+                                "b1",
+                                new BigDecimal("3"),
+                                1,
+                                "b1",
+                                Arrays.asList("p1", "p2")
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new WenZhen_AnPaiYiShengCmd(
+                                id,
+                                UUID.randomUUID(),
+                                UUID.randomUUID(),
+                                UUID.randomUUID(),
+                                UUID.randomUUID()
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new WenZhen_AnPaiHuiZhenCmd(
+                               id,
+                                OffsetDateTime.now(),
+                                "lj1",
+                                "hy1",
+                                "hf1",
+                                "b2"
+
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new WenZhen_SheZhiHuiZhenShiPinCmd(
+                                id,
+                               "splj1"
+
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new WenZhen_SheZhiHuiZhenShiPinCmd(
+                                id,
+                                "splj1"
+
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
         return PPResult.getPPResultOK(id);
+    }
+
+    @GetMapping("/t9/{id}")
+    public PPResult<WenZhenView> test9(@PathVariable UUID id) {
+
+        WenZhenView result = wenZhenViewRepository.findById(id).get();
+
+        return PPResult.getPPResultOK(result);
     }
 }

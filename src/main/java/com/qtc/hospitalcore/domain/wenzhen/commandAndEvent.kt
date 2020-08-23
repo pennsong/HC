@@ -2,7 +2,7 @@ package com.qtc.hospitalcore.domain.wenzhen
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
 data class WenZhen_ChuangJianCmd(
@@ -37,7 +37,7 @@ data class WenZhen_ChuangJianEvt(
         // 健康档案相关
         var jianKangDangAnMap: Map<String, Any>,
 
-        var xiaDanShiJian: LocalDateTime
+        var xiaDanShiJian: OffsetDateTime
 )
 
 data class WenZhen_ZhiFuYuFuKuanCmd(
@@ -54,30 +54,30 @@ data class WenZhen_ZhiFuYuFuKuanEvt(
         var beiZhu: String,
         var jinE: BigDecimal,
 
-        var shiJian: LocalDateTime
+        var shiJian: OffsetDateTime
 )
 
 data class WenZhen_ZhiXingTuiKuanCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var liuShuiHao: String,
-        var shiJian: LocalDateTime,
+        var shiJian: OffsetDateTime,
         var shouKuanZhangHuMing: String,
         var shouKuanZhangHu: String,
         var jinE: BigDecimal,
         var beiZhu: String?,
-        var pingZheng: List<String>
+        var pingZhengList: List<String>
 )
 
 data class WenZhen_ZhiXingTuiKuanEvt(
         var id: UUID,
         var liuShuiHao: String,
-        var shiJian: LocalDateTime,
+        var shiJian: OffsetDateTime,
         var shouKuanZhangHuMing: String,
         var shouKuanZhangHu: String,
         var jinE: BigDecimal,
         var beiZhu: String?,
-        var pingZheng: List<String>
+        var pingZhengList: List<String>
 )
 
 data class WenZhen_GengXinJianKangDangAnCmd(
@@ -95,25 +95,25 @@ data class WenZhen_ZhiFuBuChongKuanCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var liuShuiHao: String,
-        var shiJian: LocalDateTime,
+        var shiJian: OffsetDateTime,
         var fuKuanFang: String,
         var biZhong: String,
         var jinE: BigDecimal,
         var fuKuanDangRiHuiLv: Double,
         var beiZhu: String?,
-        var pingZheng: List<String>
+        var pingZhengList: List<String>
 )
 
 data class WenZhen_ZhiFuBuChongKuanEvt(
         var id: UUID,
         var liuShuiHao: String,
-        var shiJian: LocalDateTime,
+        var shiJian: OffsetDateTime,
         var fuKuanFang: String,
         var biZhong: String,
         var jinE: BigDecimal,
         var fuKuanDangRiHuiLv: Double,
         var beiZhu: String?,
-        var pingZheng: List<String>
+        var pingZhengList: List<String>
 )
 
 // 由WenZhen_ZhiFuBuChongKuanCmd触发
@@ -158,7 +158,7 @@ data class WenZhen_ZhuanZhenEvt(
 data class WenZhen_AnPaiHuiZhenCmd(
         @TargetAggregateIdentifier
         var id: UUID,
-        var shiJian: LocalDateTime,
+        var shiJian: OffsetDateTime,
         var lianJie: String,
         var huiYiId: String,
         var huanFangCanYuRenYuan: String,
@@ -167,7 +167,7 @@ data class WenZhen_AnPaiHuiZhenCmd(
 
 data class WenZhen_AnPaiHuiZhenEvt(
         var id: UUID,
-        var shiJian: LocalDateTime,
+        var shiJian: OffsetDateTime,
         var lianJie: String,
         var huiYiId: String,
         var huanFangCanYuRenYuan: String,
@@ -184,7 +184,6 @@ data class WenZhen_SheZhiHuiZhenShiPinEvt(
         var id: UUID,
         var shiPinLianJie: String
 )
-
 
 data class WenZhen_GengXinMuQianZhuYaoZhenDuanCmd(
         @TargetAggregateIdentifier
@@ -251,4 +250,26 @@ data class WenZhen_GengXinWenZhenZongJieCmd(
 data class WenZhen_GengXinWenZhenZongJieEvt(
         var id: UUID,
         var wenZhenZongJieMap: Map<String, Any>
+)
+
+data class WenZhen_ChengGongWanChengCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var beiZhu: String?
+)
+
+data class WenZhen_ChengGongWanChengEvt(
+        var id: UUID,
+        var beiZhu: String?
+)
+
+data class WenZhen_ZhongDuanWanChengCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var beiZhu: String?
+)
+
+data class WenZhen_ZhongDuanWanChengEvt(
+        var id: UUID,
+        var beiZhu: String?
 )

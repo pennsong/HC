@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +27,7 @@ public class ChuFangTest {
 
     private ChuFangEventListener eventListener;
     // mock data
-    LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+    OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     
     UUID id = UUID.randomUUID();
     UUID wenZhenId = UUID.randomUUID();
@@ -35,10 +35,10 @@ public class ChuFangTest {
     ChuFang.ZhuangTai zhuangTai = ChuFang.ZhuangTai.YI_KAI_JU;
     String zhengWen = "z";
     UUID kaiJuZhangHaoId = UUID.randomUUID();
-    LocalDateTime kaiJuShiJian = mockNow;
+    OffsetDateTime kaiJuShiJian = mockNow;
 
     UUID queRenZhangHaoId = UUID.randomUUID();
-    LocalDateTime queRenShiJian = mockNow;
+    OffsetDateTime queRenShiJian = mockNow;
 
     UUID quXiaoZhangHaoId = UUID.randomUUID();
 
@@ -75,7 +75,7 @@ public class ChuFangTest {
         eventListener = new ChuFangEventListener(repository);
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_ChuFang_KaiJuCmd() {
     // mock data

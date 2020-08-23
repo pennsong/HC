@@ -14,7 +14,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,12 +40,12 @@ public class ChuFangView extends PPEntity {
     @Column(columnDefinition = "varchar(128) not null")
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID kaiJuZhangHaoId;
-    LocalDateTime kaiJuShiJian;
+    OffsetDateTime kaiJuShiJian;
 
     @Column(columnDefinition = "varchar(128) not null")
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID queRenZhangHaoId;
-    LocalDateTime queRenShiJian;
+    OffsetDateTime queRenShiJian;
 
     @Column(columnDefinition = "varchar(128) not null")
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")

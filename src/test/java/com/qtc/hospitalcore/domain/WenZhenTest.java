@@ -7,11 +7,13 @@ import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -21,13 +23,13 @@ public class WenZhenTest {
 
     // mock data
     // mock now
-    LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+    OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
     UUID id = UUID.randomUUID();
 
     UUID jianKangDangAnId = UUID.randomUUID();
 
-    LocalDateTime xiaDanShiJian = mockNow;
+    OffsetDateTime xiaDanShiJian = mockNow;
 
     BigDecimal yuFuFei = new BigDecimal("1");
     BigDecimal zongJia = new BigDecimal("100");
@@ -67,28 +69,33 @@ public class WenZhenTest {
     WenZhen.YuFuKuan yuFuKuan = new WenZhen.YuFuKuan(
             "yfl", mockNow, new BigDecimal(10), "ybz"
     );
+
+    WenZhen.BuChongKuan buChongKuan = new WenZhen.BuChongKuan(
+            "bcl",
+            mockNow,
+            "fkf",
+            "bz",
+            new BigDecimal(10),
+            1,
+            "bbz",
+            "bp_1,bp_2"
+    );
+
+    WenZhen.BuChongKuan buChongKuan2 = new WenZhen.BuChongKuan(
+            "bcl2",
+            mockNow,
+            "fkf2",
+            "bz2",
+            new BigDecimal(20),
+            2,
+            "bbz",
+            "bp2_1,bp2_2"
+    );
+
     List<WenZhen.BuChongKuan> buChongKuanList = new LinkedList<>(
             Arrays.asList(
-                    new WenZhen.BuChongKuan(
-                            "bcl",
-                            mockNow,
-                            "fkf",
-                            "bz",
-                            new BigDecimal(10),
-                            1,
-                            "bbz",
-                            Arrays.asList("bp_1", "bp_2")
-                    ),
-                    new WenZhen.BuChongKuan(
-                            "bcl2",
-                            mockNow,
-                            "fkf2",
-                            "bz2",
-                            new BigDecimal(20),
-                            2,
-                            "bbz",
-                            Arrays.asList("bp2_1", "bp2_2")
-                    )
+                    buChongKuan,
+                    buChongKuan2
             )
     );
 
@@ -100,7 +107,7 @@ public class WenZhenTest {
             "skzh",
             new BigDecimal("10"),
             "tkbz",
-            Arrays.asList("tp_1", "tp_2")
+            "tp_1,tp_2"
     );
 
     WenZhen.TuiKuan tuiKuan2 = new WenZhen.TuiKuan(
@@ -110,8 +117,9 @@ public class WenZhenTest {
             "skzh2",
             new BigDecimal("20"),
             "tkbz2",
-            Arrays.asList("tp2_1", "tp2_2")
+            "tp2_1,tp2_2"
     );
+
     List<WenZhen.TuiKuan> tuiKuanList = new LinkedList<>(
             Arrays.asList(
                     tuiKuan,
@@ -120,7 +128,7 @@ public class WenZhenTest {
     );
 
     // 会诊
-    LocalDateTime huiZhenShiJian = mockNow;
+    OffsetDateTime huiZhenShiJian = mockNow;
     String huiZhenLianJie = "l";
     String huiZhenHuiYiId = "hId";
     String huiZhenHuanFangCanYuRenYuan = "r";
@@ -181,8 +189,8 @@ public class WenZhenTest {
 
         // 款
         template.setYuFuKuan(yuFuKuan);
-        template.setBuChongKuanList(buChongKuanList);
-        template.setTuiKuanList(tuiKuanList);
+        template.setBuChongKuanList(buChongKuanList.stream().collect(Collectors.toList()));
+        template.setTuiKuanList(tuiKuanList.stream().collect(Collectors.toList()));
 
         return template;
     }
@@ -192,7 +200,7 @@ public class WenZhenTest {
         fixture = new AggregateTestFixture<>(WenZhen.class);
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_WenZhen_ChuangJianCmd() {
 
@@ -244,7 +252,7 @@ public class WenZhenTest {
                 });
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_WenZhen_ZhiFuYuFuKuanCmd() {
 
@@ -280,7 +288,7 @@ public class WenZhenTest {
                 });
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_1() {
 
@@ -301,7 +309,7 @@ public class WenZhenTest {
                 .expectExceptionMessage("只有在已创建状态才能接收预付款");
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_2() {
 
@@ -323,7 +331,7 @@ public class WenZhenTest {
                 .expectExceptionMessage("只有在没有付费时才能接收预付款");
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_3() {
 
@@ -344,7 +352,7 @@ public class WenZhenTest {
                 .expectExceptionMessage("预付款不足");
     }
 
-    // 在时间整分附件测试可能会失败和LocalDateTime mockNow = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
+    // 在时间整分附件测试可能会失败和OffsetDateTime mockNow = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)有关
     @Test
     public void test_WenZhen_ZhiFuYuFuKuanCmd_失败_4() {
 
@@ -367,6 +375,17 @@ public class WenZhenTest {
 
     @Test
     public void test_WenZhen_ZhiXingTuiKuanCmd() {
+        // mock data
+        WenZhen.TuiKuan tuiKuan3 = new WenZhen.TuiKuan(
+                "tkl3",
+                mockNow,
+                "skzhm3",
+                "skzh3",
+                new BigDecimal("20"),
+                "tkbz3",
+                "tp3_1,tp3_2"
+        );
+        // mock data end
 
         fixture.givenState(() -> {
             WenZhen record = getTemplate();
@@ -375,29 +394,29 @@ public class WenZhenTest {
         })
                 .when(new WenZhen_ZhiXingTuiKuanCmd(
                         id,
-                        tuiKuan.getLiuShuiHao(),
-                        tuiKuan.getShiJian(),
-                        tuiKuan.getShouKuanZhangHuMing(),
-                        tuiKuan.getShouKuanZhangHu(),
-                        tuiKuan.getJinE(),
-                        tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
+                        tuiKuan3.getLiuShuiHao(),
+                        tuiKuan3.getShiJian(),
+                        tuiKuan3.getShouKuanZhangHuMing(),
+                        tuiKuan3.getShouKuanZhangHu(),
+                        tuiKuan3.getJinE(),
+                        tuiKuan3.getBeiZhu(),
+                        Arrays.asList(tuiKuan3.getPingZhengList().split(","))
                 ))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new WenZhen_ZhiXingTuiKuanEvt(
                         id,
-                        tuiKuan.getLiuShuiHao(),
-                        tuiKuan.getShiJian(),
-                        tuiKuan.getShouKuanZhangHuMing(),
-                        tuiKuan.getShouKuanZhangHu(),
-                        tuiKuan.getJinE(),
-                        tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
+                        tuiKuan3.getLiuShuiHao(),
+                        tuiKuan3.getShiJian(),
+                        tuiKuan3.getShouKuanZhangHuMing(),
+                        tuiKuan3.getShouKuanZhangHu(),
+                        tuiKuan3.getJinE(),
+                        tuiKuan3.getBeiZhu(),
+                        Arrays.asList(tuiKuan3.getPingZhengList().split(","))
                 ))
                 .expectState(state -> {
                     WenZhen record = getTemplate();
 
-                    record.getTuiKuanList().add(tuiKuan);
+                    record.getTuiKuanList().add(tuiKuan3);
 
                     // perform assertions
                     assertEquals(record, state);
@@ -421,7 +440,7 @@ public class WenZhenTest {
                         tuiKuan.getShouKuanZhangHu(),
                         tuiKuan.getJinE(),
                         tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
+                        Arrays.asList(tuiKuan.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已创建状态才能退款");
@@ -444,7 +463,7 @@ public class WenZhenTest {
                         tuiKuan.getShouKuanZhangHu(),
                         tuiKuan.getJinE(),
                         tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
+                        Arrays.asList(tuiKuan.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付预付费状态才能退款");
@@ -468,7 +487,7 @@ public class WenZhenTest {
                         tuiKuan.getShouKuanZhangHu(),
                         yuFuKuan.getJinE().add(new BigDecimal(0.1)),
                         tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
+                        Arrays.asList(tuiKuan.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("退款额度太大");
@@ -500,10 +519,42 @@ public class WenZhenTest {
                         tuiKuan.getShouKuanZhangHu(),
                         new BigDecimal(balance += 0.1),
                         tuiKuan.getBeiZhu(),
-                        tuiKuan.getPingZheng()
+                        Arrays.asList(tuiKuan.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("退款额度太大");
+    }
+
+    @Test
+    public void test_WenZhen_ZhiXingTuiKuanCmd_失败_5() {
+        double balance = 0;
+        balance += yuFuKuan.getJinE().doubleValue();
+
+        for (WenZhen.BuChongKuan item : buChongKuanList) {
+            balance += item.getJinE().doubleValue() * item.getFuKuanDangRiHuiLv();
+        }
+
+        for (WenZhen.TuiKuan item : tuiKuanList) {
+            balance -= item.getJinE().doubleValue();
+        }
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_ZhiXingTuiKuanCmd(
+                        id,
+                        tuiKuan.getLiuShuiHao(),
+                        tuiKuan.getShiJian(),
+                        tuiKuan.getShouKuanZhangHuMing(),
+                        tuiKuan.getShouKuanZhangHu(),
+                        new BigDecimal(balance),
+                        tuiKuan.getBeiZhu(),
+                        Arrays.asList(tuiKuan.getPingZhengList().split(","))
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("流水号不能重复");
     }
 
     @Test
@@ -561,7 +612,7 @@ public class WenZhenTest {
 
         fixture.givenState(() -> {
             WenZhen record = getTemplate();
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG);
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_JIE_SHU_WAN_CHENG);
 
             return record;
         })
@@ -600,10 +651,10 @@ public class WenZhenTest {
                 mockNow,
                 "fkf3",
                 "bz3",
-                new BigDecimal(10),
-                2,
+                new BigDecimal(69),
+                1,
                 "bbz3",
-                Arrays.asList("bp3_1", "bp3_2")
+                "bp3_1,bp3_2"
         );
 
         fixture.givenState(() -> {
@@ -620,7 +671,7 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new WenZhen_ZhiFuBuChongKuanEvt(
@@ -632,7 +683,7 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectState(state -> {
                     WenZhen record = getTemplate();
@@ -659,7 +710,7 @@ public class WenZhenTest {
                 new BigDecimal(leftJinE / huiLv),
                 huiLv,
                 "bbz3",
-                Arrays.asList("bp3_1", "bp3_2")
+                "bp3_1,bp3_2"
         );
 
         fixture.givenState(() -> {
@@ -674,7 +725,7 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(
@@ -687,7 +738,7 @@ public class WenZhenTest {
                                 buChongKuan3.getJinE(),
                                 buChongKuan3.getFuKuanDangRiHuiLv(),
                                 buChongKuan3.getBeiZhu(),
-                                buChongKuan3.getPingZheng()
+                                Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                         ),
                         new WenZhen_ZhiFuQuanKuanEvt(
                                 id
@@ -715,7 +766,7 @@ public class WenZhenTest {
                 new BigDecimal(10),
                 2,
                 "bbz3",
-                Arrays.asList("bp3_1", "bp3_2")
+                "bp3_1,bp3_2"
         );
 
         fixture.givenState(() -> {
@@ -733,7 +784,7 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在非已完成状态才能支付补充款");
@@ -750,12 +801,12 @@ public class WenZhenTest {
                 new BigDecimal(10),
                 2,
                 "bbz3",
-                Arrays.asList("bp3_1", "bp3_2")
+                "bp3_1,bp3_2"
         );
 
         fixture.givenState(() -> {
             WenZhen record = getTemplate();
-            record.setZhuangTai(WenZhen.ZhuangTai.YI_ZHONG_DUAN_WAN_CHENG);
+            record.setZhuangTai(WenZhen.ZhuangTai.YI_JIE_SHU_WAN_CHENG);
 
             return record;
         })
@@ -768,7 +819,7 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在非已完成状态才能支付补充款");
@@ -785,7 +836,7 @@ public class WenZhenTest {
                 new BigDecimal(10),
                 2,
                 "bbz3",
-                Arrays.asList("bp3_1", "bp3_2")
+                "bp3_1,bp3_2"
         );
 
         fixture.givenState(() -> {
@@ -803,7 +854,7 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付预付费状态才能支付补充款");
@@ -820,7 +871,7 @@ public class WenZhenTest {
                 new BigDecimal(10),
                 2,
                 "bbz3",
-                Arrays.asList("bp3_1", "bp3_2")
+                "bp3_1,bp3_2"
         );
 
         fixture.givenState(() -> {
@@ -838,10 +889,45 @@ public class WenZhenTest {
                         buChongKuan3.getJinE(),
                         buChongKuan3.getFuKuanDangRiHuiLv(),
                         buChongKuan3.getBeiZhu(),
-                        buChongKuan3.getPingZheng()
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已支付预付费状态才能支付补充款");
+    }
+
+    @Test
+    public void test_WenZhen_ZhiFuBuChongKuanCmd_失败_5() {
+
+        WenZhen.BuChongKuan buChongKuan3 = new WenZhen.BuChongKuan(
+                "bcl3",
+                mockNow,
+                "fkf3",
+                "bz3",
+                new BigDecimal(10),
+                2,
+                "bbz3",
+                "bp3_1,bp3_2"
+        );
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+            record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI);
+
+            return record;
+        })
+                .when(new WenZhen_ZhiFuBuChongKuanCmd(
+                        id,
+                        buChongKuan2.getLiuShuiHao(),
+                        buChongKuan3.getShiJian(),
+                        buChongKuan3.getFuKuanFang(),
+                        buChongKuan3.getBiZhong(),
+                        buChongKuan3.getJinE(),
+                        buChongKuan3.getFuKuanDangRiHuiLv(),
+                        buChongKuan3.getBeiZhu(),
+                        Arrays.asList(buChongKuan3.getPingZhengList().split(","))
+                ))
+                .expectException(PPBusinessException.class)
+                .expectExceptionMessage("流水号不能重复");
     }
 
     @Test
@@ -1528,5 +1614,67 @@ public class WenZhenTest {
                 ))
                 .expectException(PPBusinessException.class)
                 .expectExceptionMessage("只有在已安排医生状态才能更新问诊总结");
+    }
+
+    @Test
+    public void test_WenZhen_ChengGongWanChengCmd() {
+
+        String beiZhu = "cwbz";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_ChengGongWanChengCmd(
+                        id,
+                        beiZhu
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_ChengGongWanChengEvt(
+                                id,
+                                beiZhu
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_CHENG_GONG_WAN_CHENG);
+                    record.setWanChengBeiZhu(beiZhu);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
+    }
+
+    @Test
+    public void test_WenZhen_ZhongDuanWanChengCmd() {
+
+        String beiZhu = "cwbz";
+
+        fixture.givenState(() -> {
+            WenZhen record = getTemplate();
+
+            return record;
+        })
+                .when(new WenZhen_ZhongDuanWanChengCmd(
+                        id,
+                        beiZhu
+                ))
+                .expectSuccessfulHandlerExecution()
+                .expectEvents(
+                        new WenZhen_ZhongDuanWanChengEvt(
+                                id,
+                                beiZhu
+                        )
+                )
+                .expectState(state -> {
+                    WenZhen record = getTemplate();
+                    record.setZhuangTai(WenZhen.ZhuangTai.YI_JIE_SHU_WAN_CHENG);
+                    record.setWanChengBeiZhu(beiZhu);
+
+                    // perform assertions
+                    assertEquals(record, state);
+                });
     }
 }

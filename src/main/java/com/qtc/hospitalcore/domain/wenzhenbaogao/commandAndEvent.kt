@@ -1,7 +1,7 @@
 package com.qtc.hospitalcore.domain.wenzhenbaogao
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
 data class WenZhenBaoGao_KaiJuCmd(
@@ -17,5 +17,5 @@ data class WenZhenBaoGao_KaiJuEvt(
         var wenZhenId: UUID,
         var zhengWen: String,
         var kaiJuZhangHaoId: UUID,
-        var kaiJuShiJian: LocalDateTime
+        var kaiJuShiJian: OffsetDateTime
 )

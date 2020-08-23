@@ -1,7 +1,7 @@
 package com.qtc.hospitalcore.domain.chufang
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
 data class ChuFang_KaiJuCmd(
@@ -17,7 +17,7 @@ data class ChuFang_KaiJuEvt(
         var wenZhenId: UUID,
         var zhengWen: String,
         var kaiJuZhangHaoId: UUID,
-        var kaiJuShiJian: LocalDateTime
+        var kaiJuShiJian: OffsetDateTime
 )
 
 data class ChuFang_QueRenCmd(
@@ -29,7 +29,7 @@ data class ChuFang_QueRenCmd(
 data class ChuFang_QueRenEvt(
         var id: UUID,
         var queRenZhangHaoId: UUID,
-        var queRenShiJian: LocalDateTime
+        var queRenShiJian: OffsetDateTime
 )
 
 data class ChuFang_QuXiaoCmd(
