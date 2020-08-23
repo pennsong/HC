@@ -42,7 +42,8 @@ public class WenZhenEventListener {
 
         record.setXiaDanShiJian(evt.getXiaDanShiJian());
 
-        record.setZhuangTai(WenZhen.ZhuangTai.YI_CHUANG_JIAN);
+        record.setZhuangTai(ZhuangTai.YI_CHUANG_JIAN);
+        record.setFuFeiZhuangTai(FuFeiZhuangTai.WEI_FU_FEI);
 
         repository.saveAndFlush(record);
     }
@@ -51,7 +52,7 @@ public class WenZhenEventListener {
     public void on(WenZhen_ZhiFuYuFuKuanEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        WenZhen.YuFuKuan yuFuKuan = new WenZhen.YuFuKuan();
+        YuFuKuan yuFuKuan = new YuFuKuan();
         yuFuKuan.setLiuShuiHao(evt.getLiuShuiHao());
         yuFuKuan.setBeiZhu(evt.getBeiZhu());
         yuFuKuan.setJinE(evt.getJinE());
@@ -59,7 +60,7 @@ public class WenZhenEventListener {
 
         record.setYuFuKuan(yuFuKuan);
 
-        record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI);
+        record.setFuFeiZhuangTai(FuFeiZhuangTai.YI_ZHI_FU_YU_FU_FEI);
 
         repository.saveAndFlush(record);
     }
@@ -68,7 +69,7 @@ public class WenZhenEventListener {
     public void on(WenZhen_ZhiXingTuiKuanEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        WenZhen.TuiKuan tuiKuan = new WenZhen.TuiKuan();
+        TuiKuan tuiKuan = new TuiKuan();
 
         tuiKuan.setLiuShuiHao(evt.getLiuShuiHao());
         tuiKuan.setShiJian(evt.getShiJian());
@@ -96,7 +97,7 @@ public class WenZhenEventListener {
     public void on(WenZhen_ZhiFuBuChongKuanEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        WenZhen.BuChongKuan buChongKuan = new WenZhen.BuChongKuan();
+        BuChongKuan buChongKuan = new BuChongKuan();
         buChongKuan.setLiuShuiHao(evt.getLiuShuiHao());
         buChongKuan.setShiJian(evt.getShiJian());
         buChongKuan.setFuKuanFang(evt.getFuKuanFang());
@@ -115,7 +116,7 @@ public class WenZhenEventListener {
     public void on(WenZhen_ZhiFuQuanKuanEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        record.setFuFeiZhuangTai(WenZhen.FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
+        record.setFuFeiZhuangTai(FuFeiZhuangTai.YI_ZHI_FU_QUAN_KUAN);
 
         repository.saveAndFlush(record);
     }
@@ -129,7 +130,7 @@ public class WenZhenEventListener {
         record.setKaiJuChuFangZhangHaoId(evt.getKaiJuChuFangZhangHaoId());
         record.setQueRenChuFangZhangHaoId(evt.getQueRenChuFangZhangHaoId());
 
-        record.setZhuangTai(WenZhen.ZhuangTai.YI_AN_PAI_YI_SHENG);
+        record.setZhuangTai(ZhuangTai.YI_AN_PAI_YI_SHENG);
 
         repository.saveAndFlush(record);
     }
@@ -150,7 +151,8 @@ public class WenZhenEventListener {
     public void on(WenZhen_AnPaiHuiZhenEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        WenZhen.HuiZhen huiZhen = new WenZhen.HuiZhen();
+        HuiZhen huiZhen = new HuiZhen();
+        huiZhen.setZhuangTai(HuiZhenZhuangTai.YI_AN_PAI);
         huiZhen.setShiJian(evt.getShiJian());
         huiZhen.setLianJie(evt.getLianJie());
         huiZhen.setHuiYiId(evt.getHuiYiId());
@@ -158,8 +160,6 @@ public class WenZhenEventListener {
         huiZhen.setBeiZhu(evt.getBeiZhu());
 
         record.setHuiZhen(huiZhen);
-
-        record.setHuiZhenZhuangTai(WenZhen.HuiZhenZhuangTai.YI_AN_PAI);
 
         repository.saveAndFlush(record);
     }
@@ -219,21 +219,30 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_ChengGongWanChengEvt evt) {
+    public void on(WenZhen_GengXinWenZhenZongJieEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        record.setWanChengBeiZhu(evt.getBeiZhu());
-        record.setZhuangTai(WenZhen.ZhuangTai.YI_CHENG_GONG_WAN_CHENG);
+        record.setWenZhenZongJieMap(evt.getWenZhenZongJieMap());
 
         repository.saveAndFlush(record);
     }
 
     @EventHandler
-    public void on(WenZhen_ZhongDuanWanChengEvt evt) {
+    public void on(WenZhen_ChengGongWanChengEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setWanChengBeiZhu(evt.getBeiZhu());
-        record.setZhuangTai(WenZhen.ZhuangTai.YI_JIE_SHU_WAN_CHENG);
+        record.setZhuangTai(ZhuangTai.YI_CHENG_GONG_WAN_CHENG);
+
+        repository.saveAndFlush(record);
+    }
+
+    @EventHandler
+    public void on(WenZhen_JieShuWanChengEvt evt) {
+        WenZhenView record = repository.findById(evt.getId()).get();
+
+        record.setWanChengBeiZhu(evt.getBeiZhu());
+        record.setZhuangTai(ZhuangTai.YI_JIE_SHU_WAN_CHENG);
 
         repository.saveAndFlush(record);
     }
@@ -242,7 +251,7 @@ public class WenZhenEventListener {
     public void on(WenZhen_KaiJuWenZhenBaoGaoEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        WenZhen.WenZhenBaoGao record2 = new WenZhen.WenZhenBaoGao();
+        WenZhenBaoGao record2 = new WenZhenBaoGao();
         record2.setId(evt.getWenZhenBaoGaoId());
         record2.setZhengWen(evt.getZhengWen());
         record2.setZhangHaoId(evt.getZhangHaoId());
@@ -257,7 +266,7 @@ public class WenZhenEventListener {
     public void on(WenZhen_KaiJuZhenLiaoBaoGaoEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-        WenZhen.ZhenLiaoBaoGao record2 = new WenZhen.ZhenLiaoBaoGao();
+        ZhenLiaoBaoGao record2 = new ZhenLiaoBaoGao();
         record2.setId(evt.getZhenLiaoBaoGaoId());
         record2.setZhengWen(evt.getZhengWen());
         record2.setZhangHaoId(evt.getZhangHaoId());
@@ -272,12 +281,12 @@ public class WenZhenEventListener {
     public void on(WenZhen_KaiJuChuFangEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
-       WenZhen.ChuFang record2 = new WenZhen.ChuFang();
+        ChuFang record2 = new ChuFang();
         record2.setZhengWen(evt.getZhengWen());
         record2.setKaiJuZhangHaoId(evt.getZhangHaoId());
         record2.setKaiJuShiJian(evt.getShiJian());
 
-        record2.setZhuangTai(WenZhen.ChuFang.ZhuangTai.YI_KAI_JU);
+        record2.setZhuangTai(ChuFangZhuangTai.YI_KAI_JU);
 
         record.setChuFang(record2);
 
@@ -291,7 +300,7 @@ public class WenZhenEventListener {
         record.getChuFang().setQueRenZhangHaoId(evt.getZhangHaoId());
         record.getChuFang().setQueRenShiJian(evt.getShiJian());
 
-        record.getChuFang().setZhuangTai(WenZhen.ChuFang.ZhuangTai.YI_QUE_REN);
+        record.getChuFang().setZhuangTai(ChuFangZhuangTai.YI_QUE_REN);
 
         repository.saveAndFlush(record);
     }
@@ -302,7 +311,7 @@ public class WenZhenEventListener {
 
         record.getChuFang().setQuXiaoZhangHaoId(evt.getZhangHaoId());
 
-        record.getChuFang().setZhuangTai(WenZhen.ChuFang.ZhuangTai.YI_QU_XIAO);
+        record.getChuFang().setZhuangTai(ChuFangZhuangTai.YI_QU_XIAO);
 
         repository.saveAndFlush(record);
     }

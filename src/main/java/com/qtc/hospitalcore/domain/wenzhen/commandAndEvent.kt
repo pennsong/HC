@@ -1,9 +1,39 @@
 package com.qtc.hospitalcore.domain.wenzhen
 
+import com.qtc.hospitalcore.domain.wenzhen.WenZhen.HuiZhen
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.util.*
+
+enum class HuiZhenZhuangTai {
+        YI_AN_PAI,
+        YI_WAN_CHENG,
+}
+
+enum class ChuFangZhuangTai {
+        YI_KAI_JU,
+        YI_QUE_REN,
+        YI_QU_XIAO,
+}
+
+enum class JieGuo {
+        CHENG_GONG,
+        ZHONG_DUAN,
+}
+
+enum class ZhuangTai {
+        YI_CHUANG_JIAN,
+        YI_AN_PAI_YI_SHENG,
+        YI_CHENG_GONG_WAN_CHENG,
+        YI_JIE_SHU_WAN_CHENG,
+}
+
+enum class FuFeiZhuangTai {
+        WEI_FU_FEI,
+        YI_ZHI_FU_YU_FU_FEI,
+        YI_ZHI_FU_QUAN_KUAN,
+}
 
 data class WenZhen_ChuangJianCmd(
         @TargetAggregateIdentifier
@@ -263,13 +293,13 @@ data class WenZhen_ChengGongWanChengEvt(
         var beiZhu: String?
 )
 
-data class WenZhen_ZhongDuanWanChengCmd(
+data class WenZhen_JieShuWanChengCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var beiZhu: String?
 )
 
-data class WenZhen_ZhongDuanWanChengEvt(
+data class WenZhen_JieShuWanChengEvt(
         var id: UUID,
         var beiZhu: String?
 )

@@ -31,14 +31,11 @@ public class WenZhenView extends PPEntity {
     UUID id;
 
     @Enumerated(EnumType.STRING)
-    WenZhen.ZhuangTai zhuangTai;
+    ZhuangTai zhuangTai;
     String wanChengBeiZhu;
 
     @Enumerated(EnumType.STRING)
-    WenZhen.FuFeiZhuangTai fuFeiZhuangTai;
-
-    @Enumerated(EnumType.STRING)
-    WenZhen.HuiZhenZhuangTai huiZhenZhuangTai;
+    FuFeiZhuangTai fuFeiZhuangTai;
 
     OffsetDateTime xiaDanShiJian;
     BigDecimal yuFuFei;
@@ -108,26 +105,125 @@ public class WenZhenView extends PPEntity {
 
     // 款
     @Embedded
-    WenZhen.YuFuKuan yuFuKuan;
+    YuFuKuan yuFuKuan;
 
     @ElementCollection
-    List<WenZhen.BuChongKuan> buChongKuanList = new LinkedList<>();
+    List<BuChongKuan> buChongKuanList = new LinkedList<>();
 
     @ElementCollection
-    List<WenZhen.TuiKuan> tuiKuanList = new LinkedList<>();
+    List<TuiKuan> tuiKuanList = new LinkedList<>();
 
     // 会诊
     @Embedded
-    WenZhen.HuiZhen huiZhen;
+    HuiZhen huiZhen;
 
     // 处方
     @Embedded
-    WenZhen.ChuFang chuFang;
+    ChuFang chuFang;
 
     // 报告
     @ElementCollection
-    List<WenZhen.WenZhenBaoGao> wenZhenBaoGaoList = new LinkedList<>();
+    List<WenZhenBaoGao> wenZhenBaoGaoList = new LinkedList<>();
 
     @ElementCollection
-    List<WenZhen.ZhenLiaoBaoGao> zhenLiaoBaoGaoList = new LinkedList<>();
+    List<ZhenLiaoBaoGao> zhenLiaoBaoGaoList = new LinkedList<>();
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class YuFuKuan {
+    String liuShuiHao;
+    @Column(name = "yuFuKuanShiJian")
+    OffsetDateTime shiJian;
+    BigDecimal jinE;
+    @Column(name = "yuFuKuanBeiZhu")
+    String beiZhu;
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class BuChongKuan {
+    String liuShuiHao;
+    OffsetDateTime shiJian;
+    String fuKuanFang;
+    String biZhong;
+    BigDecimal jinE;
+    double fuKuanDangRiHuiLv;
+    String beiZhu;
+    String pingZhengList;
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class TuiKuan {
+    String liuShuiHao;
+    OffsetDateTime shiJian;
+    String shouKuanZhangHuMing;
+    String shouKuanZhangHu;
+    BigDecimal jinE;
+    String beiZhu;
+    String pingZhengList;
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class HuiZhen {
+    @Column(name = "huiZhenZhuangTai")
+    HuiZhenZhuangTai zhuangTai;
+    @Column(name = "huiZhenShiJian")
+    OffsetDateTime shiJian;
+    String lianJie;
+    String huiYiId;
+    String huanFangCanYuRenYuan;
+    @Column(name = "huiZhenBeiZhu")
+    String beiZhu;
+
+    String shiPinLianJie;
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class WenZhenBaoGao {
+    UUID id;
+    String zhengWen;
+    UUID zhangHaoId;
+    OffsetDateTime shiJian;
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class ZhenLiaoBaoGao {
+    UUID id;
+    String zhengWen;
+    UUID zhangHaoId;
+    OffsetDateTime shiJian;
+}
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Embeddable
+class ChuFang {
+    ChuFangZhuangTai zhuangTai;
+    String zhengWen;
+
+    UUID kaiJuZhangHaoId;
+    OffsetDateTime kaiJuShiJian;
+
+    UUID queRenZhangHaoId;
+    OffsetDateTime queRenShiJian;
+
+    UUID quXiaoZhangHaoId;
 }

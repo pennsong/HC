@@ -5,6 +5,7 @@ import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
 import com.qtc.hospitalcore.domain.chanpin.ChanPinView;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.util.PPUtil;
+import com.qtc.hospitalcore.domain.wenzhen.JieGuo;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
 import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
@@ -327,7 +328,7 @@ public class AdminController {
     @Data
     static class DTO_jieShuWenZhen {
         UUID wenZhenId;
-        WenZhen.JieGuo jieGuo;
+        JieGuo jieGuo;
         String beiZhu;
     }
 
