@@ -27,6 +27,7 @@ public class YongHuView {
     String shenFenZheng;
     String weiXinOpenId;
 
+    @Column(columnDefinition = "json")
     @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;
 }

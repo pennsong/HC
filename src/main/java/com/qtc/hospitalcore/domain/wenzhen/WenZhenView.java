@@ -119,4 +119,15 @@ public class WenZhenView extends PPEntity {
     // 会诊
     @Embedded
     WenZhen.HuiZhen huiZhen;
+
+    // 处方
+    @Embedded
+    WenZhen.ChuFang chuFang;
+
+    // 报告
+    @ElementCollection
+    List<WenZhen.WenZhenBaoGao> wenZhenBaoGaoList = new LinkedList<>();
+
+    @ElementCollection
+    List<WenZhen.ZhenLiaoBaoGao> zhenLiaoBaoGaoList = new LinkedList<>();
 }

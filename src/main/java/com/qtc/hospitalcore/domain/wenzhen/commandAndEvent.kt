@@ -273,3 +273,71 @@ data class WenZhen_ZhongDuanWanChengEvt(
         var id: UUID,
         var beiZhu: String?
 )
+
+data class WenZhen_KaiJuWenZhenBaoGaoCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var zhengWen: String,
+        var zhangHaoId: UUID
+)
+
+data class WenZhen_KaiJuWenZhenBaoGaoEvt(
+        var id: UUID,
+        var wenZhenBaoGaoId: UUID,
+        var zhengWen: String,
+        var zhangHaoId: UUID,
+        var shiJian: OffsetDateTime
+)
+
+data class WenZhen_KaiJuZhenLiaoBaoGaoCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var zhengWen: String,
+        var zhangHaoId: UUID,
+        var shiJian: OffsetDateTime
+)
+
+data class WenZhen_KaiJuZhenLiaoBaoGaoEvt(
+        var id: UUID,
+        var zhenLiaoBaoGaoId: UUID,
+        var zhengWen: String,
+        var zhangHaoId: UUID,
+        var shiJian: OffsetDateTime
+)
+
+data class WenZhen_KaiJuChuFangCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var zhengWen: String,
+        var zhangHaoId: UUID
+)
+
+data class WenZhen_KaiJuChuFangEvt(
+        var id: UUID,
+        var zhengWen: String,
+        var zhangHaoId: UUID,
+        var shiJian: OffsetDateTime
+)
+
+data class WenZhen_QueRenChuFangCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var zhangHaoId: UUID
+)
+
+data class WenZhen_QueRenChuFangEvt(
+        var id: UUID,
+        var zhangHaoId: UUID,
+        var shiJian: OffsetDateTime
+)
+
+data class WenZhen_QuXiaoChuFangCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var zhangHaoId: UUID
+)
+
+data class WenZhen_QuXiaoChuFangEvt(
+        var id: UUID,
+        var zhangHaoId: UUID
+)

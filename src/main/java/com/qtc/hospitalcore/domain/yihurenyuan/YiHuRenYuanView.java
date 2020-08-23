@@ -1,9 +1,12 @@
 package com.qtc.hospitalcore.domain.yihurenyuan;
 
+import com.qtc.hospitalcore.domain.query.PPEntity;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -14,12 +17,18 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class YiHuRenYuanView {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class YiHuRenYuanView extends PPEntity {
     @Id
+    @Column(columnDefinition="varchar(128) not null")
+    @org.hibernate.annotations.Type(type="org.hibernate.type.UUIDCharType")
     UUID id;
 
+    String xingMing;
+
+    String shenFenZhengHao;
+
     @ElementCollection
-    @Enumerated(EnumType.STRING)
     Set<YiHuRenYuan.QuanXian> quanXianSet;
 
     @Column(columnDefinition = "json")

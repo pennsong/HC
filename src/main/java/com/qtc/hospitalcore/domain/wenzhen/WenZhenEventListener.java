@@ -165,7 +165,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_SheZhiHuiZhenShiPinEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_SheZhiHuiZhenShiPinEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.getHuiZhen().setShiPinLianJie(evt.getShiPinLianJie());
@@ -174,7 +174,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_GengXinMuQianZhuYaoZhenDuanEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_GengXinMuQianZhuYaoZhenDuanEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setMuQianZhuYaoZhenDuan(evt.getZhenDuan());
@@ -183,7 +183,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_GengXinXiangXiZhiLiaoJingGuoEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_GengXinXiangXiZhiLiaoJingGuoEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setXiangXiZhiLiaoJingGuoMap(evt.getXiangXiZhiLiaoJingGuoMap());
@@ -192,7 +192,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_GengXinJianChaZongJieEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_GengXinJianChaZongJieEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setJianChaZongJieMap(evt.getJianChaZongJieMap());
@@ -201,7 +201,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_GengXinDianZiYingXiangEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_GengXinDianZiYingXiangEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setDianZiYingXiangMap(evt.getDianZiYingXiangMap());
@@ -210,7 +210,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_GengXinQiTaCaiLiaoEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_GengXinQiTaCaiLiaoEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setQiTaCaiLiaoMap(evt.getQiTaCaiLiaoMap());
@@ -219,7 +219,7 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_ChengGongWanChengEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_ChengGongWanChengEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setWanChengBeiZhu(evt.getBeiZhu());
@@ -229,11 +229,80 @@ public class WenZhenEventListener {
     }
 
     @EventHandler
-    public void on(WenZhen_ZhongDuanWanChengEvt evt) throws JsonProcessingException {
+    public void on(WenZhen_ZhongDuanWanChengEvt evt) {
         WenZhenView record = repository.findById(evt.getId()).get();
 
         record.setWanChengBeiZhu(evt.getBeiZhu());
         record.setZhuangTai(WenZhen.ZhuangTai.YI_JIE_SHU_WAN_CHENG);
+
+        repository.saveAndFlush(record);
+    }
+
+    @EventHandler
+    public void on(WenZhen_KaiJuWenZhenBaoGaoEvt evt) {
+        WenZhenView record = repository.findById(evt.getId()).get();
+
+        WenZhen.WenZhenBaoGao record2 = new WenZhen.WenZhenBaoGao();
+        record2.setId(evt.getWenZhenBaoGaoId());
+        record2.setZhengWen(evt.getZhengWen());
+        record2.setZhangHaoId(evt.getZhangHaoId());
+        record2.setShiJian(evt.getShiJian());
+
+        record.getWenZhenBaoGaoList().add(record2);
+
+        repository.saveAndFlush(record);
+    }
+
+    @EventHandler
+    public void on(WenZhen_KaiJuZhenLiaoBaoGaoEvt evt) {
+        WenZhenView record = repository.findById(evt.getId()).get();
+
+        WenZhen.ZhenLiaoBaoGao record2 = new WenZhen.ZhenLiaoBaoGao();
+        record2.setId(evt.getZhenLiaoBaoGaoId());
+        record2.setZhengWen(evt.getZhengWen());
+        record2.setZhangHaoId(evt.getZhangHaoId());
+        record2.setShiJian(evt.getShiJian());
+
+        record.getZhenLiaoBaoGaoList().add(record2);
+
+        repository.saveAndFlush(record);
+    }
+
+    @EventHandler
+    public void on(WenZhen_KaiJuChuFangEvt evt) {
+        WenZhenView record = repository.findById(evt.getId()).get();
+
+       WenZhen.ChuFang record2 = new WenZhen.ChuFang();
+        record2.setZhengWen(evt.getZhengWen());
+        record2.setKaiJuZhangHaoId(evt.getZhangHaoId());
+        record2.setKaiJuShiJian(evt.getShiJian());
+
+        record2.setZhuangTai(WenZhen.ChuFang.ZhuangTai.YI_KAI_JU);
+
+        record.setChuFang(record2);
+
+        repository.saveAndFlush(record);
+    }
+
+    @EventHandler
+    public void on(WenZhen_QueRenChuFangEvt evt) {
+        WenZhenView record = repository.findById(evt.getId()).get();
+
+        record.getChuFang().setQueRenZhangHaoId(evt.getZhangHaoId());
+        record.getChuFang().setQueRenShiJian(evt.getShiJian());
+
+        record.getChuFang().setZhuangTai(WenZhen.ChuFang.ZhuangTai.YI_QUE_REN);
+
+        repository.saveAndFlush(record);
+    }
+
+    @EventHandler
+    public void on(WenZhen_QuXiaoChuFangEvt evt) {
+        WenZhenView record = repository.findById(evt.getId()).get();
+
+        record.getChuFang().setQuXiaoZhangHaoId(evt.getZhangHaoId());
+
+        record.getChuFang().setZhuangTai(WenZhen.ChuFang.ZhuangTai.YI_QU_XIAO);
 
         repository.saveAndFlush(record);
     }

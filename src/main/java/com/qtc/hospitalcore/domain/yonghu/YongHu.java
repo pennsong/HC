@@ -47,8 +47,8 @@ public class YongHu extends PPAggregate {
 
         apply(
                 new YongHu_ChuangJianEvt(
-                        cmd.getYongHuId(),
-                        cmd.getShouJiHaoMa(),
+                        cmd.getId(),
+                        cmd.getShouJiHao(),
                         cmd.getWeiXinOpenId()
                 ),
                 metaData
@@ -57,8 +57,8 @@ public class YongHu extends PPAggregate {
 
     @EventSourcingHandler
     public void on(YongHu_ChuangJianEvt evt) {
-        this.id = evt.getYongHuId();
-        this.shouJiHao = evt.getShouJiHaoMa();
+        this.id = evt.getId();
+        this.shouJiHao = evt.getShouJiHao();
         this.weiXinOpenId = evt.getWeiXinOpenId();
     }
 
@@ -72,10 +72,10 @@ public class YongHu extends PPAggregate {
 
         apply(
                 new YongHu_ChuangJianJiBenXinXiEvt(
-                        cmd.getYongHuId(),
+                        cmd.getId(),
                         cmd.getXingMing(),
                         cmd.getShenFenZheng(),
-                        cmd.getJiBenXinXiMap()
+                        cmd.getXinXiMap()
                 ),
                 metaData
         );
@@ -85,6 +85,6 @@ public class YongHu extends PPAggregate {
     public void on(YongHu_ChuangJianJiBenXinXiEvt evt) {
         this.xingMing = evt.getXingMing();
         this.shenFenZheng = evt.getShenFenZheng();
-        this.xinXiMap = evt.getJiBenXinXiMap();
+        this.xinXiMap = evt.getXinXiMap();
     }
 }
