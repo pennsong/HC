@@ -185,7 +185,7 @@ public class TestController {
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
                         new WenZhen_AnPaiHuiZhenCmd(
-                               id,
+                                id,
                                 OffsetDateTime.now(),
                                 "lj1",
                                 "hy1",
@@ -200,7 +200,7 @@ public class TestController {
                 GenericCommandMessage.asCommandMessage(
                         new WenZhen_SheZhiHuiZhenShiPinCmd(
                                 id,
-                               "splj1"
+                                "splj1"
 
                         )
                 ).withMetaData(PPUtil.stringToMap(""))
@@ -225,5 +225,24 @@ public class TestController {
         WenZhenView result = wenZhenViewRepository.findById(id).get();
 
         return PPResult.getPPResultOK(result);
+    }
+
+    @GetMapping("/t10")
+    public PPResult test10() {
+        UUID id = UUID.randomUUID();
+
+        commandGateway.sendAndWait(
+                GenericCommandMessage.asCommandMessage(
+                        new ExtChuangJianYongHuCmd(
+                                id,
+                                "sj",
+                                "wx"
+
+                        )
+                ).withMetaData(PPUtil.stringToMap(""))
+        );
+
+
+        return PPResult.getPPOK();
     }
 }

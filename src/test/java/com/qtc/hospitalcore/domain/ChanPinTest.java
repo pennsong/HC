@@ -42,7 +42,7 @@ public class ChanPinTest {
         ChanPin template = new ChanPin();
 
         template.setId(id);
-        template.setZhuangTai(ChanPin.ZhuangTai.ZAI_SHOU);
+        template.setZhuangTai(ZhuangTai.ZAI_SHOU);
         template.setMingCheng("mc");
         template.setDaLeiXing("dl");
         template.setXiaoLeiXing("xl");
@@ -57,7 +57,7 @@ public class ChanPinTest {
         ChanPinView template = new ChanPinView();
 
         template.setId(id);
-        template.setZhuangTai(ChanPin.ZhuangTai.ZAI_SHOU);
+        template.setZhuangTai(ZhuangTai.ZAI_SHOU);
         template.setMingCheng("mc");
         template.setDaLeiXing("dl");
         template.setXiaoLeiXing("xl");
@@ -92,7 +92,7 @@ public class ChanPinTest {
                 .expectState(state -> {
                     ChanPin record = getTemplate();
 
-                    record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+                    record.setZhuangTai(ZhuangTai.TING_SHOU);
 
                     // 时间相关assertions
                     // 时间相关assertions end
@@ -125,7 +125,7 @@ public class ChanPinTest {
         // 修改record到预期结果
         ChanPinView record2 = getViewTemplate();
 
-        record2.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+        record2.setZhuangTai(ZhuangTai.TING_SHOU);
         // 修改record到预期结果 end
 
         ArgumentCaptor<ChanPinView> captor = ArgumentCaptor.forClass(ChanPinView.class);
@@ -227,7 +227,7 @@ public class ChanPinTest {
 
         fixture.givenState(() -> {
             ChanPin record = getTemplate();
-            record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+            record.setZhuangTai(ZhuangTai.TING_SHOU);
 
             return record;
         })
@@ -256,7 +256,7 @@ public class ChanPinTest {
 
         ChanPinView record = getViewTemplate();
 
-        record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+        record.setZhuangTai(ZhuangTai.TING_SHOU);
 
         Mockito.when(repository.findById(evt.getId()))
                 .thenReturn(Optional.of(record));
@@ -311,7 +311,7 @@ public class ChanPinTest {
                 .expectState(state -> {
                     ChanPin record = getTemplate();
 
-                    record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+                    record.setZhuangTai(ZhuangTai.TING_SHOU);
                     // 时间相关assertions
                     // 时间相关assertions end
 
@@ -337,7 +337,7 @@ public class ChanPinTest {
         // 修改record到预期结果
         ChanPinView record2 = getViewTemplate();
 
-        record2.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+        record2.setZhuangTai(ZhuangTai.TING_SHOU);
         // 修改record到预期结果 end
 
         ArgumentCaptor<ChanPinView> captor = ArgumentCaptor.forClass(ChanPinView.class);
@@ -358,7 +358,7 @@ public class ChanPinTest {
 
         fixture.givenState(() -> {
             ChanPin record = getTemplate();
-            record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+            record.setZhuangTai(ZhuangTai.TING_SHOU);
 
             return record;
         })

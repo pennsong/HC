@@ -29,10 +29,6 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public class ChanPin extends PPAggregate {
-    public static enum ZhuangTai {
-        ZAI_SHOU,
-        TING_SHOU
-    }
 
     @AggregateIdentifier
     UUID id;

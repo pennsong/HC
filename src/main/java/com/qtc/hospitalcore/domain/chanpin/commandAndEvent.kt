@@ -6,6 +6,11 @@ import java.math.BigDecimal
 import java.util.*
 import javax.persistence.Convert
 
+enum class ZhuangTai {
+        ZAI_SHOU,
+        TING_SHOU,
+}
+
 data class ChanPin_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,

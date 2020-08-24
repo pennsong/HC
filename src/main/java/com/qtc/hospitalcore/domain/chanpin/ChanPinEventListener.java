@@ -32,7 +32,7 @@ public class ChanPinEventListener {
         record.setShiChangJia(evt.getShiChangJia());
         record.setXinXiMap(evt.getXinXiMap());
 
-        record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+        record.setZhuangTai(ZhuangTai.TING_SHOU);
 
         repository.saveAndFlush(record);
     }
@@ -53,7 +53,7 @@ public class ChanPinEventListener {
     @EventHandler
     public void on(ChanPin_ShangJiaEvt evt) {
         ChanPinView record = repository.findById(evt.getId()).get();
-        record.setZhuangTai(ChanPin.ZhuangTai.ZAI_SHOU);
+        record.setZhuangTai(ZhuangTai.ZAI_SHOU);
 
         repository.saveAndFlush(record);
     }
@@ -61,7 +61,7 @@ public class ChanPinEventListener {
     @EventHandler
     public void on(ChanPin_XiaJiaEvt evt) {
         ChanPinView record = repository.findById(evt.getId()).get();
-        record.setZhuangTai(ChanPin.ZhuangTai.TING_SHOU);
+        record.setZhuangTai(ZhuangTai.TING_SHOU);
 
         repository.saveAndFlush(record);
     }

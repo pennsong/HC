@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CommandLineAppStartupRunner implements CommandLineRunner {
 
-    @Autowired
-    ExternalHandler externalCommandHandler;
-
-    @Autowired
-    private ApplicationContext context;
+//    @Autowired
+//    ExternalHandler externalCommandHandler;
+//
+//    @Autowired
+//    private ApplicationContext context;
 
     @Override
     public void run(String...args) throws Exception {
         log.info("Application started");
-        externalCommandHandler.setZhangHaoRepository((Repository<ZhangHao>) context.getBean("zhangHaoRepository"));
-        externalCommandHandler.setYongHuRepository((Repository<YongHu>) context.getBean("yongHuRepository"));
-        externalCommandHandler.setYiHuRenYuanRepository((Repository<YiHuRenYuan>) context.getBean("yiHuRenYuanRepository"));
+//        externalCommandHandler.setZhangHaoRepository((Repository<ZhangHao>) context.getBean("zhangHaoRepository"));
+//        externalCommandHandler.setYongHuRepository((Repository<YongHu>) context.getBean("yongHuRepository"));
+//        externalCommandHandler.setYiHuRenYuanRepository((Repository<YiHuRenYuan>) context.getBean("yiHuRenYuanRepository"));
 
 //        String[] beans = context.getBeanDefinitionNames();
 //        Arrays.sort(beans);

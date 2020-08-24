@@ -1,6 +1,5 @@
 package com.qtc.hospitalcore.domain;
 
-import com.qtc.hospitalcore.domain.chanpin.*;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.paiban.*;
 import com.qtc.hospitalcore.domain.util.PPUtil;

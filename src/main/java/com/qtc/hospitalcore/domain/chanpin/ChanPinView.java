@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +28,8 @@ public class ChanPinView extends PPEntity {
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID id;
 
-    ChanPin.ZhuangTai zhuangTai;
+    @Enumerated(EnumType.STRING)
+    ZhuangTai zhuangTai;
 
     String mingCheng;
     String daLeiXing;

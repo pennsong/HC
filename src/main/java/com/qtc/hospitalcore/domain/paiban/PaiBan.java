@@ -21,6 +21,7 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Slf4j
@@ -66,7 +67,8 @@ public class PaiBan extends PPAggregate {
                         cmd.getYuFuFei(),
                         cmd.getShiChangJia(),
                         cmd.getYiSheng(),
-                        cmd.getShiJian(),
+                        // 强制到小时粒度
+                        cmd.getShiJian().truncatedTo(HOURS),
                         cmd.getXinXiMap()
                 ),
                 metaData

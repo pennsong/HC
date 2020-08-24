@@ -1,8 +1,11 @@
 package com.qtc.hospitalcore;
 
+import com.qtc.hospitalcore.domain.ExtCheckChanPinCmd;
 import com.qtc.hospitalcore.domain.ExtChuangJianYiHuRenYuanCmd;
 import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.chanpin.ChanPin;
 import com.qtc.hospitalcore.domain.chongFuJianCe.*;
+import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.exception.PPDuplicationException;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_ChuangJianCmd;
@@ -14,7 +17,9 @@ import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
 import lombok.Setter;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.messaging.MetaData;
+import org.axonframework.modelling.command.Aggregate;
 import org.axonframework.modelling.command.Repository;
+import org.axonframework.spring.config.AxonConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,14 +30,6 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Component
 public class ExternalHandler {
-    @Setter
-    private Repository<ZhangHao> zhangHaoRepository;
-
-    @Setter
-    private Repository<YongHu> yongHuRepository;
-
-    @Setter
-    private Repository<YiHuRenYuan> yiHuRenYuanRepository;
 
     @Autowired
     private YongHuShouJiHaoRepository yongHuShouJiHaoRepository;
@@ -45,6 +42,18 @@ public class ExternalHandler {
 
     @Autowired
     private YiHuRenYuanShenFenZhengHaoRepository yiHuRenYuanShenFenZhengHaoRepository;
+
+    @Autowired
+    private Repository<ZhangHao> zhangHaoRepository;
+
+    @Autowired
+    private Repository<YongHu> yongHuRepository;
+
+    @Autowired
+    private Repository<YiHuRenYuan> yiHuRenYuanRepository;
+
+    @Autowired
+    private Repository<ChanPin> chanPinRepository;
 
     @CommandHandler
     public void on(ExtChuangJianYongHuCmd cmd, MetaData metaData) throws Exception {
@@ -138,5 +147,15 @@ public class ExternalHandler {
                         yiHuRenYuanId
                 ), metaData
         ));
+    }
+
+    @CommandHandler
+    public void on (ExtCheckChanPinCmd cmd) {
+        // 如果查不到, 这里会抛异常
+        Aggregate<ChanPin> chanPinAggregate = chanPinRepository.load(cmd.getId().toString());
+
+        if (chanPinAggregate.invoke(r -> r.isDeleted())) {
+            throw new PPBusinessException("产品已删除");
+        }
     }
 }

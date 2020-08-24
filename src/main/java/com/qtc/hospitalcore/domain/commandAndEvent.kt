@@ -23,3 +23,8 @@ data class ExtChuangJianYiHuRenYuanCmd(
         var yiHuRenYuan_XinXiMap: Map<String, Any>
 )
 
+data class ExtCheckChanPinCmd(
+        @TargetAggregateIdentifier
+        var id: UUID
+)
+
