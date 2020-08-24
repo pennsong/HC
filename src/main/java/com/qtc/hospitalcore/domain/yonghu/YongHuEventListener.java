@@ -37,5 +37,14 @@ public class YongHuEventListener {
 
         repository.saveAndFlush(record);
     }
+
+    @EventHandler
+    public void on(YongHu_ShanChuEvt evt) {
+        YongHuView record = repository.findById(evt.getId()).get();
+
+        record.delete();
+
+        repository.saveAndFlush(record);
+    }
     
 }

@@ -1,50 +1,37 @@
 package com.qtc.hospitalcore.api;
 
-import com.qtc.hospitalcore.domain.ExtCheckChanPinCmd;
+import com.qtc.hospitalcore.domain.ExtJianChaChanPinCmd;
 import com.qtc.hospitalcore.domain.ExtChuangJianYiHuRenYuanCmd;
-import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
 import com.qtc.hospitalcore.domain.chanpin.*;
-import com.qtc.hospitalcore.domain.chongFuJianCe.YongHuShouJiHaoRepository;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.paiban.PaiBan_ChuangJianCmd;
+import com.qtc.hospitalcore.domain.paiban.PaiBan_ShangJiaEvt;
+import com.qtc.hospitalcore.domain.paiban.PaiBan_ShouChuCmd;
+import com.qtc.hospitalcore.domain.paiban.PaiBan_XiaJiaCmd;
+import com.qtc.hospitalcore.domain.util.PPCommandGateway;
 import com.qtc.hospitalcore.domain.util.PPUtil;
-import com.qtc.hospitalcore.domain.wenzhen.JieGuo;
-import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
-import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
-import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
-import com.qtc.hospitalcore.domain.yaopin.YaoPinView;
+import com.qtc.hospitalcore.domain.wenzhen.*;
 import com.qtc.hospitalcore.domain.yihurenyuan.QuanXian;
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView;
-import com.qtc.hospitalcore.domain.yonghu.YongHu;
-import com.qtc.hospitalcore.domain.yonghu.YongHuView;
-import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
-import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
+import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_GengXinCmd;
+import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_SheZhiQuanXianCmd;
+import com.qtc.hospitalcore.domain.yonghu.YongHu_ShanChuCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ShanChuCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_SheZhiMiMaCmd;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.axonserver.connector.event.axon.AxonServerEventStore;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
-import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
-import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
-import org.axonframework.messaging.unitofwork.UnitOfWork;
-import org.axonframework.modelling.command.Aggregate;
 import org.axonframework.modelling.command.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -53,15 +40,8 @@ import java.util.*;
 @RequestMapping("/admin")
 @Api(tags = "Admin操作")
 public class AdminController {
-
     @Autowired
-    private AxonServerEventStore axonServerEventStore;
-
-    @Autowired
-    private CommandGateway commandGateway;
-
-    @Autowired
-    private Repository<ChanPin> chanPinRepository;
+    private PPCommandGateway ppCommandGateway;
 
     // query
 
@@ -72,20 +52,21 @@ public class AdminController {
     @ApiOperation(value = "创建产品")
     @PostMapping("/chuangJianChanPin")
     public PPResult<UUID> chuangJianChanPin(@Valid @RequestBody DTO_chuangJianChanPin dto) {
+        // 参数相关检查
+        // 参数相关检查 end
+
         UUID id = UUID.randomUUID();
 
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ChanPin_ChuangJianCmd(
-                                id,
-                                dto.getChanPingMing(),
-                                dto.getDaLeiXing(),
-                                dto.getXiaoLeiXing(),
-                                dto.getYuFuFei(),
-                                dto.getShiChangJia(),
-                                dto.getXinXiMap()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        ppCommandGateway.sendAndWait(
+                new ChanPin_ChuangJianCmd(
+                        id,
+                        dto.getChanPingMing(),
+                        dto.getDaLeiXing(),
+                        dto.getXiaoLeiXing(),
+                        dto.getYuFuFei(),
+                        dto.getShiChangJia(),
+                        dto.getXinXiMap()
+                )
         );
 
         return PPResult.getPPResultOK(id);
@@ -112,19 +93,19 @@ public class AdminController {
     @ApiOperation(value = "编辑产品")
     @PostMapping("/bianJichanPin")
     public PPResult bianJichanPin(@Valid @RequestBody DTO_bianJichanPin dto) {
+        // 参数相关检查
+        // 参数相关检查 end
 
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ChanPin_GengXinCmd(
-                                dto.getChanPinId(),
-                                dto.getChanPingMing(),
-                                dto.getDaLeiXing(),
-                                dto.getXiaoLeiXing(),
-                                dto.getYuFuFei(),
-                                dto.getShiChangJia(),
-                                dto.getXinXiMap()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        ppCommandGateway.sendAndWait(
+                new ChanPin_GengXinCmd(
+                        dto.getChanPinId(),
+                        dto.getChanPingMing(),
+                        dto.getDaLeiXing(),
+                        dto.getXiaoLeiXing(),
+                        dto.getYuFuFei(),
+                        dto.getShiChangJia(),
+                        dto.getXinXiMap()
+                )
         );
 
         return PPResult.getPPOK();
@@ -153,12 +134,13 @@ public class AdminController {
     @ApiOperation(value = "下架产品")
     @PostMapping("/xiaJiaChanPin")
     public PPResult xiaJiaChanPin(@Valid @RequestBody DTO_xiaJiaChanPin dto) {
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ChanPin_XiaJiaCmd(
-                                dto.getChanPinId()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        // 参数相关检查
+        // 参数相关检查 end
+
+        ppCommandGateway.sendAndWait(
+                new ChanPin_XiaJiaCmd(
+                        dto.getChanPinId()
+                )
         );
 
         return PPResult.getPPOK();
@@ -173,12 +155,13 @@ public class AdminController {
     @ApiOperation(value = "上架产品")
     @PostMapping("/shangJiaChanPin")
     public PPResult shangJiaChanPin(@Valid @RequestBody DTO_shangJiaChanPin dto) {
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ChanPin_ShangJiaCmd(
-                                dto.getChanPinId()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        // 参数相关检查
+        // 参数相关检查 end
+
+        ppCommandGateway.sendAndWait(
+                new ChanPin_ShangJiaCmd(
+                        dto.getChanPinId()
+                )
         );
 
         return PPResult.getPPOK();
@@ -193,12 +176,13 @@ public class AdminController {
     @ApiOperation(value = "删除产品")
     @PostMapping("/shanChuChanPin")
     public PPResult shanChuChanPin(@Valid @RequestBody DTO_shanChuChanPin dto) {
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ChanPin_ShanChuCmd(
-                                dto.getChanPinId()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        // 参数相关检查
+        // 参数相关检查 end
+
+        ppCommandGateway.sendAndWait(
+                new ChanPin_ShanChuCmd(
+                        dto.getChanPinId()
+                )
         );
 
         return PPResult.getPPOK();
@@ -214,32 +198,32 @@ public class AdminController {
     @PostMapping("/chuangJianPaiBan")
     public PPResult<UUID> chuangJianPaiBan(@Valid @RequestBody DTO_chuangJianPaiBan dto) {
         // 参数相关检查
-        // 对应产品id存在
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ExtCheckChanPinCmd(
-                                dto.getChanPinId()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
-        );
+        // 检查排班时间
+        if (Duration.between(OffsetDateTime.now(), dto.getShiJian()).toDays() > 365) {
+            throw new PPBusinessException("只能创建将来365天内的排班");
+        }
 
+        // 对应产品id存在
+        ppCommandGateway.sendAndWait(
+                new ExtJianChaChanPinCmd(
+                        dto.getChanPinId()
+                )
+        );
         // 参数相关检查 end
 
         UUID id = UUID.randomUUID();
 
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new PaiBan_ChuangJianCmd(
-                                id,
-                                dto.getChanPinId(),
-                                dto.getYuFuFei(),
-                                dto.getShiChangJia(),
-                                dto.getYiSheng(),
-                                dto.getShiJian(),
-                                dto.getXinXiMap()
+        ppCommandGateway.sendAndWait(
+                new PaiBan_ChuangJianCmd(
+                        id,
+                        dto.getChanPinId(),
+                        dto.getYuFuFei(),
+                        dto.getShiChangJia(),
+                        dto.getYiSheng(),
+                        dto.getShiJian(),
+                        dto.getXinXiMap()
 
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+                )
         );
 
         return PPResult.getPPResultOK(id);
@@ -264,127 +248,136 @@ public class AdminController {
         Map<String, Object> xinXiMap;
     }
 
-    @ApiOperation(value = "编辑排班")
-    @PostMapping("/bianJiPaiBan")
-    public PPResult bianJiPaiBan(@Valid @RequestBody DTO_bianJiPaiBan dto) {
-        // TODO: PP
-
-        return null;
-    }
-
-    @Data
-    static class DTO_bianJiPaiBan {
-        @NotNull
-        UUID PaiBanId;
-        @NotBlank
-        String chanPingMing;
-        @NotBlank
-        String daLeiXing;
-        @NotBlank
-        String xiaoLeiXing;
-        @NotNull
-        @Min(0)
-        BigDecimal yuFuFei;
-        @NotNull
-        @Min(0)
-        BigDecimal shiChangJia;
-    }
-
     @ApiOperation(value = "下架排班")
     @PostMapping("/xiaJiaPaiBan")
     public PPResult xiaJiaPaiBan(@Valid @RequestBody DTO_xiaJiaPaiBan dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new PaiBan_XiaJiaCmd(
+                        dto.getPaiBanId()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_xiaJiaPaiBan {
+        @NotNull
         UUID PaiBanId;
     }
 
     @ApiOperation(value = "上架排班")
     @PostMapping("/shangJiaPaiBan")
     public PPResult shangJiaPaiBan(@Valid @RequestBody DTO_shangJiaPaiBan dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new PaiBan_ShangJiaEvt(
+                        dto.getPaiBanId()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_shangJiaPaiBan {
+        @NotNull
         UUID PaiBanId;
     }
 
     @ApiOperation(value = "删除排班")
     @PostMapping("/shanChuPaiBan")
     public PPResult shanChuPaiBan(@Valid @RequestBody DTO_shanChuPaiBan dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new PaiBan_ShouChuCmd(
+                        dto.getPaiBanId()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_shanChuPaiBan {
+        @NotNull
         UUID PaiBanId;
     }
 
     @ApiOperation(value = "删除用户")
     @PostMapping("/shanChuYongHu")
     public PPResult shanChuYongHu(@Valid @RequestBody DTO_shanChuYongHu dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new YongHu_ShanChuCmd(
+                        dto.getYongHuId()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_shanChuYongHu {
+        @NotNull
         UUID yongHuId;
     }
 
     @ApiOperation(value = "创建医护人员")
     @PostMapping("/chuangJianYiHuRenYuan")
     public PPResult<UUID> chuangJianYiHuRenYuan(@Valid @RequestBody DTO_chuangJianYiHuRenYuan dto) {
-        // 校验
+        // 参数相关检查
+        // 参数相关检查 end
 
-        // 校验 end
-        UUID result = UUID.randomUUID();
+        UUID id = UUID.randomUUID();
 
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ExtChuangJianYiHuRenYuanCmd(
-                                result,
-                                dto.getDengLuMing(),
-                                dto.getDengLuMiMa(),
-                                dto.getXingMing(),
-                                dto.getShenFenZhengHao(),
-                                dto.getYiHuRenYuanXinXiNeiRong()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        ppCommandGateway.sendAndWait(
+                new ExtChuangJianYiHuRenYuanCmd(
+                        id,
+                        dto.getDengLuMing(),
+                        dto.getDengLuMiMa(),
+                        dto.getXingMing(),
+                        dto.getShenFenZhengHao(),
+                        dto.getYiHuRenYuanXinXiNeiRong()
+                )
         );
 
-        return PPResult.getPPResultOK(result);
+        return PPResult.getPPResultOK(id);
     }
 
     @Data
     static class DTO_chuangJianYiHuRenYuan {
+        @NotBlank
         String dengLuMing;
+        @NotBlank
         String dengLuMiMa;
+        @NotBlank
         String xingMing;
+        @NotBlank
         String shenFenZhengHao;
+        @NotNull
         Map<String, Object> yiHuRenYuanXinXiNeiRong;
     }
 
     @ApiOperation(value = "删除医护人员帐号")
     @PostMapping("/shanChuYiHuRenYuanZhangHao")
     public PPResult shanChuYiHuRenYuanZhangHao(@Valid @RequestBody DTO_shanChuYiHuRenYuanZhangHao dto) {
+        // 参数相关检查
+        // 参数相关检查 end
 
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ZhangHao_ShanChuCmd(
-                                dto.getYiHuRenYuanZhangHaoId()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        ppCommandGateway.sendAndWait(
+                new ZhangHao_ShanChuCmd(
+                        dto.getYiHuRenYuanZhangHaoId()
+                )
         );
 
         return PPResult.getPPOK();
@@ -392,53 +385,75 @@ public class AdminController {
 
     @Data
     static class DTO_shanChuYiHuRenYuanZhangHao {
+        @NotNull
         UUID yiHuRenYuanZhangHaoId;
     }
 
     @ApiOperation(value = "编辑医护人员")
     @PostMapping("/bianJiYiHuRenYuan")
     public PPResult bianJiYiHuRenYuan(@Valid @RequestBody DTO_bianJiYiHuRenYuan dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new YiHuRenYuan_GengXinCmd(
+                        dto.getYiHuRenYuanId(),
+                        dto.getXingMing(),
+                        dto.getShenFenZhengHao(),
+                        dto.getYiHuRenYuanXinXiNeiRong()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_bianJiYiHuRenYuan {
+        @NotNull
         UUID yiHuRenYuanId;
-        String dengLuMiMa;
+        @NotBlank
         String xingMing;
+        @NotBlank
         String shenFenZhengHao;
+        @NotNull
         Map<String, Object> yiHuRenYuanXinXiNeiRong;
     }
 
     @ApiOperation(value = "设置医护人员权限")
     @PostMapping("/sheZhiYiHuRenYuanQuanXian")
     public PPResult sheZhiYiHuRenYuanQuanXian(@Valid @RequestBody DTO_sheZhiYiHuRenYuanQuanXian dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new YiHuRenYuan_SheZhiQuanXianCmd(
+                        dto.getYiHuRenYuanId(),
+                        dto.getQuanXianZu()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_sheZhiYiHuRenYuanQuanXian {
+        @NotNull
         UUID yiHuRenYuanId;
+        @NotNull
         Set<QuanXian> quanXianZu;
     }
 
     @ApiOperation(value = "设置医护人员密码")
     @PostMapping("/sheZhiYiHuRenYuanMiMa")
     public PPResult sheZhiYiHuRenYuanMiMa(@Valid @RequestBody DTO_sheZhiYiHuRenYuanMiMa dto) {
-        // 校验
+        // 参数相关检查
+        // 参数相关检查 end
 
-        // 校验 end
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ZhangHao_SheZhiMiMaCmd(
-                                dto.getYiHuRenYuanZhangHaoId(),
-                                dto.getMiMa()
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
+        ppCommandGateway.sendAndWait(
+                new ZhangHao_SheZhiMiMaCmd(
+                        dto.getYiHuRenYuanZhangHaoId(),
+                        dto.getMiMa()
+                )
         );
 
         return PPResult.getPPOK();
@@ -446,21 +461,42 @@ public class AdminController {
 
     @Data
     static class DTO_sheZhiYiHuRenYuanMiMa {
+        @NotNull
         UUID yiHuRenYuanZhangHaoId;
+        @NotBlank
         String miMa;
     }
 
     @ApiOperation(value = "结束问诊")
     @PostMapping("/jieShuWenZhen")
     public PPResult jieShuWenZhen(@Valid @RequestBody DTO_jieShuWenZhen dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        if (dto.jieGuo == JieGuo.CHENG_GONG) {
+            ppCommandGateway.sendAndWait(
+                    new WenZhen_ChengGongWanChengCmd(
+                            dto.getWenZhenId(),
+                            dto.getBeiZhu()
+                    )
+            );
+        } else if (dto.jieGuo == JieGuo.JIE_SHU) {
+            ppCommandGateway.sendAndWait(
+                    new WenZhen_JieShuWanChengCmd(
+                            dto.getWenZhenId(),
+                            dto.getBeiZhu()
+                    )
+            );
+        }
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_jieShuWenZhen {
+        @NotNull
         UUID wenZhenId;
+        @NotNull
         JieGuo jieGuo;
         String beiZhu;
     }
@@ -468,49 +504,107 @@ public class AdminController {
     @ApiOperation(value = "分配问诊")
     @PostMapping("/fenPeiWenZhen")
     public PPResult fenPeiWenZhen(@Valid @RequestBody DTO_fenPeiWenZhen dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new WenZhen_AnPaiYiShengCmd(
+                        dto.getWenZhenId(),
+                        dto.getWenZhenZhangHaoId(),
+                        dto.getBianJiBingLiZhangHaoId(),
+                        dto.getKaiJuChuFangZhangHaoId(),
+                        dto.getQueRenChuFangZhangHaoId()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_fenPeiWenZhen {
+        @NotNull
         UUID wenZhenId;
-        UUID wenZhenYiSheng;
-        UUID bianJiBingLiYiSheng;
-        UUID kaiJuChuFangYiSheng;
-        UUID queRenChuFangYiSheng;
+        @NotNull
+        UUID wenZhenZhangHaoId;
+        @NotNull
+        UUID bianJiBingLiZhangHaoId;
+        @NotNull
+        UUID kaiJuChuFangZhangHaoId;
+        @NotNull
+        UUID queRenChuFangZhangHaoId;
     }
 
     @ApiOperation(value = "转诊")
     @PostMapping("/zhuanZhen")
     public PPResult zhuanZhen(@Valid @RequestBody DTO_zhuanZhen dto) {
-        // TODO: PP
+        // 参数相关检查
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new WenZhen_ZhuanZhenCmd(
+                        dto.getWenZhenId(),
+                        dto.getWenZhenZhangHaoId(),
+                        dto.getBianJiBingLiZhangHaoId(),
+                        dto.getKaiJuChuFangZhangHaoId(),
+                        dto.getQueRenChuFangZhangHaoId()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_zhuanZhen {
+        @NotNull
         UUID wenZhenId;
-        UUID wenZhenYiSheng;
-        UUID bianJiBingLiYiSheng;
-        UUID kaiJuChuFangYiSheng;
-        UUID queRenChuFangYiSheng;
+        @NotNull
+        UUID wenZhenZhangHaoId;
+        @NotNull
+        UUID bianJiBingLiZhangHaoId;
+        @NotNull
+        UUID kaiJuChuFangZhangHaoId;
+        @NotNull
+        UUID queRenChuFangZhangHaoId;
     }
 
     @ApiOperation(value = "安排会诊")
     @PostMapping("/anPaiHuiZhen")
     public PPResult anPaiHuiZhen(@Valid @RequestBody DTO_anPaiHuiZhen dto) {
-        // TODO: PP
+        // 参数相关检查
+        if (Duration.between(OffsetDateTime.now(), dto.getHuiZhenShiJian()).toDays() > 365) {
+            throw new PPBusinessException("只能创建将来365天内的会诊");
+        }
+        // 参数相关检查 end
 
-        return null;
+        ppCommandGateway.sendAndWait(
+                new WenZhen_AnPaiHuiZhenCmd(
+                        dto.getWenZhenId(),
+                        dto.getHuiZhenShiJian(),
+                        dto.getLianJie(),
+                        dto.getHuiYiId(),
+                        dto.getHuanFangCanYuRenYuan(),
+                        dto.getBeiZhu()
+                )
+        );
+
+        return PPResult.getPPOK();
     }
 
     @Data
     static class DTO_anPaiHuiZhen {
+        @NotNull
         UUID wenZhenId;
-        Map<String, Object> huiZhenXinXiNeiRong;
+        @NotNull
+        @Future
+        OffsetDateTime huiZhenShiJian;
+        @NotBlank
+        String lianJie;
+        @NotBlank
+        String huiYiId;
+        @NotBlank
+        String huanFangCanYuRenYuan;
+        String beiZhu;
+
     }
     // command end
 }

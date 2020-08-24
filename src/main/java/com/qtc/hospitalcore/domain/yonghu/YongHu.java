@@ -87,4 +87,25 @@ public class YongHu extends PPAggregate {
         this.shenFenZheng = evt.getShenFenZheng();
         this.xinXiMap = evt.getXinXiMap();
     }
+
+    @CommandHandler
+    public void on(YongHu_ShanChuCmd cmd, MetaData metaData) {
+        // 条件检查
+        // 删除检查
+        checkDeleted();
+
+        // 条件检查 end
+
+        apply(
+                new YongHu_ShanChuEvt(
+                        cmd.getId()
+                ),
+                metaData
+        );
+    }
+
+    @EventSourcingHandler
+    public void on(YongHu_ShanChuEvt evt) {
+       this.delete();
+    }
 }

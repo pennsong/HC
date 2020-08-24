@@ -1,6 +1,6 @@
 package com.qtc.hospitalcore;
 
-import com.qtc.hospitalcore.domain.ExtCheckChanPinCmd;
+import com.qtc.hospitalcore.domain.ExtJianChaChanPinCmd;
 import com.qtc.hospitalcore.domain.ExtChuangJianYiHuRenYuanCmd;
 import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
 import com.qtc.hospitalcore.domain.chanpin.ChanPin;
@@ -14,12 +14,10 @@ import com.qtc.hospitalcore.domain.yonghu.YongHu;
 import com.qtc.hospitalcore.domain.zhanghao.JueSe;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
-import lombok.Setter;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.modelling.command.Aggregate;
 import org.axonframework.modelling.command.Repository;
-import org.axonframework.spring.config.AxonConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -150,7 +148,7 @@ public class ExternalHandler {
     }
 
     @CommandHandler
-    public void on (ExtCheckChanPinCmd cmd) {
+    public void on (ExtJianChaChanPinCmd cmd) {
         // 如果查不到, 这里会抛异常
         Aggregate<ChanPin> chanPinAggregate = chanPinRepository.load(cmd.getId().toString());
 

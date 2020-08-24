@@ -143,6 +143,8 @@ public class YongHuController {
     @ApiOperation(value = "获取用户手机验证码")
     @PostMapping("/huoQuYongHuShouJiYanZhengMa")
     public PPResult huoQuYongHuShouJiYanZhengMa(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody DTO_huoQuYongHuShouJiYanZhengMa dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // 校验
         // 检测验证码
         String code = String.format("%04d", new Random().nextInt(10000));
@@ -162,6 +164,8 @@ public class YongHuController {
     @ApiOperation(value = "递交用户手机验证码")
     @PostMapping("/diJiaoYongHuShouJiYanZhengMa")
     public PPResult diJiaoYongHuShouJiYanZhengMa(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody DTO_diJiaoYongHuShouJiYanZhengMa dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // 校验
         // 检测验证码
         Object code = sessionStrategy.getAttribute(new ServletWebRequest(request), YONG_HU_YAN_ZHENG_MA_KEY);
@@ -200,6 +204,8 @@ public class YongHuController {
     @ApiOperation(value = "递交基本信息")
     @PostMapping("/diJiaoJiBenXinXi")
     public PPResult diJiaoJiBenXinXi(@Valid @RequestBody DTO_diJiaoJiBenXinXi dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         commandGateway.sendAndWait(new YongHu_ChuangJianJiBenXinXiCmd(
                         dto.getYongHuId(),
                         dto.getXingMing(),
@@ -222,6 +228,8 @@ public class YongHuController {
     @ApiOperation(value = "发起问诊")
     @PostMapping("/faQiWenZhen")
     public PPResult faQiWenZhen(@Valid @RequestBody DTO_faQiWenZhen dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -235,6 +243,8 @@ public class YongHuController {
     @ApiOperation(value = "取消问诊")
     @PostMapping("/quXiaoWenZhen")
     public PPResult quXiaoWenZhen(@Valid @RequestBody DTO_quXiaoWenZhen dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -248,6 +258,8 @@ public class YongHuController {
     @ApiOperation(value = "支付预付款")
     @PostMapping("/zhiFuYuFuKuan")
     public PPResult zhiFuYuFuKuan(@Valid @RequestBody DTO_zhiFuYuFuKuan dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -261,6 +273,8 @@ public class YongHuController {
     @ApiOperation(value = "获取健康档案手机绑定验证码")
     @PostMapping("/huoQuJianKangDangAnShouJiBangDingYanZhengMa")
     public PPResult<String> huoQuJianKangDangAnShouJiBangDingYanZhengMa(@Valid @RequestBody DTO_huoQuJianKangDangAnShouJiBangDingYanZhengMa dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -274,6 +288,8 @@ public class YongHuController {
     @ApiOperation(value = "创建健康档案")
     @PostMapping("/chuangJianJianKangDangAn")
     public PPResult chuangJianJianKangDangAn(@Valid @RequestBody DTO_chuangJianJianKangDangAn dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -287,6 +303,8 @@ public class YongHuController {
     @ApiOperation(value = "编辑健康信息")
     @PostMapping("/bianJiJianKangXinXi")
     public PPResult bianJiJianKangXinXi(@Valid @RequestBody DTO_bianJiJianKangXinXi dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;

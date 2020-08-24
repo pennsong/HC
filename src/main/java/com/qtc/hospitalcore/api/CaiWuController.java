@@ -42,6 +42,8 @@ public class CaiWuController {
     @ApiOperation(value = "补充问诊付款")
     @PostMapping("/buChongWenZhenFuKuan")
     public PPResult buChongWenZhenFuKuan(@Valid @RequestBody DTO_buChongWenZhenFuKuan dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -63,6 +65,8 @@ public class CaiWuController {
     @ApiOperation(value = "发起问诊退款")
     @PostMapping("/faQiWenZhenTuiKuan")
     public PPResult faQiTuiKuan(@Valid @RequestBody DTO_faQiWenZhenTuiKuan dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;

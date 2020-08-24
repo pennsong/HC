@@ -35,6 +35,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "创建问诊报告")
     @PostMapping("/chuangJianWenZhenBaoGao")
     public PPResult<WenZhen> chuangJianWenZhen(@Valid @RequestBody DTO_chuangJianWenZhenBaoGao dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -49,6 +51,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊健康档案")
     @PostMapping("/bianJiWenZhenJianKangDangAn")
     public PPResult<WenZhen> bianJiWenZhenJianKangDangAn(@Valid @RequestBody DTO_bianJiWenZhenJianKangDangAn dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -63,6 +67,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊主要诊断")
     @PostMapping("/bianJiWenZhenZhuYaoZhenDuan")
     public PPResult<WenZhen> bianJiWenZhenZhuYaoZhenDuan(@Valid @RequestBody DTO_bianJiWenZhenZhuYaoZhenDuan dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -77,6 +83,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊详细治疗经过")
     @PostMapping("/bianJiWenZhenXiangXiZhiLiaoJingGuo")
     public PPResult<WenZhen> bianJiWenZhenXiangXiZhiLiaoJingGuo(@Valid @RequestBody DTO_bianJiWenZhenXiangXiZhiLiaoJingGuo dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -91,6 +99,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊检查总结")
     @PostMapping("/bianJiWenZhenJianChaZongJie")
     public PPResult<WenZhen> bianJiWenZhenJianChaZongJie(@Valid @RequestBody DTO_bianJiWenZhenJianChaZongJie dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -105,6 +115,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊电子影像")
     @PostMapping("/bianJiWenZhenDianZiYingXiang")
     public PPResult<WenZhen> bianJiWenZhenDianZiYingXiang(@Valid @RequestBody DTO_bianJiWenZhenDianZiYingXiang dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -119,6 +131,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊其他材料")
     @PostMapping("/bianJiWenZhenQiTaCaiLiao")
     public PPResult<WenZhen> bianJiWenZhenQiTaCaiLiao(@Valid @RequestBody DTO_bianJiWenZhenQiTaCaiLiao dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -133,6 +147,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "编辑问诊总结")
     @PostMapping("/bianJiWenZhenZongJie")
     public PPResult<WenZhen> bianJiWenZhenZongJie(@Valid @RequestBody DTO_bianJiWenZhenZongJie dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -147,6 +163,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "开具问诊处方")
     @PostMapping("/kaiJuWenZhenChuFang")
     public PPResult<WenZhen> kaiJuWenZhenChuFang(@Valid @RequestBody DTO_kaiJuWenZhenChuFang dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;
@@ -161,6 +179,8 @@ public class YiHuRenYuanController {
     @ApiOperation(value = "确认问诊处方")
     @PostMapping("/queRenWenZhenChuFang")
     public PPResult<WenZhen> queRenWenZhenChuFang(@Valid @RequestBody DTO_queRenWenZhenChuFang dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;

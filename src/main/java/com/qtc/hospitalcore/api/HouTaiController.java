@@ -133,6 +133,8 @@ public class HouTaiController {
     @ApiOperation(value = "获取健康档案问诊列表")
     @GetMapping("/huoQuJianKangDangAnWenZhenLB")
     public PPResult<List<WenZhenView>> huoQuJianKangDangAnWenZhenLB(DTO_huoQuJiuZhenRenWenZhenLB dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         // TODO: PP
 
         return null;

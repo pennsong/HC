@@ -3,6 +3,7 @@ package com.qtc.hospitalcore.domain.util;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class PPCommandGateway {
 
     private CommandGateway commandGateway;
 
+    @Autowired
     public PPCommandGateway(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }

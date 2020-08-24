@@ -25,6 +25,8 @@ public class ServerController {
     @ApiOperation(value = "创建用户")
     @PostMapping("/chuangJianYongHu")
     public PPResult chuangJianYongHu(@Valid @RequestBody DTO_chuangJianYongHu dto) {
+        // 参数相关检查
+        // 参数相关检查 end
         ppCommandGateway.sendAndWait(
                 new YongHu_ChuangJianCmd(
                         dto.getYongHuId(),

@@ -19,7 +19,7 @@ enum class ChuFangZhuangTai {
 
 enum class JieGuo {
         CHENG_GONG,
-        ZHONG_DUAN,
+        JIE_SHU,
 }
 
 enum class ZhuangTai {

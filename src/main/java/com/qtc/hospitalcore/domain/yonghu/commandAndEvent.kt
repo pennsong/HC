@@ -21,14 +21,23 @@ data class YongHu_ChuangJianJiBenXinXiCmd(
         var id: UUID,
         var xingMing: String,
         var shenFenZheng: String,
-        var xinXiMap: Map<String, Any?>
+        var xinXiMap: Map<String, Any>
 )
 
 data class YongHu_ChuangJianJiBenXinXiEvt(
         var id: UUID,
         var xingMing: String,
         var shenFenZheng: String,
-        var xinXiMap: Map<String, Any?>
+        var xinXiMap: Map<String, Any>
+)
+
+data class YongHu_ShanChuCmd(
+        @TargetAggregateIdentifier
+        var id: UUID
+)
+
+data class YongHu_ShanChuEvt(
+        var id: UUID
 )
 
 
