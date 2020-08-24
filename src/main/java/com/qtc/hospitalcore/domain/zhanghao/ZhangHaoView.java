@@ -30,7 +30,7 @@ public class ZhangHaoView extends PPEntity {
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    Set<ZhangHao.JueSe> jueSeSet;
+    Set<JueSe> jueSeSet;
 
     @Column(columnDefinition = "varchar(128)")
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")

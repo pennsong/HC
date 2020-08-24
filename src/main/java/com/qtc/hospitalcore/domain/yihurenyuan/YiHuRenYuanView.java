@@ -29,7 +29,7 @@ public class YiHuRenYuanView extends PPEntity {
     String shenFenZhengHao;
 
     @ElementCollection
-    Set<YiHuRenYuan.QuanXian> quanXianSet;
+    Set<QuanXian> quanXianSet;
 
     @Column(columnDefinition = "json")
     @Convert(converter = HashMapConverter.class)

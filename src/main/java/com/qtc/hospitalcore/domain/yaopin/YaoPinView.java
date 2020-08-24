@@ -29,5 +29,5 @@ public class YaoPinView extends PPEntity {
 
     @Column(columnDefinition = "json")
     @Convert(converter = HashMapConverter.class)
-    Map<String, Object> xinXi;
+    Map<String, Object> xinXiMap;
 }

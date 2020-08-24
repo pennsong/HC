@@ -12,8 +12,6 @@ data class YaoPin_ChuangJianCmd(
         var mingCheng: String,
         var daLeiXing: String,
         var xiaoLeiXing: String,
-        var yuFuFei: BigDecimal,
-        var shiChangJia: BigDecimal,
         var xinXiMap: Map<String, Any>
 )
 
@@ -22,8 +20,6 @@ data class YaoPin_ChuangJianEvt(
         var mingCheng: String,
         var daLeiXing: String,
         var xiaoLeiXing: String,
-        var yuFuFei: BigDecimal,
-        var shiChangJia: BigDecimal,
         var xinXiMap: Map<String, Any>
 )
 
@@ -33,8 +29,6 @@ data class YaoPin_GengXinCmd(
         var mingCheng: String,
         var daLeiXing: String,
         var xiaoLeiXing: String,
-        var yuFuFei: BigDecimal,
-        var shiChangJia: BigDecimal,
         var xinXiMap: Map<String, Any>
 )
 
@@ -43,8 +37,6 @@ data class YaoPin_GengXinEvt(
         var mingCheng: String,
         var daLeiXing: String,
         var xiaoLeiXing: String,
-        var yuFuFei: BigDecimal,
-        var shiChangJia: BigDecimal,
         var xinXiMap: Map<String, Any>
 )
 

@@ -5,6 +5,11 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.*
 import javax.persistence.Convert
 
+enum class ZhuangTai {
+    YI_CHUANG_JIAN,
+    JIAN_KANG_XIN_XI_YI_GENG_XIN,
+}
+
 data class JianKangDangAn_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,

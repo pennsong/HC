@@ -26,12 +26,6 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public class YiHuRenYuan extends PPAggregate {
-    public static enum QuanXian {
-        WEN_ZHEN,
-        KAI_JU_CHU_FANG,
-        QUE_REN_CHU_FANG,
-        BIAN_JI_BING_LI
-    }
 
     @AggregateIdentifier
     UUID id;

@@ -19,13 +19,13 @@ public class YaoPinEventListener {
     }
 
     @EventHandler
-    public void on(YaoPin_ChuangJianCmd evt) {
+    public void on(YaoPin_ChuangJianEvt evt) {
         YaoPinView record = new YaoPinView();
         record.setId(evt.getId());
         record.setMingCheng(evt.getMingCheng());
         record.setDaLeiXing(evt.getDaLeiXing());
         record.setXiaoLeiXing(evt.getXiaoLeiXing());
-        record.setXinXi(evt.getXinXiMap());
+        record.setXinXiMap(evt.getXinXiMap());
 
         record.setZhuangTai(YaoPin.ZhuangTai.TING_SHOU);
 
@@ -39,7 +39,7 @@ public class YaoPinEventListener {
         record.setMingCheng(evt.getMingCheng());
         record.setDaLeiXing(evt.getDaLeiXing());
         record.setXiaoLeiXing(evt.getXiaoLeiXing());
-        record.setXinXi(evt.getXinXiMap());
+        record.setXinXiMap(evt.getXinXiMap());
 
         repository.saveAndFlush(record);
     }

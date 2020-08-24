@@ -216,6 +216,7 @@ class ZhenLiaoBaoGao {
 @Data
 @Embeddable
 class ChuFang {
+    @Column(name = "chuFangZhuangTai")
     ChuFangZhuangTai zhuangTai;
     String zhengWen;
 

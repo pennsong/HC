@@ -5,6 +5,11 @@ import java.math.BigDecimal
 import java.time.OffsetDateTime
 import java.util.*
 
+enum class ZhuangTai {
+    ZAI_SHOU,
+    TING_SHOU,
+}
+
 data class PaiBan_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,

@@ -29,7 +29,7 @@ public class PaiBanEventListener {
         record.setXinXiMap(evt.getXinXiMap());
 
         record.setShouChu(false);
-        record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
+        record.setZhuangTai(ZhuangTai.TING_SHOU);
 
         repository.saveAndFlush(record);
     }
@@ -38,7 +38,7 @@ public class PaiBanEventListener {
     public void on(PaiBan_ShangJiaEvt evt) {
         PaiBanView record = repository.findById(evt.getId()).get();
 
-        record.setZhuangTai(PaiBan.ZhuangTai.ZAI_SHOU);
+        record.setZhuangTai(ZhuangTai.ZAI_SHOU);
 
         repository.saveAndFlush(record);
     }
@@ -47,7 +47,7 @@ public class PaiBanEventListener {
     public void on(PaiBan_XiaJiaEvt evt) {
         PaiBanView record = repository.findById(evt.getId()).get();
 
-        record.setZhuangTai(PaiBan.ZhuangTai.TING_SHOU);
+        record.setZhuangTai(ZhuangTai.TING_SHOU);
 
         repository.saveAndFlush(record);
     }

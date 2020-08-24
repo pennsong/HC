@@ -59,8 +59,6 @@ public class YaoPin extends PPAggregate {
                         cmd.getMingCheng(),
                         cmd.getDaLeiXing(),
                         cmd.getXiaoLeiXing(),
-                        cmd.getYuFuFei(),
-                        cmd.getShiChangJia(),
                         cmd.getXinXiMap()
                 ),
                 metaData
@@ -92,8 +90,6 @@ public class YaoPin extends PPAggregate {
                         cmd.getMingCheng(),
                         cmd.getDaLeiXing(),
                         cmd.getXiaoLeiXing(),
-                        cmd.getYuFuFei(),
-                        cmd.getShiChangJia(),
                         cmd.getXinXiMap()
                 ),
                 metaData

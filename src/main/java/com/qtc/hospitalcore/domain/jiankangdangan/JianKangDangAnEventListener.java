@@ -26,7 +26,7 @@ public class JianKangDangAnEventListener {
         record.setShouJiHao(evt.getShouJiHao());
         record.setJiBenXinXiMap(evt.getJiBenXinXiMap());
 
-        record.setZhuangTai(JianKangDangAn.ZhuangTai.YI_CHUANG_JIAN);
+        record.setZhuangTai(ZhuangTai.YI_CHUANG_JIAN);
 
         repository.saveAndFlush(record);
     }
@@ -37,7 +37,7 @@ public class JianKangDangAnEventListener {
 
         record.setJianKangXinXiMap(evt.getJianKangXinXiMap());
 
-        record.setZhuangTai(JianKangDangAn.ZhuangTai.JIAN_KANG_XIN_XI_YI_GENG_XIN);
+        record.setZhuangTai(ZhuangTai.JIAN_KANG_XIN_XI_YI_GENG_XIN);
 
         repository.saveAndFlush(record);
     }

@@ -25,7 +25,7 @@ public class JianKangDangAnView extends PPEntity {
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID id;
 
-    JianKangDangAn.ZhuangTai zhuangTai;
+    ZhuangTai zhuangTai;
 
     String xingMing;
     String shenFenZhengHao;

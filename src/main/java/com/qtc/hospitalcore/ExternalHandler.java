@@ -8,6 +8,7 @@ import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHu;
+import com.qtc.hospitalcore.domain.zhanghao.JueSe;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
 import lombok.Setter;
@@ -83,7 +84,7 @@ public class ExternalHandler {
                         cmd.getZhangHaoId(),
                         null,
                         null,
-                        ZhangHao.JueSe.YONG_HU,
+                        JueSe.YONG_HU,
                         yongHuId,
                         null
                 ), metaData
@@ -132,7 +133,7 @@ public class ExternalHandler {
                         cmd.getZhangHaoId(),
                         cmd.getUsername(),
                         cmd.getPassword(),
-                        ZhangHao.JueSe.YI_HU_REN_YUAN,
+                        JueSe.YI_HU_REN_YUAN,
                         null,
                         yiHuRenYuanId
                 ), metaData

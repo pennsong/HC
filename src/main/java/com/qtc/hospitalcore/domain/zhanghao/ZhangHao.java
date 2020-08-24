@@ -25,10 +25,6 @@ import static org.axonframework.modelling.command.AggregateLifecycle.markDeleted
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 public class ZhangHao extends PPAggregate {
-    public static enum JueSe {
-        YONG_HU,
-        YI_HU_REN_YUAN
-    }
 
     @AggregateIdentifier
     UUID id;

@@ -1018,7 +1018,7 @@ public class WenZhen extends PPAggregate {
         }
 
         // 处方状态
-        if (chuFang.getZhuangTai() == ChuFangZhuangTai.YI_QU_XIAO) {
+        if (!(chuFang != null && chuFang.getZhuangTai() != ChuFangZhuangTai.YI_QU_XIAO)) {
             throw new PPBusinessException("只有在未取消处方时才能取消处方");
         }
 

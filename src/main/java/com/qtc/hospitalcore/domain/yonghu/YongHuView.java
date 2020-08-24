@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.yonghu;
 
+import com.qtc.hospitalcore.domain.query.PPEntity;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class YongHuView {
+public class YongHuView extends PPEntity {
     @Id
     @Column(columnDefinition="varchar(128) not null")
     @org.hibernate.annotations.Type(type="org.hibernate.type.UUIDCharType")

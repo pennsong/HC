@@ -2,37 +2,78 @@ package com.qtc.hospitalcore.domain;
 
 import com.qtc.hospitalcore.domain.paiban.PaiBan;
 import com.qtc.hospitalcore.domain.util.PPUtil;
+import com.qtc.hospitalcore.domain.yaopin.*;
 import com.qtc.hospitalcore.domain.yihurenyuan.*;
 import com.qtc.hospitalcore.domain.yonghu.*;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
 public class YiHuRenYuanTest {
     private FixtureConfiguration<YiHuRenYuan> fixture;
 
-    // mock data
-    UUID id = UUID.randomUUID();
-    String xingMing = "x";
-    String shenFenZhengHao = "s";
-    Set<YiHuRenYuan.QuanXian> quanXianSet = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.WEN_ZHEN, YiHuRenYuan.QuanXian.KAI_JU_CHU_FANG));
-    Map<String, Object> xinXiMap = PPUtil.stringToMap("A:1, B:1");
+    private YiHuRenYuanViewRepository repository = mock(YiHuRenYuanViewRepository.class);
 
+    private YiHuRenYuanEventListener eventListener;
+
+    // mock data
+    // mock now
+    OffsetDateTime mockNow = OffsetDateTime.now();
+    OffsetDateTime nullTime = OffsetDateTime.of(3000, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC);
+
+    UUID id = UUID.randomUUID();
     // mock data end
 
     private YiHuRenYuan getTemplate() {
         YiHuRenYuan template = new YiHuRenYuan();
+
         template.setId(id);
-        template.setXingMing(xingMing);
-        template.setShenFenZhengHao(shenFenZhengHao);
-        template.setQuanXianSet(quanXianSet);
-        template.setXinXiMap(xinXiMap);
+        template.setXingMing("xm");
+        template.setShenFenZhengHao("sf");
+        template.setQuanXianSet(
+                new HashSet<>(
+                        Arrays.asList(
+                                QuanXian.BIAN_JI_BING_LI,
+                                QuanXian.KAI_JU_CHU_FANG,
+                                QuanXian.QUE_REN_CHU_FANG,
+                                QuanXian.WEN_ZHEN
+                        )
+                )
+        );
+        template.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
+
+        return template;
+    }
+
+    private YiHuRenYuanView getViewTemplate() {
+        YiHuRenYuanView template = new YiHuRenYuanView();
+
+        template.setId(id);
+        template.setXingMing("xm");
+        template.setShenFenZhengHao("sf");
+        template.setQuanXianSet(
+                new HashSet<>(
+                        Arrays.asList(
+                                QuanXian.BIAN_JI_BING_LI,
+                                QuanXian.KAI_JU_CHU_FANG,
+                                QuanXian.QUE_REN_CHU_FANG,
+                                QuanXian.WEN_ZHEN
+                        )
+                )
+        );
+        template.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
 
         return template;
     }
@@ -40,6 +81,8 @@ public class YiHuRenYuanTest {
     @BeforeEach
     public void setUp() {
         fixture = new AggregateTestFixture<>(YiHuRenYuan.class);
+
+        eventListener = new YiHuRenYuanEventListener(repository);
     }
 
     @Test
@@ -48,35 +91,74 @@ public class YiHuRenYuanTest {
         fixture.givenNoPriorActivity()
                 .when(new YiHuRenYuan_ChuangJianCmd(
                         id,
-                        xingMing,
-                        shenFenZhengHao,
-                        quanXianSet,
-                        xinXiMap
+                        "xm",
+                        "sf",
+                        new HashSet<>(
+                                Arrays.asList(
+                                        QuanXian.BIAN_JI_BING_LI,
+                                        QuanXian.KAI_JU_CHU_FANG,
+                                        QuanXian.QUE_REN_CHU_FANG,
+                                        QuanXian.WEN_ZHEN
+                                )
+                        ),
+                        PPUtil.stringToMap("A:1, B:1")
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new YiHuRenYuan_ChuangJianEvt(
-                        id,
-                        xingMing,
-                        shenFenZhengHao,
-                        quanXianSet,
-                        xinXiMap
-                ))
                 .expectState(state -> {
                     YiHuRenYuan record = getTemplate();
+
+                    // 时间相关assertions
+                    // 时间相关assertions end
+
+                    // 调整时间相关field准备整体比较
+                    // 调整时间相关field准备整体比较 end
 
                     // perform assertions
                     assertEquals(record, state);
                 });
+
+        // query model update
+        YiHuRenYuan_ChuangJianEvt evt = new YiHuRenYuan_ChuangJianEvt(
+                id,
+                "xm",
+                "sf",
+                new HashSet<>(
+                        Arrays.asList(
+                                QuanXian.BIAN_JI_BING_LI,
+                                QuanXian.KAI_JU_CHU_FANG,
+                                QuanXian.QUE_REN_CHU_FANG,
+                                QuanXian.WEN_ZHEN
+                        )
+                ),
+                PPUtil.stringToMap("A:1, B:1")
+        );
+
+        YiHuRenYuanView record = getViewTemplate();
+
+        Mockito.when(repository.findById(evt.getId()))
+                .thenReturn(Optional.of(record));
+
+        eventListener.on(evt);
+
+        // 修改record到预期结果
+        YiHuRenYuanView record2 = getViewTemplate();
+        // 修改record到预期结果 end
+
+        ArgumentCaptor<YiHuRenYuanView> captor = ArgumentCaptor.forClass(YiHuRenYuanView.class);
+        verify(repository).saveAndFlush(captor.capture());
+        YiHuRenYuanView state = captor.getValue();
+
+        // 时间相关assertions
+        // 时间相关assertions end
+
+        // 调整时间相关field准备整体比较
+        // 调整时间相关field准备整体比较 end
+
+        assertEquals(record2, state);
     }
 
     @Test
     public void test_YiHuRenYuan_GengXinCmd() {
-        // mock data
-        String xingMing2 = "x2";
-        String shenFenZhengHao2 = "s2";
-        Map<String, Object> xinXiMap2 = PPUtil.stringToMap("B:2, C:2");
-
-        // mock data end
 
         fixture.givenState(() -> {
             YiHuRenYuan record = getTemplate();
@@ -85,22 +167,24 @@ public class YiHuRenYuanTest {
         })
                 .when(new YiHuRenYuan_GengXinCmd(
                         id,
-                        xingMing2,
-                        shenFenZhengHao2,
-                        xinXiMap2
+                        "xm2",
+                        "sf2",
+                        PPUtil.stringToMap("B:2, C:2")
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new YiHuRenYuan_GengXinEvt(
-                        id,
-                        xingMing2,
-                        shenFenZhengHao2,
-                        xinXiMap2
-                ))
+
                 .expectState(state -> {
                     YiHuRenYuan record = getTemplate();
-                    record.setXingMing(xingMing2);
-                    record.setShenFenZhengHao(shenFenZhengHao2);
-                    record.setXinXiMap(xinXiMap2);
+
+                    record.setXingMing("xm2");
+                    record.setShenFenZhengHao("sf2");
+                    record.setXinXiMap( PPUtil.stringToMap("B:2, C:2"));
+
+                    // 时间相关assertions
+                    // 时间相关assertions end
+
+                    // 调整时间相关field准备整体比较
+                    // 调整时间相关field准备整体比较 end
 
                     // perform assertions
                     assertEquals(record, state);
@@ -108,12 +192,8 @@ public class YiHuRenYuanTest {
     }
 
     @Test
-    public void t_YiHuRenYuan_SheZhiQuanXianCmd() {
-        // mock data
-        Set<YiHuRenYuan.QuanXian> quanXianSet2 = new HashSet<>(Arrays.asList(YiHuRenYuan.QuanXian.BIAN_JI_BING_LI, YiHuRenYuan.QuanXian.QUE_REN_CHU_FANG));
-
-        // mock data end
-
+    public void test_YiHuRenYuan_SheZhiQuanXianCmd() {
+       
         fixture.givenState(() -> {
             YiHuRenYuan record = getTemplate();
 
@@ -121,19 +201,81 @@ public class YiHuRenYuanTest {
         })
                 .when(new YiHuRenYuan_SheZhiQuanXianCmd(
                         id,
-                        quanXianSet2
+                        new HashSet<>(
+                                Arrays.asList(
+                                        QuanXian.BIAN_JI_BING_LI,
+                                        QuanXian.KAI_JU_CHU_FANG,
+                                        QuanXian.QUE_REN_CHU_FANG
+                                )
+                        )
                 ))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new YiHuRenYuan_SheZhiQuanXianEvt(
-                        id,
-                        quanXianSet2
-                ))
                 .expectState(state -> {
                     YiHuRenYuan record = getTemplate();
-                    record.setQuanXianSet(quanXianSet2);
+
+                    record.setQuanXianSet(
+                            new HashSet<>(
+                                    Arrays.asList(
+                                            QuanXian.BIAN_JI_BING_LI,
+                                            QuanXian.KAI_JU_CHU_FANG,
+                                            QuanXian.QUE_REN_CHU_FANG
+                                    )
+                            )
+                    );
+
+                    // 时间相关assertions
+                    // 时间相关assertions end
+
+                    // 调整时间相关field准备整体比较
+                    // 调整时间相关field准备整体比较 end
 
                     // perform assertions
                     assertEquals(record, state);
                 });
+
+        // query model update
+        YiHuRenYuan_SheZhiQuanXianEvt evt = new YiHuRenYuan_SheZhiQuanXianEvt(
+                id,
+                new HashSet<>(
+                        Arrays.asList(
+                                QuanXian.BIAN_JI_BING_LI,
+                                QuanXian.KAI_JU_CHU_FANG,
+                                QuanXian.QUE_REN_CHU_FANG
+                        )
+                )
+        );
+
+        YiHuRenYuanView record = getViewTemplate();
+
+        Mockito.when(repository.findById(evt.getId()))
+                .thenReturn(Optional.of(record));
+
+        eventListener.on(evt);
+
+        // 修改record到预期结果
+        YiHuRenYuanView record2 = getViewTemplate();
+
+        record2.setQuanXianSet(
+                new HashSet<>(
+                        Arrays.asList(
+                                QuanXian.BIAN_JI_BING_LI,
+                                QuanXian.KAI_JU_CHU_FANG,
+                                QuanXian.QUE_REN_CHU_FANG
+                        )
+                )
+        );
+        // 修改record到预期结果 end
+
+        ArgumentCaptor<YiHuRenYuanView> captor = ArgumentCaptor.forClass(YiHuRenYuanView.class);
+        verify(repository).saveAndFlush(captor.capture());
+        YiHuRenYuanView state = captor.getValue();
+
+        // 时间相关assertions
+        // 时间相关assertions end
+
+        // 调整时间相关field准备整体比较
+        // 调整时间相关field准备整体比较 end
+
+        assertEquals(record2, state);
     }
 }

@@ -10,6 +10,7 @@ import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
 import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
 import com.qtc.hospitalcore.domain.yaopin.YaoPinView;
+import com.qtc.hospitalcore.domain.yihurenyuan.QuanXian;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
@@ -290,7 +291,7 @@ public class AdminController {
     @Data
     static class DTO_sheZhiYiHuRenYuanQuanXian {
         UUID yiHuRenYuanId;
-        Set<YiHuRenYuan.QuanXian> quanXianZu;
+        Set<QuanXian> quanXianZu;
     }
 
     @ApiOperation(value = "设置医护人员密码")

@@ -31,7 +31,7 @@ public class PaiBanView extends PPEntity {
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID id;
 
-    PaiBan.ZhuangTai zhuangTai;
+    ZhuangTai zhuangTai;
 
     @Column(columnDefinition = "varchar(128) not null")
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
