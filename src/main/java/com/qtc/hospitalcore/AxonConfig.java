@@ -17,6 +17,8 @@
 package com.qtc.hospitalcore;
 
 import com.qtc.hospitalcore.domain.chanpin.ChanPin;
+import com.qtc.hospitalcore.domain.paiban.PaiBan;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yonghu.YongHu;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao;
@@ -55,5 +57,15 @@ public class AxonConfig {
     @Bean
     public Repository<ChanPin> chanPinRepository2() {
         return axonConfiguration.repository(ChanPin.class);
+    }
+
+    @Bean
+    public Repository<PaiBan> paiBanRepository2() {
+        return axonConfiguration.repository(PaiBan.class);
+    }
+
+    @Bean
+    public Repository<WenZhen> wenZhenRepository2() {
+        return axonConfiguration.repository(WenZhen.class);
     }
 }

@@ -15,4 +15,11 @@ public interface ChanPinViewRepository extends JpaRepository<ChanPinView, UUID> 
             "WHERE r.deleted = false " +
             "AND r.id = ?1 ")
     public Optional<ChanPinView> findById(UUID id);
+
+    @Query(value = "" +
+            "SELECT r " +
+            "FROM ChanPinView r " +
+            "WHERE r.deleted = false " +
+            "AND r.mingCheng = ?1 ")
+    public Optional<ChanPinView> findByMingCheng(String mingCheng);
 }

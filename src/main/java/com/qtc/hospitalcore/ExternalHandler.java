@@ -1,12 +1,14 @@
 package com.qtc.hospitalcore;
 
-import com.qtc.hospitalcore.domain.ExtJianChaChanPinCmd;
-import com.qtc.hospitalcore.domain.ExtChuangJianYiHuRenYuanCmd;
-import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.*;
 import com.qtc.hospitalcore.domain.chanpin.ChanPin;
 import com.qtc.hospitalcore.domain.chongFuJianCe.*;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.exception.PPDuplicationException;
+import com.qtc.hospitalcore.domain.paiban.PaiBan;
+import com.qtc.hospitalcore.domain.paiban.PaiBan_ChuangJianCmd;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhen;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhen_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianCmd;
@@ -53,6 +55,12 @@ public class ExternalHandler {
     @Autowired
     private Repository<ChanPin> chanPinRepository;
 
+    @Autowired
+    private Repository<PaiBan> paiBanRepository;
+
+    @Autowired
+    private Repository<PaiBan> wenZhenRepository;
+
     @CommandHandler
     public void on(ExtChuangJianYongHuCmd cmd, MetaData metaData) throws Exception {
         // 条件检查
@@ -75,10 +83,9 @@ public class ExternalHandler {
         // 条件检查 end
 
         // 创建用户
-        UUID yongHuId = UUID.randomUUID();
         yongHuRepository.newInstance(() -> new YongHu(
                 new YongHu_ChuangJianCmd(
-                        yongHuId,
+                        cmd.getYongHuId(),
                         cmd.getShouJiHao(),
                         cmd.getWeiXinOpenId()
                 ),
@@ -92,7 +99,7 @@ public class ExternalHandler {
                         null,
                         null,
                         JueSe.YONG_HU,
-                        yongHuId,
+                        cmd.getYongHuId(),
                         null
                 ), metaData
         ));
@@ -148,7 +155,7 @@ public class ExternalHandler {
     }
 
     @CommandHandler
-    public void on (ExtJianChaChanPinCmd cmd) {
+    public void on(ExtJianChaChanPinCmd cmd) {
         // 如果查不到, 这里会抛异常
         Aggregate<ChanPin> chanPinAggregate = chanPinRepository.load(cmd.getId().toString());
 

@@ -1,6 +1,7 @@
 package com.qtc.hospitalcore.domain.wenzhen;
 
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
+import com.qtc.hospitalcore.domain.util.BiZhong;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
@@ -98,7 +99,7 @@ public class WenZhen_ZhiXingTuiKuanCmdTest {
                                         "bcls",
                                         mockNow,
                                         "fkf",
-                                        "bz",
+                                        BiZhong.REN_MIN_BI,
                                         new BigDecimal(10),
                                         2,
                                         "bz",
@@ -177,7 +178,7 @@ public class WenZhen_ZhiXingTuiKuanCmdTest {
                                         "bcls",
                                         mockNow,
                                         "fkf",
-                                        "bz",
+                                        BiZhong.REN_MIN_BI,
                                         new BigDecimal(10),
                                         2,
                                         "bz",

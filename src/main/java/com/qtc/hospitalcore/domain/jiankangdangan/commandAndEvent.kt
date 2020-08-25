@@ -13,6 +13,7 @@ enum class ZhuangTai {
 data class JianKangDangAn_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,
+        var yongHuId: UUID,
         var xingMing: String,
         var shenFenZhengHao: String,
         var shouJiHao: String,
@@ -21,6 +22,7 @@ data class JianKangDangAn_ChuangJianCmd(
 
 data class JianKangDangAn_ChuangJianEvt(
         var id: UUID,
+        var yongHuId: UUID,
         var xingMing: String,
         var shenFenZhengHao: String,
         var shouJiHao: String,

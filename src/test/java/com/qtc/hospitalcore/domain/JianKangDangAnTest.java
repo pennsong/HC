@@ -34,6 +34,7 @@ public class JianKangDangAnTest {
     OffsetDateTime nullTime = OffsetDateTime.of(3000, 1, 1, 1, 1, 1, 1, ZoneOffset.UTC);
 
     UUID id = UUID.randomUUID();
+    UUID yongHuId = UUID.randomUUID();
     // mock data end
 
     private JianKangDangAn getTemplate() {
@@ -55,6 +56,7 @@ public class JianKangDangAnTest {
         JianKangDangAnView template = new JianKangDangAnView();
 
         template.setId(id);
+        template.setYongHuId(yongHuId);
         template.setXingMing("xm");
         template.setShenFenZhengHao("sf");
         template.setShouJiHao("sj");
@@ -79,6 +81,7 @@ public class JianKangDangAnTest {
         fixture.givenNoPriorActivity()
                 .when(new JianKangDangAn_ChuangJianCmd(
                         id,
+                        yongHuId,
                         "xm",
                         "sf",
                         "sj",
@@ -102,6 +105,7 @@ public class JianKangDangAnTest {
         // query model update
         JianKangDangAn_ChuangJianEvt evt = new JianKangDangAn_ChuangJianEvt(
                 id,
+                yongHuId,
                 "xm",
                 "sf",
                 "sj",

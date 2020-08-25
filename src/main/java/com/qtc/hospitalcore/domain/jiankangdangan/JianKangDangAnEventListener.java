@@ -21,6 +21,7 @@ public class JianKangDangAnEventListener {
     public void on(JianKangDangAn_ChuangJianEvt evt) {
         JianKangDangAnView record = new JianKangDangAnView();
         record.setId(evt.getId());
+        record.setYongHuId(evt.getYongHuId());
         record.setXingMing(evt.getXingMing());
         record.setShenFenZhengHao(evt.getShenFenZhengHao());
         record.setShouJiHao(evt.getShouJiHao());

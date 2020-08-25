@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.api;
 
+import com.qtc.hospitalcore.domain.ExtChuangJianPaiBanCmd;
 import com.qtc.hospitalcore.domain.ExtJianChaChanPinCmd;
 import com.qtc.hospitalcore.domain.ExtChuangJianYiHuRenYuanCmd;
 import com.qtc.hospitalcore.domain.chanpin.*;
@@ -8,6 +9,7 @@ import com.qtc.hospitalcore.domain.paiban.PaiBan_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.paiban.PaiBan_ShangJiaEvt;
 import com.qtc.hospitalcore.domain.paiban.PaiBan_ShouChuCmd;
 import com.qtc.hospitalcore.domain.paiban.PaiBan_XiaJiaCmd;
+import com.qtc.hospitalcore.domain.util.BiZhong;
 import com.qtc.hospitalcore.domain.util.PPCommandGateway;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.*;
@@ -26,6 +28,7 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.command.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,6 +46,8 @@ public class AdminController {
     @Autowired
     private PPCommandGateway ppCommandGateway;
 
+    @Autowired
+    private ChanPinViewRepository chanPinViewRepository;
     // query
 
 
@@ -203,12 +208,13 @@ public class AdminController {
             throw new PPBusinessException("只能创建将来365天内的排班");
         }
 
-        // 对应产品id存在
-        ppCommandGateway.sendAndWait(
-                new ExtJianChaChanPinCmd(
-                        dto.getChanPinId()
-                )
-        );
+        // 检查对应产品是否存在并且没有被删除
+        Optional<ChanPinView> chanPinView = chanPinViewRepository.findById(dto.getChanPinId());
+
+        if (!chanPinView.isPresent()) {
+            throw new PPBusinessException("对应产品不存在");
+        }
+
         // 参数相关检查 end
 
         UUID id = UUID.randomUUID();
@@ -222,7 +228,6 @@ public class AdminController {
                         dto.getYiSheng(),
                         dto.getShiJian(),
                         dto.getXinXiMap()
-
                 )
         );
 
@@ -605,6 +610,132 @@ public class AdminController {
         String huanFangCanYuRenYuan;
         String beiZhu;
 
+    }
+
+    @ApiOperation(value = "补充问诊付款")
+    @PostMapping("/buChongWenZhenFuKuan")
+    public PPResult buChongWenZhenFuKuan(@Valid @RequestBody DTO_buChongWenZhenFuKuan dto) {
+        // 参数相关检查
+        // 补充付款日期
+        long days = Duration.between(dto.getBuChongFuKuanRiQi(), OffsetDateTime.now()).toDays();
+
+        if (days > 1000) {
+            throw new PPBusinessException("只能录入1000内的付款");
+        }
+
+        // 付款凭证
+        if (dto.getFuKuanPingZheng().size() == 0) {
+            throw new PPBusinessException("凭证不能为空");
+        }
+
+        for (String item : dto.getFuKuanPingZheng()) {
+            if (StringUtils.isEmpty(item)) {
+                throw new PPBusinessException("凭证项目不能为空");
+            }
+        }
+        // 付款凭证 end
+        // 参数相关检查 end
+
+        ppCommandGateway.sendAndWait(
+                new WenZhen_ZhiFuBuChongKuanCmd(
+                        dto.getWenZhenId(),
+                        dto.getLiuShuiHao(),
+                        dto.getBuChongFuKuanRiQi(),
+                        dto.getFuKuanFang(),
+                        dto.getBiZhong(),
+                        dto.getFuKuanE(),
+                        dto.getFuKuanDangRiHuiLv(),
+                        dto.getBeiZhu(),
+                        dto.getFuKuanPingZheng()
+                )
+        );
+
+        return PPResult.getPPOK();
+    }
+
+    @Data
+    static class DTO_buChongWenZhenFuKuan {
+        @NotNull
+        UUID wenZhenId;
+        @NotBlank
+        String liuShuiHao;
+        @NotNull
+        @Past
+        OffsetDateTime buChongFuKuanRiQi;
+        @NotBlank
+        String fuKuanFang;
+        @NotNull
+        @Min(0)
+        BigDecimal fuKuanE;
+        @NotNull
+        BiZhong biZhong;
+        @NotNull
+        @Min(0)
+        Float fuKuanDangRiHuiLv;
+        @NotNull
+        List<String> fuKuanPingZheng;
+        String beiZhu;
+    }
+
+    @ApiOperation(value = "发起问诊退款")
+    @PostMapping("/faQiWenZhenTuiKuan")
+    public PPResult faQiTuiKuan(@Valid @RequestBody DTO_faQiWenZhenTuiKuan dto) {
+        // 参数相关检查
+        // 补充付款日期
+        long days = Duration.between(dto.getTuiKuanRiQi(), OffsetDateTime.now()).toDays();
+
+        if (days > 1000) {
+            throw new PPBusinessException("只能录入1000内的退款");
+        }
+
+        // 付款凭证
+        if (dto.getTuiKuanPingZheng().size() == 0) {
+            throw new PPBusinessException("凭证不能为空");
+        }
+
+        for (String item : dto.getTuiKuanPingZheng()) {
+            if (StringUtils.isEmpty(item)) {
+                throw new PPBusinessException("凭证项目不能为空");
+            }
+        }
+        // 付款凭证 end
+        // 参数相关检查 end
+
+        ppCommandGateway.sendAndWait(
+                new WenZhen_ZhiXingTuiKuanCmd(
+                        dto.getWenZhenId(),
+                        dto.getLiuShuiHao(),
+                        dto.getTuiKuanRiQi(),
+                        dto.getShouKuanZhangHuMing(),
+                        dto.getShouKuanZhangHu(),
+                        dto.getTuiKuanE(),
+                        dto.getBeiZhu(),
+                        dto.getTuiKuanPingZheng()
+                )
+        );
+
+        return PPResult.getPPOK();
+    }
+
+    @Data
+    static class DTO_faQiWenZhenTuiKuan {
+        @NotNull
+        UUID wenZhenId;
+        @NotBlank
+        String liuShuiHao;
+        @NotNull
+        @Past
+        OffsetDateTime tuiKuanRiQi;
+        @NotBlank
+        String shouKuanZhangHuMing;
+        @NotBlank
+        String shouKuanZhangHu;
+        @NotNull
+        @Min(0)
+        BigDecimal tuiKuanE;
+        @NotNull
+        List<String> tuiKuanPingZheng;
+        String beiZhu;
     }
     // command end
 }

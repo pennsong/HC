@@ -1,5 +1,6 @@
 package com.qtc.hospitalcore.domain.wenzhen
 
+import com.qtc.hospitalcore.domain.util.BiZhong
 import com.qtc.hospitalcore.domain.wenzhen.WenZhen.HuiZhen
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.math.BigDecimal
@@ -127,7 +128,7 @@ data class WenZhen_ZhiFuBuChongKuanCmd(
         var liuShuiHao: String,
         var shiJian: OffsetDateTime,
         var fuKuanFang: String,
-        var biZhong: String,
+        var biZhong: BiZhong,
         var jinE: BigDecimal,
         var fuKuanDangRiHuiLv: Double,
         var beiZhu: String?,
@@ -139,7 +140,7 @@ data class WenZhen_ZhiFuBuChongKuanEvt(
         var liuShuiHao: String,
         var shiJian: OffsetDateTime,
         var fuKuanFang: String,
-        var biZhong: String,
+        var biZhong: BiZhong,
         var jinE: BigDecimal,
         var fuKuanDangRiHuiLv: Double,
         var beiZhu: String?,

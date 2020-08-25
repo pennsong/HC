@@ -1,6 +1,8 @@
 package com.qtc.hospitalcore.domain
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
+import java.math.BigDecimal
+import java.time.OffsetDateTime
 import java.util.*
 
 /**
@@ -9,6 +11,7 @@ import java.util.*
 data class ExtChuangJianYongHuCmd(
         @TargetAggregateIdentifier
         var zhangHaoId: UUID,
+        var yongHuId: UUID,
         var shouJiHao: String,
         var weiXinOpenId: String
 )
@@ -28,3 +31,13 @@ data class ExtJianChaChanPinCmd(
         var id: UUID
 )
 
+data class ExtChuangJianPaiBanCmd(
+        @TargetAggregateIdentifier
+        var id: UUID,
+        var chanPinId: UUID,
+        var yuFuFei: BigDecimal,
+        var shiChangJia: BigDecimal,
+        var yiSheng: String,
+        var shiJian: OffsetDateTime,
+        var xinXiMap: Map<String, Any>
+)

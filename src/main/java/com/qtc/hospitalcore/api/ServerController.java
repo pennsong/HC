@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Slf4j
@@ -40,8 +42,11 @@ public class ServerController {
 
     @Data
     static class DTO_chuangJianYongHu {
+        @NotNull
         UUID yongHuId;
+        @NotBlank
         String shouJiHaoMa;
+        @NotBlank
         String weiXinOpenId;
     }
     // command end

@@ -29,6 +29,8 @@ public class JianKangDangAn extends PPAggregate {
     @AggregateIdentifier
     UUID id;
 
+    UUID yongHuId;
+
     ZhuangTai zhuangTai;
 
     String xingMing;
@@ -53,6 +55,7 @@ public class JianKangDangAn extends PPAggregate {
         apply(
                 new JianKangDangAn_ChuangJianEvt(
                         cmd.getId(),
+                        cmd.getYongHuId(),
                         cmd.getXingMing(),
                         cmd.getShenFenZhengHao(),
                         cmd.getShouJiHao(),

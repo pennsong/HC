@@ -39,48 +39,6 @@ public class CaiWuController {
 //    // query end
 
     // command
-    @ApiOperation(value = "补充问诊付款")
-    @PostMapping("/buChongWenZhenFuKuan")
-    public PPResult buChongWenZhenFuKuan(@Valid @RequestBody DTO_buChongWenZhenFuKuan dto) {
-        // 参数相关检查
-        // 参数相关检查 end
-        // TODO: PP
 
-        return null;
-    }
-
-    @Data
-    static class DTO_buChongWenZhenFuKuan {
-        UUID wenZhenId;
-        Long buChongFuKuanRiQi;
-        String fuKuanFang;
-        BigDecimal fuKuanE;
-        BiZhong biZhong;
-        Float fuKuanDangRiHuiLv;
-        BigDecimal renMinBiZiDongHuanSuan;
-        String[] fuKuanPingZheng;
-        Map<String, Object> fuKuanXinXi;
-    }
-
-    @ApiOperation(value = "发起问诊退款")
-    @PostMapping("/faQiWenZhenTuiKuan")
-    public PPResult faQiTuiKuan(@Valid @RequestBody DTO_faQiWenZhenTuiKuan dto) {
-        // 参数相关检查
-        // 参数相关检查 end
-        // TODO: PP
-
-        return null;
-    }
-
-    @Data
-    static class DTO_faQiWenZhenTuiKuan {
-        UUID wenZhenId;
-        Long tuiKuanRiQi;
-        String shouKuanZhangHuMing;
-        String shouKuanZhangHu;
-        BigDecimal tuiKuanE;
-        String[] tuiKuanPingZheng;
-        Map<String, Object> tuiKuanXinXi;
-    }
     // command end
 }

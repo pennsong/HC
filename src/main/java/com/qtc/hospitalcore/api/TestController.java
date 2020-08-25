@@ -1,11 +1,16 @@
 package com.qtc.hospitalcore.api;
 
 import com.qtc.hospitalcore.domain.ExtChuangJianYongHuCmd;
+import com.qtc.hospitalcore.domain.ExtJianChaChanPinCmd;
 import com.qtc.hospitalcore.domain.chanpin.ChanPinView;
+import com.qtc.hospitalcore.domain.chanpin.ChanPin_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.exception.PPException;
+import com.qtc.hospitalcore.domain.util.BiZhong;
+import com.qtc.hospitalcore.domain.util.PPCommandGateway;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.*;
+import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianJiBenXinXiCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoView;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ShanChuCmd;
@@ -41,10 +46,16 @@ public class TestController {
     CommandGateway commandGateway;
 
     @Autowired
+    PPCommandGateway ppCommandGateway;
+
+    @Autowired
     ZhangHaoViewRepository repository;
 
     @Autowired
     WenZhenViewRepository wenZhenViewRepository;
+
+    static UUID zhangHaoId = UUID.randomUUID();
+    static UUID yongHuId = UUID.randomUUID();
 
     private static final String SESSION_KEY = "PP_KEY";
 
@@ -61,21 +72,6 @@ public class TestController {
         String result = String.valueOf(sessionStrategy.getAttribute(new ServletWebRequest(request), SESSION_KEY));
 
         return result;
-    }
-
-    @GetMapping("/t3")
-    public PPResult test3() {
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new ExtChuangJianYongHuCmd(
-                                UUID.randomUUID(),
-                                "s1",
-                                "o1"
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
-        );
-
-        return PPResult.getPPOK();
     }
 
     @GetMapping("/t4/{id}")
@@ -129,7 +125,7 @@ public class TestController {
                                 "ll1",
                                 OffsetDateTime.now(),
                                 "fkf1",
-                                "b1",
+                                BiZhong.REN_MIN_BI,
                                 new BigDecimal("98"),
                                 1,
                                 "b1",
@@ -161,7 +157,7 @@ public class TestController {
                                 "ll2",
                                 OffsetDateTime.now(),
                                 "fkf1",
-                                "b1",
+                                BiZhong.REN_MIN_BI,
                                 new BigDecimal("3"),
                                 1,
                                 "b1",
@@ -227,17 +223,13 @@ public class TestController {
         return PPResult.getPPResultOK(result);
     }
 
-    @GetMapping("/t10")
-    public PPResult test10() {
-        UUID id = UUID.randomUUID();
+    @GetMapping("/t11/{id}")
+    public PPResult test11(@PathVariable UUID id) {
 
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
-                        new ExtChuangJianYongHuCmd(
-                                id,
-                                "sj",
-                                "wx"
-
+                        new ExtJianChaChanPinCmd(
+                               id
                         )
                 ).withMetaData(PPUtil.stringToMap(""))
         );
@@ -245,4 +237,54 @@ public class TestController {
 
         return PPResult.getPPOK();
     }
+
+    @GetMapping("/init")
+    public PPResult init() {
+        log.info(zhangHaoId.toString());
+        log.info(yongHuId.toString());
+        // 产品
+        UUID id = UUID.randomUUID();
+
+        ppCommandGateway.sendAndWait(
+                new ChanPin_ChuangJianCmd(
+                        id,
+                        "产品1",
+                        "大类1",
+                        "小类1",
+                        new BigDecimal(10),
+                        new BigDecimal(100),
+                        PPUtil.stringToMap("A:1, B:1")
+                )
+        );
+
+        // 用户
+        ppCommandGateway.sendAndWait(
+                new ExtChuangJianYongHuCmd(
+                        zhangHaoId,
+                        yongHuId,
+                        "13800000000",
+                        "wx"
+                )
+        );
+
+        return PPResult.getPPOK();
+    }
+
+    @GetMapping("/init2")
+    public PPResult init2() {
+        log.info(zhangHaoId.toString());
+        log.info(yongHuId.toString());
+        ppCommandGateway.sendAndWait(
+                new YongHu_ChuangJianJiBenXinXiCmd(
+                        yongHuId,
+                        "xm",
+                        "sfz",
+                        PPUtil.stringToMap("A:1, B:1")
+                )
+        );
+        return PPResult.getPPOK();
+    }
+
+
+
 }

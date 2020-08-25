@@ -25,6 +25,10 @@ public class JianKangDangAnView extends PPEntity {
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID id;
 
+    @Column(columnDefinition = "varchar(128) not null")
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
+    UUID yongHuId;
+
     ZhuangTai zhuangTai;
 
     String xingMing;

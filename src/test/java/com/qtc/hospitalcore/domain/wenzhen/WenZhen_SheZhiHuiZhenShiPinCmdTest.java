@@ -1,6 +1,7 @@
 package com.qtc.hospitalcore.domain.wenzhen;
 
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
+import com.qtc.hospitalcore.domain.util.BiZhong;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
@@ -100,7 +101,7 @@ public class WenZhen_SheZhiHuiZhenShiPinCmdTest {
                                         "bcls",
                                         mockNow,
                                         "fkf",
-                                        "bz",
+                                        BiZhong.REN_MIN_BI,
                                         new BigDecimal(10),
                                         1,
                                         "bz",
@@ -110,7 +111,7 @@ public class WenZhen_SheZhiHuiZhenShiPinCmdTest {
                                         "bcls2",
                                         mockNow,
                                         "fkf2",
-                                        "bz2",
+                                        BiZhong.REN_MIN_BI,
                                         new BigDecimal(20),
                                         2,
                                         "bz2",
@@ -221,7 +222,7 @@ public class WenZhen_SheZhiHuiZhenShiPinCmdTest {
                                         "bcls",
                                         mockNow,
                                         "fkf",
-                                        "bz",
+                                        BiZhong.REN_MIN_BI,
                                         new BigDecimal(10),
                                         1,
                                         "bz",
@@ -231,7 +232,7 @@ public class WenZhen_SheZhiHuiZhenShiPinCmdTest {
                                         "bcls2",
                                         mockNow,
                                         "fkf2",
-                                        "bz2",
+                                        BiZhong.REN_MIN_BI,
                                         new BigDecimal(20),
                                         2,
                                         "bz2",

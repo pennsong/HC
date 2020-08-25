@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -53,7 +54,7 @@ public class PaiBanTest {
         template.setYuFuFei(new BigDecimal(10));
         template.setShiChangJia(new BigDecimal(100));
         template.setYiSheng("ys");
-        template.setShiJian(mockNow);
+        template.setShiJian(mockNow.truncatedTo(HOURS));
         template.setShouChu(false);
         template.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
 
@@ -69,7 +70,7 @@ public class PaiBanTest {
         template.setYuFuFei(new BigDecimal(10));
         template.setShiChangJia(new BigDecimal(100));
         template.setYiSheng("ys");
-        template.setShiJian(mockNow);
+        template.setShiJian(mockNow.truncatedTo(HOURS));
         template.setShouChu(false);
         template.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
 
@@ -134,6 +135,7 @@ public class PaiBanTest {
         PaiBanView record2 = getViewTemplate();
 
         record2.setZhuangTai(ZhuangTai.TING_SHOU);
+        record2.setShiJian(mockNow);
         // 修改record到预期结果 end
 
         ArgumentCaptor<PaiBanView> captor = ArgumentCaptor.forClass(PaiBanView.class);

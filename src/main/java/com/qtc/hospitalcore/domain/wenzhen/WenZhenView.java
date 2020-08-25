@@ -150,7 +150,7 @@ class BuChongKuan {
     String liuShuiHao;
     OffsetDateTime shiJian;
     String fuKuanFang;
-    String biZhong;
+    BiZhong biZhong;
     BigDecimal jinE;
     double fuKuanDangRiHuiLv;
     String beiZhu;

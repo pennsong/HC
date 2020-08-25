@@ -2,6 +2,7 @@ package com.qtc.hospitalcore.domain.wenzhen;
 
 import com.qtc.hospitalcore.domain.PPAggregate;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
+import com.qtc.hospitalcore.domain.util.BiZhong;
 import com.qtc.hospitalcore.domain.util.HashMapConverter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -49,7 +50,7 @@ public class WenZhen extends PPAggregate {
         String liuShuiHao;
         OffsetDateTime shiJian;
         String fuKuanFang;
-        String biZhong;
+        BiZhong biZhong;
         BigDecimal jinE;
         double fuKuanDangRiHuiLv;
         String beiZhu;
