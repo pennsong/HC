@@ -5,33 +5,74 @@ import com.qtc.hospitalcore.domain.jiankangdangan.JianKangDangAnView;
 import com.qtc.hospitalcore.domain.paiban.PaiBanView;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
 import com.qtc.hospitalcore.domain.yaopin.YaoPinView;
-import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuan;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewExt;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @RestController
 @RequestMapping("/houTai")
-@Api(tags="后台操作", description = "后台通用操作")
+@Api(tags = "后台操作", description = "后台通用操作")
 public class HouTaiController {
+    @Autowired
+    private EntityManager em;
+
+    @Autowired
+    private ZhangHaoViewRepository zhangHaoViewRepository;
 
     // query
     @ApiOperation(value = "获取用户列表")
     @GetMapping("/huoQuYongHuLB")
-    public PPResult<List<YongHuView>> huoQuYongHuLB(@RequestParam(defaultValue="") String queryKey, @PageableDefault(page=0, size=20) Pageable pageable) {
-        // TODO: PP
+    public PPResult<List<ZhangHaoViewExt>> huoQuYongHuLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
 
-        return null;
+
+        Query q = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   z.id zhang_hao_id," +
+                        "   y.id yong_hu_id," +
+                        "   y.shou_ji_hao," +
+                        "   y.xing_ming," +
+                        "   y.shen_fen_zheng," +
+                        "   y.wei_xin_open_id," +
+                        "   y.xin_xi_map " +
+                        "FROM " +
+                        "   zhang_hao_view z " +
+                        "JOIN " +
+                        "   yong_hu_view y " +
+                        "ON " +
+                        "   z.yong_hu_id = y.id " +
+                        "WHERE" +
+                        "   z.deleted = false " +
+                        "AND" +
+                        "   y.deleted = false " +
+                        "AND " +
+                        "   y.xing_ming LIKE :keyword",
+                ZhangHaoViewExt.class
+        );
+        q.setParameter("keyword", "%" + queryKey + "%");
+
+        q.setFirstResult(new Long(pageable.getOffset()).intValue()).setMaxResults(pageable.getPageSize());
+
+        List<ZhangHaoViewExt> result = q.getResultList();
+
+
+        return PPResult.getPPResultOK(result);
     }
 
     @ApiOperation(value = "获取用户")
@@ -44,7 +85,7 @@ public class HouTaiController {
 
     @ApiOperation(value = "获取医护人员列表")
     @GetMapping("/huoQuYiHuRenYuanLB")
-    public PPResult<List<YiHuRenYuanView>> huoQuYiHuRenYuanLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<YiHuRenYuanView>> huoQuYiHuRenYuanLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -60,7 +101,7 @@ public class HouTaiController {
 
     @ApiOperation(value = "获取问诊列表")
     @GetMapping("/huoQuWenZhenLB")
-    public PPResult<List<WenZhenView>> huoQuWenZhenLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<WenZhenView>> huoQuWenZhenLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -76,7 +117,7 @@ public class HouTaiController {
 
     @ApiOperation(value = "获取药品列表")
     @GetMapping("/huoQuYaoPinLB")
-    public PPResult<List<YaoPinView>> huoQuYaoPinLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<YaoPinView>> huoQuYaoPinLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -92,7 +133,7 @@ public class HouTaiController {
 
     @ApiOperation(value = "获取产品列表")
     @GetMapping("/huoQuChanPinLB")
-    public PPResult<List<ChanPinView>> huoQuChanPinLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<ChanPinView>> huoQuChanPinLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -108,7 +149,7 @@ public class HouTaiController {
 
     @ApiOperation(value = "获取排班列表")
     @GetMapping("/huoQuPaiBanLB")
-    public PPResult<List<PaiBanView>> huoQuPaiBanLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<PaiBanView>> huoQuPaiBanLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -124,7 +165,7 @@ public class HouTaiController {
 
     @ApiOperation(value = "获取健康档案列表")
     @GetMapping("/huoQuJianKangDangAnLB")
-    public PPResult<List<JianKangDangAnView>> huoQuJianKangDangAnLB(@RequestParam(defaultValue="") String queryKey, Pageable pageable) {
+    public PPResult<List<JianKangDangAnView>> huoQuJianKangDangAnLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
         // TODO: PP
 
         return null;
@@ -141,7 +182,7 @@ public class HouTaiController {
     }
 
     @Data
-    static class DTO_huoQuJiuZhenRenWenZhenLB{
+    static class DTO_huoQuJiuZhenRenWenZhenLB {
         UUID jianKangDangAnId;
     }
     // query end

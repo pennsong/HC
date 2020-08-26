@@ -58,38 +58,41 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
                 )
         );
 
-        // 用户
-        UUID zhangHaoId = UUID.randomUUID();
-        UUID yongHuId = UUID.randomUUID();
-        ppCommandGateway.sendAndWait(
-                new ExtChuangJianYongHuCmd(
-                        zhangHaoId,
-                        yongHuId,
-                        "13800000000",
-                        "wx"
-                )
-        );
+        for (int i = 0; i < 100; i++) {
+            // 用户
+            UUID zhangHaoId = UUID.randomUUID();
+            UUID yongHuId = UUID.randomUUID();
+            ppCommandGateway.sendAndWait(
+                    new ExtChuangJianYongHuCmd(
+                            zhangHaoId,
+                            yongHuId,
+                            "" + i,
+                            "wx" + i
+                    )
+            );
 
-        ppCommandGateway.sendAndWait(
-                new YongHu_ChuangJianJiBenXinXiCmd(
-                       yongHuId,
-                        "xm",
-                        "sfz",
-                        PPUtil.stringToMap("A:2, B:2")
-                )
-        );
+            ppCommandGateway.sendAndWait(
+                    new YongHu_ChuangJianJiBenXinXiCmd(
+                            yongHuId,
+                            "xm" + i,
+                            "sfz" + i,
+                            PPUtil.stringToMap("A:1, B:1")
+                    )
+            );
 
-        // 健康档案
-        UUID jianKangDangAnId = UUID.randomUUID();
-        ppCommandGateway.sendAndWait(
-                new JianKangDangAn_ChuangJianCmd(
-                        jianKangDangAnId,
-                        yongHuId,
-                        "xm2",
-                        "sfz2",
-                        "13800000002",
-                        PPUtil.stringToMap("A:3, B:3")
-                )
-        );
+            // 健康档案
+            UUID jianKangDangAnId = UUID.randomUUID();
+            ppCommandGateway.sendAndWait(
+                    new JianKangDangAn_ChuangJianCmd(
+                            jianKangDangAnId,
+                            yongHuId,
+                            "xm" + i,
+                            "sfz" + i,
+                            "s" + i,
+                            PPUtil.stringToMap("A:1, B:1")
+                    )
+            );
+        }
+
     }
 }

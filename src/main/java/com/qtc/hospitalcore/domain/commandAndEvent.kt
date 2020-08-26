@@ -41,3 +41,4 @@ data class ExtChuangJianPaiBanCmd(
         var shiJian: OffsetDateTime,
         var xinXiMap: Map<String, Any>
 )
+
