@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class ZhangHaoViewExt {
+public class ZhangHaoViewExtYongHu {
     @Id
     UUID zhangHaoId;
 

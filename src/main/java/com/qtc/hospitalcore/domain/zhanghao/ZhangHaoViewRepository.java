@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NamedNativeQuery;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,4 +21,10 @@ public interface ZhangHaoViewRepository extends JpaRepository<ZhangHaoView, UUID
             "WHERE r.deleted = false " +
             "AND r.id = ?1 ")
     public Optional<ZhangHaoView> findById(UUID id);
+
+    @Query(value = "" +
+            "SELECT r " +
+            "FROM ZhangHaoView r " +
+            "WHERE r.deleted = false")
+    public Page<ZhangHaoView> findTest(Pageable pageable);
 }

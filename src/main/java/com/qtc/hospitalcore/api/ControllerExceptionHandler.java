@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.persistence.NoResultException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -42,7 +43,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler({HttpMessageNotReadableException.class,
             PPException.class,
             CommandExecutionException.class,
-            NoSuchElementException.class
+            NoSuchElementException.class,
+            NoResultException.class
     })
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

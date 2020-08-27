@@ -7,7 +7,8 @@ import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
 import com.qtc.hospitalcore.domain.yaopin.YaoPinView;
 import com.qtc.hospitalcore.domain.yihurenyuan.YiHuRenYuanView;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
-import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewExt;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewExtYiHuRenYuan;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewExtYongHu;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,8 +16,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -38,8 +39,7 @@ public class HouTaiController {
     // query
     @ApiOperation(value = "获取用户列表")
     @GetMapping("/huoQuYongHuLB")
-    public PPResult<List<ZhangHaoViewExt>> huoQuYongHuLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
-
+    public PPResult<Page<ZhangHaoViewExtYongHu>> huoQuYongHuLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
 
         Query q = em.createNativeQuery(
                 "" +
@@ -62,33 +62,146 @@ public class HouTaiController {
                         "AND" +
                         "   y.deleted = false " +
                         "AND " +
-                        "   y.xing_ming LIKE :keyword",
-                ZhangHaoViewExt.class
+                        "   (" +
+                        "       y.xing_ming LIKE :keyword " +
+                        "   OR" +
+                        "       y.xin_xi_map LIKE :keyword" +
+                        "   )",
+                ZhangHaoViewExtYongHu.class
         );
         q.setParameter("keyword", "%" + queryKey + "%");
 
-        q.setFirstResult(new Long(pageable.getOffset()).intValue()).setMaxResults(pageable.getPageSize());
+        q
+                .setFirstResult(new Long(pageable.getOffset()).intValue())
+                .setMaxResults(pageable.getPageSize());
 
-        List<ZhangHaoViewExt> result = q.getResultList();
+        Query q2 = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   count(*)" +
+                        "FROM " +
+                        "   zhang_hao_view z " +
+                        "JOIN " +
+                        "   yong_hu_view y " +
+                        "ON " +
+                        "   z.yong_hu_id = y.id " +
+                        "WHERE" +
+                        "   z.deleted = false " +
+                        "AND" +
+                        "   y.deleted = false " +
+                        "AND " +
+                        "   (" +
+                        "       y.xing_ming LIKE :keyword " +
+                        "   OR" +
+                        "       y.xin_xi_map LIKE :keyword" +
+                        "   )"
+        );
+        q2.setParameter("keyword", "%" + queryKey + "%");
 
-
-        return PPResult.getPPResultOK(result);
+        return PPResult.getPPResultOK(new PageImpl<>(
+                q.getResultList(),
+                pageable,
+                Integer.valueOf(q2.getResultList().get(0).toString())
+        ));
     }
 
     @ApiOperation(value = "获取用户")
     @GetMapping("/huoQuYongHu/{yongHuId}")
     public PPResult<YongHuView> huoQuYongHu(@PathVariable UUID yongHuId) {
-        // TODO: PP
+        Query q = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   z.id zhang_hao_id," +
+                        "   y.id yong_hu_id," +
+                        "   y.shou_ji_hao," +
+                        "   y.xing_ming," +
+                        "   y.shen_fen_zheng," +
+                        "   y.wei_xin_open_id," +
+                        "   y.xin_xi_map " +
+                        "FROM " +
+                        "   zhang_hao_view z " +
+                        "JOIN " +
+                        "   yong_hu_view y " +
+                        "ON " +
+                        "   z.yong_hu_id = y.id " +
+                        "WHERE" +
+                        "   z.deleted = false " +
+                        "AND" +
+                        "   y.deleted = false " +
+                        "AND " +
+                        "   y.id = '" + yongHuId + "'",
+                ZhangHaoViewExtYongHu.class
+        );
 
-        return null;
+        ZhangHaoViewExtYongHu result = (ZhangHaoViewExtYongHu) q.getSingleResult();
+
+        return PPResult.getPPResultOK(result);
     }
 
     @ApiOperation(value = "获取医护人员列表")
     @GetMapping("/huoQuYiHuRenYuanLB")
-    public PPResult<List<YiHuRenYuanView>> huoQuYiHuRenYuanLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
-        // TODO: PP
+    public PPResult<List<ZhangHaoViewExtYiHuRenYuan>> huoQuYiHuRenYuanLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
+        Query q = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   z.id zhang_hao_id," +
+                        "   y.id yi_hu_ren_yuan_id," +
+                        "   y.xing_ming," +
+                        "   y.shen_fen_zheng_hao," +
+                        "   y.quanXianSet," +
+                        "   y.xin_xi_map " +
+                        "FROM " +
+                        "   zhang_hao_view z " +
+                        "JOIN " +
+                        "   yi_hu_ren_yuan_view y " +
+                        "ON " +
+                        "   z.yi_hu_ren_yuan_id = y.id " +
+                        "WHERE" +
+                        "   z.deleted = false " +
+                        "AND" +
+                        "   y.deleted = false " +
+                        "AND " +
+                        "   (" +
+                        "       y.xing_ming LIKE :keyword " +
+                        "   OR" +
+                        "       y.xin_xi_map LIKE :keyword" +
+                        "   )",
+                ZhangHaoViewExtYongHu.class
+        );
+        q.setParameter("keyword", "%" + queryKey + "%");
 
-        return null;
+        q
+                .setFirstResult(new Long(pageable.getOffset()).intValue())
+                .setMaxResults(pageable.getPageSize());
+
+        Query q2 = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   count(*)" +
+                        "FROM " +
+                        "   zhang_hao_view z " +
+                        "JOIN " +
+                        "   yong_hu_view y " +
+                        "ON " +
+                        "   z.yi_hu_ren_yuan_id = y.id " +
+                        "WHERE" +
+                        "   z.deleted = false " +
+                        "AND" +
+                        "   y.deleted = false " +
+                        "AND " +
+                        "   (" +
+                        "       y.xing_ming LIKE :keyword " +
+                        "   OR" +
+                        "       y.xin_xi_map LIKE :keyword" +
+                        "   )"
+        );
+        q2.setParameter("keyword", "%" + queryKey + "%");
+
+        return PPResult.getPPResultOK(new PageImpl<>(
+                q.getResultList(),
+                pageable,
+                Integer.valueOf(q2.getResultList().get(0).toString())
+        ));
     }
 
     @ApiOperation(value = "获取医护人员")
