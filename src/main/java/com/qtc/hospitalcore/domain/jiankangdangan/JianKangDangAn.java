@@ -34,7 +34,7 @@ public class JianKangDangAn extends PPAggregate {
     ZhuangTai zhuangTai;
 
     String xingMing;
-    String shenFenZhengHao;
+    String shenFenZheng;
     String shouJiHao;
 
     @Convert(converter = HashMapConverter.class)
@@ -57,7 +57,7 @@ public class JianKangDangAn extends PPAggregate {
                         cmd.getId(),
                         cmd.getYongHuId(),
                         cmd.getXingMing(),
-                        cmd.getShenFenZhengHao(),
+                        cmd.getShenFenZheng(),
                         cmd.getShouJiHao(),
                         cmd.getJiBenXinXiMap()
                 ),
@@ -69,7 +69,7 @@ public class JianKangDangAn extends PPAggregate {
     public void on(JianKangDangAn_ChuangJianEvt evt) {
         this.id = evt.getId();
         this.xingMing = evt.getXingMing();
-        this.shenFenZhengHao = evt.getShenFenZhengHao();
+        this.shenFenZheng = evt.getShenFenZheng();
         this.shouJiHao = evt.getShouJiHao();
         this.jiBenXinXiMap = evt.getJiBenXinXiMap();
 

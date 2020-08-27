@@ -22,7 +22,7 @@ public class YiHuRenYuanEventListener {
         YiHuRenYuanView record = new YiHuRenYuanView();
         record.setId(evt.getId());
         record.setXingMing(evt.getXingMing());
-        record.setShenFenZhengHao(evt.getShenFenZhengHao());
+        record.setShenFenZheng(evt.getShenFenZheng());
         record.setQuanXianSet(evt.getQuanXianSet());
         record.setXinXiMap(evt.getXinXiMap());
 
@@ -34,7 +34,7 @@ public class YiHuRenYuanEventListener {
         YiHuRenYuanView record = repository.findById(evt.getId()).get();
 
         record.setXingMing(evt.getXingMing());
-        record.setShenFenZhengHao(evt.getShenFenZhengHao());
+        record.setShenFenZheng(evt.getShenFenZheng());
         record.setXinXiMap(evt.getXinXiMap());
 
         repository.saveAndFlush(record);

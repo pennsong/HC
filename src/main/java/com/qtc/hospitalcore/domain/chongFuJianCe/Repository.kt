@@ -14,7 +14,7 @@ interface YongHuOpenIdRepository : JpaRepository<YongHuOpenId, Long>
 interface UsernameRepository : JpaRepository<Username, Long>
 
 @Repository
-interface YiHuRenYuanShenFenZhengHaoRepository : JpaRepository<YiHuRenYuanShenFenZhengHao, Long>
+interface YiHuRenYuanShenFenZhengRepository : JpaRepository<YiHuRenYuanShenFenZheng, Long>
 
 @Repository
-interface JianKangDangAnShenFenZhengHaoRepository : JpaRepository<JianKangDangAnShenFenZhengHao, Long>
+interface JianKangDangAnShenFenZhengRepository : JpaRepository<JianKangDangAnShenFenZheng, Long>

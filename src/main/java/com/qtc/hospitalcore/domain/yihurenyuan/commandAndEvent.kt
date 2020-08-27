@@ -14,7 +14,7 @@ data class YiHuRenYuan_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var quanXianSet: Set<QuanXian>,
         var xinXiMap: Map<String, Any>
 )
@@ -22,7 +22,7 @@ data class YiHuRenYuan_ChuangJianCmd(
 data class YiHuRenYuan_ChuangJianEvt(
         var id: UUID,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var quanXianSet: Set<QuanXian>,
         var xinXiMap: Map<String, Any>
 )
@@ -31,14 +31,14 @@ data class YiHuRenYuan_GengXinCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var xinXiMap: Map<String, Any>
 )
 
 data class YiHuRenYuan_GengXinEvt(
         var id: UUID,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var xinXiMap: Map<String, Any>
 )
 

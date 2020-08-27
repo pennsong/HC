@@ -41,7 +41,7 @@ public class YiHuRenYuanTest {
 
         template.setId(id);
         template.setXingMing("xm");
-        template.setShenFenZhengHao("sf");
+        template.setShenFenZheng("sf");
         template.setQuanXianSet(
                 new HashSet<>(
                         Arrays.asList(
@@ -62,7 +62,7 @@ public class YiHuRenYuanTest {
 
         template.setId(id);
         template.setXingMing("xm");
-        template.setShenFenZhengHao("sf");
+        template.setShenFenZheng("sf");
         template.setQuanXianSet(
                 new HashSet<>(
                         Arrays.asList(
@@ -177,7 +177,7 @@ public class YiHuRenYuanTest {
                     YiHuRenYuan record = getTemplate();
 
                     record.setXingMing("xm2");
-                    record.setShenFenZhengHao("sf2");
+                    record.setShenFenZheng("sf2");
                     record.setXinXiMap( PPUtil.stringToMap("B:2, C:2"));
 
                     // 时间相关assertions

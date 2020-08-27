@@ -26,7 +26,7 @@ public class YiHuRenYuanView extends PPEntity {
 
     String xingMing;
 
-    String shenFenZhengHao;
+    String shenFenZheng;
 
     @ElementCollection
     Set<QuanXian> quanXianSet;

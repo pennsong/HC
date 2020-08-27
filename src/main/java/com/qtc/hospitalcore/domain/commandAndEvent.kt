@@ -22,7 +22,7 @@ data class ExtChuangJianYiHuRenYuanCmd(
         var username: String,
         var password: String,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var yiHuRenYuan_XinXiMap: Map<String, Any>
 )
 

@@ -306,7 +306,7 @@ public class YongHuController {
         jianKangDangAnMap.put("id", jianKangDangAnView.getId());
         jianKangDangAnMap.put("zhuangTai", jianKangDangAnView.getZhuangTai());
         jianKangDangAnMap.put("xingMing", jianKangDangAnView.getXingMing());
-        jianKangDangAnMap.put("shenFenZhengHao", jianKangDangAnView.getShenFenZhengHao());
+        jianKangDangAnMap.put("shenFenZheng", jianKangDangAnView.getShenFenZheng());
         jianKangDangAnMap.put("shouJiHao", jianKangDangAnView.getShouJiHao());
         jianKangDangAnMap.put("jiBenXinXiMap", jianKangDangAnView.getJiBenXinXiMap());
         jianKangDangAnMap.put("jianKangXinXiMap", jianKangDangAnView.getJianKangXinXiMap());
@@ -435,7 +435,7 @@ public class YongHuController {
                         id,
                         yongHuId,
                         dto.getXingMing(),
-                        dto.getShenFenZhengHao(),
+                        dto.getShenFenZheng(),
                         dto.getShouJiHao(),
                         dto.getShenFenXinXiNeiRong()
                 )
@@ -449,7 +449,7 @@ public class YongHuController {
         @NotBlank
         String xingMing;
         @NotBlank
-        String shenFenZhengHao;
+        String shenFenZheng;
         @NotBlank
         String shouJiHao;
         @NotNull

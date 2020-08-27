@@ -23,7 +23,7 @@ public class JianKangDangAnEventListener {
         record.setId(evt.getId());
         record.setYongHuId(evt.getYongHuId());
         record.setXingMing(evt.getXingMing());
-        record.setShenFenZhengHao(evt.getShenFenZhengHao());
+        record.setShenFenZheng(evt.getShenFenZheng());
         record.setShouJiHao(evt.getShouJiHao());
         record.setJiBenXinXiMap(evt.getJiBenXinXiMap());
 

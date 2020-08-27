@@ -32,7 +32,7 @@ public class JianKangDangAnView extends PPEntity {
     ZhuangTai zhuangTai;
 
     String xingMing;
-    String shenFenZhengHao;
+    String shenFenZheng;
     String shouJiHao;
 
     @Column(columnDefinition = "json")

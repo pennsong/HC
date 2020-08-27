@@ -9,15 +9,15 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class YiHuRenYuanShenFenZhengHao {
+public class YiHuRenYuanShenFenZheng {
     @Id
     @GeneratedValue
     long id;
 
     @Column(unique = true)
-    String shenFenZhengHao;
+    String shenFenZheng;
 
-    public YiHuRenYuanShenFenZhengHao(String shenFenZhengHao) {
-        this.shenFenZhengHao = shenFenZhengHao;
+    public YiHuRenYuanShenFenZheng(String shenFenZheng) {
+        this.shenFenZheng = shenFenZheng;
     }
 }

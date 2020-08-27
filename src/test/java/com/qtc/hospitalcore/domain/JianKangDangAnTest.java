@@ -42,7 +42,7 @@ public class JianKangDangAnTest {
 
         template.setId(id);
         template.setXingMing("xm");
-        template.setShenFenZhengHao("sf");
+        template.setShenFenZheng("sf");
         template.setShouJiHao("sj");
         template.setJiBenXinXiMap(PPUtil.stringToMap("A:1, B:1"));
         template.setJianKangXinXiMap(PPUtil.stringToMap("C:1, D:1"));
@@ -58,7 +58,7 @@ public class JianKangDangAnTest {
         template.setId(id);
         template.setYongHuId(yongHuId);
         template.setXingMing("xm");
-        template.setShenFenZhengHao("sf");
+        template.setShenFenZheng("sf");
         template.setShouJiHao("sj");
         template.setJiBenXinXiMap(PPUtil.stringToMap("A:1, B:1"));
         template.setJianKangXinXiMap(PPUtil.stringToMap("C:1, D:1"));

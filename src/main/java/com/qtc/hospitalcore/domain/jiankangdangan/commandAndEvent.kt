@@ -15,7 +15,7 @@ data class JianKangDangAn_ChuangJianCmd(
         var id: UUID,
         var yongHuId: UUID,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var shouJiHao: String,
         var jiBenXinXiMap: Map<String, Any>
 )
@@ -24,7 +24,7 @@ data class JianKangDangAn_ChuangJianEvt(
         var id: UUID,
         var yongHuId: UUID,
         var xingMing: String,
-        var shenFenZhengHao: String,
+        var shenFenZheng: String,
         var shouJiHao: String,
         var jiBenXinXiMap: Map<String, Any>
 )

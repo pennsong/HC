@@ -351,7 +351,7 @@ public class AdminController {
                         dto.getDengLuMing(),
                         dto.getDengLuMiMa(),
                         dto.getXingMing(),
-                        dto.getShenFenZhengHao(),
+                        dto.getShenFenZheng(),
                         dto.getYiHuRenYuanXinXiNeiRong()
                 )
         );
@@ -368,7 +368,7 @@ public class AdminController {
         @NotBlank
         String xingMing;
         @NotBlank
-        String shenFenZhengHao;
+        String shenFenZheng;
         @NotNull
         Map<String, Object> yiHuRenYuanXinXiNeiRong;
     }
@@ -404,7 +404,7 @@ public class AdminController {
                 new YiHuRenYuan_GengXinCmd(
                         dto.getYiHuRenYuanId(),
                         dto.getXingMing(),
-                        dto.getShenFenZhengHao(),
+                        dto.getShenFenZheng(),
                         dto.getYiHuRenYuanXinXiNeiRong()
                 )
         );
@@ -419,7 +419,7 @@ public class AdminController {
         @NotBlank
         String xingMing;
         @NotBlank
-        String shenFenZhengHao;
+        String shenFenZheng;
         @NotNull
         Map<String, Object> yiHuRenYuanXinXiNeiRong;
     }

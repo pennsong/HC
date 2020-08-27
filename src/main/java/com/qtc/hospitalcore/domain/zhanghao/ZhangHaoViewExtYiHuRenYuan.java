@@ -21,7 +21,7 @@ public class ZhangHaoViewExtYiHuRenYuan {
     UUID yiHuRenYuanId;
 
     String xingMing;
-    String shenFenZhengHao;
+    String shenFenZheng;
 
     @ElementCollection
     Set<QuanXian> quanXianSet;

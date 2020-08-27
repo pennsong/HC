@@ -32,7 +32,7 @@ public class YiHuRenYuan extends PPAggregate {
 
     String xingMing;
 
-    String shenFenZhengHao;
+    String shenFenZheng;
 
     Set<QuanXian> quanXianSet;
 
@@ -50,7 +50,7 @@ public class YiHuRenYuan extends PPAggregate {
         apply(new YiHuRenYuan_ChuangJianEvt(
                 cmd.getId(),
                 cmd.getXingMing(),
-                cmd.getShenFenZhengHao(),
+                cmd.getShenFenZheng(),
                 cmd.getQuanXianSet(),
                 cmd.getXinXiMap()
         ));
@@ -60,7 +60,7 @@ public class YiHuRenYuan extends PPAggregate {
     public void on(YiHuRenYuan_ChuangJianEvt evt) {
         this.id = evt.getId();
         this.xingMing = evt.getXingMing();
-        this.shenFenZhengHao = evt.getShenFenZhengHao();
+        this.shenFenZheng = evt.getShenFenZheng();
         this.quanXianSet = evt.getQuanXianSet();
         this.xinXiMap = evt.getXinXiMap();
     }
@@ -76,7 +76,7 @@ public class YiHuRenYuan extends PPAggregate {
         apply(new YiHuRenYuan_GengXinEvt(
                 cmd.getId(),
                 cmd.getXingMing(),
-                cmd.getShenFenZhengHao(),
+                cmd.getShenFenZheng(),
                 cmd.getXinXiMap()
         ));
     }
@@ -84,7 +84,7 @@ public class YiHuRenYuan extends PPAggregate {
     @EventSourcingHandler
     public void on(YiHuRenYuan_GengXinEvt evt) {
         this.xingMing = evt.getXingMing();
-        this.shenFenZhengHao = evt.getShenFenZhengHao();
+        this.shenFenZheng = evt.getShenFenZheng();
         this.xinXiMap = evt.getXinXiMap();
     }
 

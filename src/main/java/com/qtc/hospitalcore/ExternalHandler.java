@@ -41,7 +41,7 @@ public class ExternalHandler {
     private UsernameRepository usernameRepository;
 
     @Autowired
-    private YiHuRenYuanShenFenZhengHaoRepository yiHuRenYuanShenFenZhengHaoRepository;
+    private YiHuRenYuanShenFenZhengRepository yiHuRenYuanShenFenZhengRepository;
 
     @Autowired
     private Repository<ZhangHao> zhangHaoRepository;
@@ -110,10 +110,10 @@ public class ExternalHandler {
         // 条件检查
 
         // 检查身份证号
-        YiHuRenYuanShenFenZhengHao yiHuRenYuanShenFenZhengHao = new YiHuRenYuanShenFenZhengHao(cmd.getShenFenZhengHao());
+        YiHuRenYuanShenFenZheng yiHuRenYuanShenFenZheng = new YiHuRenYuanShenFenZheng(cmd.getShenFenZheng());
 
         try {
-            yiHuRenYuanShenFenZhengHaoRepository.saveAndFlush(yiHuRenYuanShenFenZhengHao);
+            yiHuRenYuanShenFenZhengRepository.saveAndFlush(yiHuRenYuanShenFenZheng);
         } catch (Exception e) {
             throw new PPDuplicationException("此身份证号已存在");
         }
@@ -134,7 +134,7 @@ public class ExternalHandler {
                 new YiHuRenYuan_ChuangJianCmd(
                         yiHuRenYuanId,
                         cmd.getXingMing(),
-                        cmd.getShenFenZhengHao(),
+                        cmd.getShenFenZheng(),
                         new HashSet<>(),
                         cmd.getYiHuRenYuan_XinXiMap()
                 ),
