@@ -12,6 +12,7 @@ import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.*;
 import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianJiBenXinXiCmd;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoView;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewExtYongHu;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHao_ShanChuCmd;
 import lombok.Data;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.resource.HttpResource;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
@@ -53,6 +56,9 @@ public class TestController {
 
     @Autowired
     WenZhenViewRepository wenZhenViewRepository;
+
+    @Autowired
+    private EntityManager em;
 
     static UUID zhangHaoId = UUID.randomUUID();
     static UUID yongHuId = UUID.randomUUID();
@@ -229,7 +235,7 @@ public class TestController {
         commandGateway.sendAndWait(
                 GenericCommandMessage.asCommandMessage(
                         new ExtJianChaChanPinCmd(
-                               id
+                                id
                         )
                 ).withMetaData(PPUtil.stringToMap(""))
         );
@@ -238,53 +244,32 @@ public class TestController {
         return PPResult.getPPOK();
     }
 
-    @GetMapping("/init")
+    @GetMapping("/tt")
     public PPResult init() {
-        log.info(zhangHaoId.toString());
-        log.info(yongHuId.toString());
-        // 产品
-        UUID id = UUID.randomUUID();
-
-        ppCommandGateway.sendAndWait(
-                new ChanPin_ChuangJianCmd(
-                        id,
-                        "产品1",
-                        "大类1",
-                        "小类1",
-                        new BigDecimal(10),
-                        new BigDecimal(100),
-                        PPUtil.stringToMap("A:1, B:1")
-                )
+        Query q = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   z.id zhang_hao_id," +
+                        "   y.id yong_hu_id," +
+                        "   y.shou_ji_hao," +
+                        "   y.xing_ming," +
+                        "   y.shen_fen_zheng," +
+                        "   y.wei_xin_open_id," +
+                        "   y.xin_xi_map " +
+                        "FROM " +
+                        "   zhang_hao_view z " +
+                        "JOIN " +
+                        "   yong_hu_view y " +
+                        "ON " +
+                        "   z.yong_hu_id = y.id " +
+                        "WHERE" +
+                        "   z.deleted = false " +
+                        "AND" +
+                        "   y.deleted = false"
         );
 
-        // 用户
-        ppCommandGateway.sendAndWait(
-                new ExtChuangJianYongHuCmd(
-                        zhangHaoId,
-                        yongHuId,
-                        "13800000000",
-                        "wx"
-                )
-        );
-
-        return PPResult.getPPOK();
+        return PPResult.getPPResultOK(q.getResultList());
     }
-
-    @GetMapping("/init2")
-    public PPResult init2() {
-        log.info(zhangHaoId.toString());
-        log.info(yongHuId.toString());
-        ppCommandGateway.sendAndWait(
-                new YongHu_ChuangJianJiBenXinXiCmd(
-                        yongHuId,
-                        "xm",
-                        "sfz",
-                        PPUtil.stringToMap("A:1, B:1")
-                )
-        );
-        return PPResult.getPPOK();
-    }
-
 
 
 }

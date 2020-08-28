@@ -344,10 +344,11 @@ public class AdminController {
         // 参数相关检查 end
 
         UUID id = UUID.randomUUID();
-
+        UUID yiHuRenYuanId = UUID.randomUUID();
         ppCommandGateway.sendAndWait(
                 new ExtChuangJianYiHuRenYuanCmd(
                         id,
+                        yiHuRenYuanId,
                         dto.getDengLuMing(),
                         dto.getDengLuMiMa(),
                         dto.getXingMing(),
@@ -445,7 +446,7 @@ public class AdminController {
         @NotNull
         UUID yiHuRenYuanId;
         @NotNull
-        Set<QuanXian> quanXianZu;
+        Map<QuanXian, Boolean> quanXianZu;
     }
 
     @ApiOperation(value = "设置医护人员密码")

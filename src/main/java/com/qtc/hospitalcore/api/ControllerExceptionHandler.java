@@ -3,6 +3,7 @@ package com.qtc.hospitalcore.api;
 import com.qtc.hospitalcore.domain.exception.PPBusinessException;
 import com.qtc.hospitalcore.domain.exception.PPException;
 import org.axonframework.commandhandling.CommandExecutionException;
+import org.hibernate.QueryException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -44,7 +45,8 @@ public class ControllerExceptionHandler {
             PPException.class,
             CommandExecutionException.class,
             NoSuchElementException.class,
-            NoResultException.class
+            NoResultException.class,
+            QueryException.class
     })
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

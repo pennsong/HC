@@ -23,6 +23,7 @@ import org.axonframework.modelling.command.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -129,13 +130,12 @@ public class ExternalHandler {
         // 条件检查 end
 
         // 创建医护人员
-        UUID yiHuRenYuanId = UUID.randomUUID();
         yiHuRenYuanRepository.newInstance(() -> new YiHuRenYuan(
                 new YiHuRenYuan_ChuangJianCmd(
-                        yiHuRenYuanId,
+                        cmd.getYiHuRenYuanId(),
                         cmd.getXingMing(),
                         cmd.getShenFenZheng(),
-                        new HashSet<>(),
+                        new HashMap<>(),
                         cmd.getYiHuRenYuan_XinXiMap()
                 ),
                 metaData
@@ -149,7 +149,7 @@ public class ExternalHandler {
                         cmd.getPassword(),
                         JueSe.YI_HU_REN_YUAN,
                         null,
-                        yiHuRenYuanId
+                        cmd.getYiHuRenYuanId()
                 ), metaData
         ));
     }

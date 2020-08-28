@@ -17,9 +17,9 @@ import java.util.UUID;
 @Data
 public class ZhangHaoViewExtYongHu {
     @Id
-    UUID zhangHaoId;
+    String zhangHaoId;
 
-    UUID yongHuId;
+    String yongHuId;
 
     String shouJiHao;
     String xingMing;

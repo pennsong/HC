@@ -26,17 +26,6 @@ public class YiHuRenYuanController {
     private PPCommandGateway ppCommandGateway;
 
     // query
-    @ApiOperation(value = "获取问诊")
-    @GetMapping("/huoQuWenZhen/{wenZhenId}")
-    public PPResult<WenZhenView> huoQuWenZhen(
-            @PathVariable UUID wenZhenDanId
-    ) {
-        // TODO: PP authentication中取得当前zhangHaoId
-        UUID zhangHaoId = PPUtil.yiHuRenYuanZhangHaoId;
-        // TODO: PP end
-
-        return null;
-    }
 
     // query end
 

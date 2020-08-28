@@ -19,6 +19,7 @@ import com.qtc.hospitalcore.domain.wenzhen.WenZhen_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHuViewRepository;
 import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianJiBenXinXiCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHuView;
+import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewExtYongHu;
 import com.qtc.hospitalcore.domain.zhanghao.ZhangHaoViewRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,12 +27,16 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.GenericCommandMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -49,6 +54,9 @@ public class YongHuController {
 
     public static final String JIAN_KANG_DANG_AN_YONG_HU_YAN_ZHENG_MA_KEY = "jianKangDangAnYongHuYanZhengMa";
     public static final String JIAN_KANG_DANG_AN_YONG_HU_SHOU_JI_HAO_KEY = "jianKangDangAnYongHuShouJiHao";
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private PPCommandGateway ppCommandGateway;
@@ -77,12 +85,8 @@ public class YongHuController {
 
     @ApiOperation(value = "获取产品列表")
     @GetMapping("/huoQuChanPinLB")
-    public PPResult<List<ChanPinView>> huoQuChanPinLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
-        // TODO: PP authentication中取得当前zhangHaoId
-        UUID zhangHaoId = PPUtil.yongHuZhangHaoId;
-        // TODO: PP end
-
-        return null;
+    public PPResult<Page<ChanPinView>> huoQuChanPinLB(@RequestParam(defaultValue = "") String queryKey, Pageable pageable) {
+        return PPResult.getPPResultOK(chanPinViewRepository.findAllKeGouByKeyword(queryKey, pageable));
     }
 
     @ApiOperation(value = "获取用户信息")
@@ -92,19 +96,22 @@ public class YongHuController {
         UUID zhangHaoId = PPUtil.yongHuZhangHaoId;
         // TODO: PP end
 
-        return null;
+        UUID yongHuId = zhangHaoViewRepository.findById(zhangHaoId).get().getYongHuId();
+
+        return PPResult.getPPResultOK(yongHuViewRepository.findById(yongHuId));
     }
 
     @ApiOperation(value = "获取用户健康档案列表")
     @GetMapping("/huoQuYongHuJianKangDangAnLB")
-    public PPResult<List<JianKangDangAnView>> huoQuYongHuJianKangDangAnLB(
+    public PPResult<Page<JianKangDangAnView>> huoQuYongHuJianKangDangAnLB(
     ) {
         // TODO: PP authentication中取得当前zhangHaoId
         UUID zhangHaoId = PPUtil.yongHuZhangHaoId;
         // TODO: PP end
 
+        UUID yongHuId = zhangHaoViewRepository.findById(zhangHaoId).get().getYongHuId();
 
-        return null;
+        return PPResult.getPPResultOK(jianKangDangAnViewRepository.findAllByYongHuId(yongHuId));
     }
 
     @ApiOperation(value = "获取用户问诊列表")
@@ -115,6 +122,74 @@ public class YongHuController {
         UUID zhangHaoId = PPUtil.yongHuZhangHaoId;
         // TODO: PP end
 
+        UUID yongHuId = zhangHaoViewRepository.findById(zhangHaoId).get().getYongHuId();
+
+//        Query q = em.createNativeQuery(
+//                "" +
+//                        "SELECT " +
+//                        "   z.id zhang_hao_id," +
+//                        "   y.id yong_hu_id," +
+//                        "   y.shou_ji_hao," +
+//                        "   y.xing_ming," +
+//                        "   y.shen_fen_zheng," +
+//                        "   y.wei_xin_open_id," +
+//                        "   y.xin_xi_map " +
+//                        "FROM " +
+//                        "   wen_zhen_view w " +
+//                        "JOIN " +
+//                        "   jian_kang_dang_an_view j " +
+//                        "ON " +
+//                        "   w.jian_kang_dang_an_id = j.id " +
+//                        "JOIN " +
+//                        "   yong_hu_view y " +
+//                        "ON " +
+//                        "   j.yong_hu_id = y.id " +
+//                        "WHERE" +
+//                        "   z.deleted = false " +
+//                        "AND" +
+//                        "   y.deleted = false " +
+//                        "AND " +
+//                        "   (" +
+//                        "       y.xing_ming LIKE :keyword " +
+//                        "   OR" +
+//                        "       y.xin_xi_map LIKE :keyword" +
+//                        "   )",
+//                ZhangHaoViewExtYongHu.class
+//        );
+//        q.setParameter("keyword", "%" + queryKey + "%");
+//
+//        q
+//                .setFirstResult(new Long(pageable.getOffset()).intValue())
+//                .setMaxResults(pageable.getPageSize());
+//
+//        Query q2 = em.createNativeQuery(
+//                "" +
+//                        "SELECT " +
+//                        "   count(*)" +
+//                        "FROM " +
+//                        "   zhang_hao_view z " +
+//                        "JOIN " +
+//                        "   yong_hu_view y " +
+//                        "ON " +
+//                        "   z.yong_hu_id = y.id " +
+//                        "WHERE" +
+//                        "   z.deleted = false " +
+//                        "AND" +
+//                        "   y.deleted = false " +
+//                        "AND " +
+//                        "   (" +
+//                        "       y.xing_ming LIKE :keyword " +
+//                        "   OR" +
+//                        "       y.xin_xi_map LIKE :keyword" +
+//                        "   )"
+//        );
+//        q2.setParameter("keyword", "%" + queryKey + "%");
+//
+//        return PPResult.getPPResultOK(new PageImpl<>(
+//                q.getResultList(),
+//                pageable,
+//                Integer.valueOf(q2.getResultList().get(0).toString())
+//        ));
 
         return null;
     }

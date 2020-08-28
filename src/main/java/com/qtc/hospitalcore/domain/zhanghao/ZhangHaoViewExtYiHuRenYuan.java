@@ -16,15 +16,15 @@ import java.util.UUID;
 @Data
 public class ZhangHaoViewExtYiHuRenYuan {
     @Id
-    UUID zhangHaoId;
+    String zhangHaoId;
 
-    UUID yiHuRenYuanId;
+    String yiHuRenYuanId;
 
     String xingMing;
     String shenFenZheng;
 
-    @ElementCollection
-    Set<QuanXian> quanXianSet;
+    @Convert(converter = HashMapConverter.class)
+    Map<String, Object> quanXianMap;
 
     @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;

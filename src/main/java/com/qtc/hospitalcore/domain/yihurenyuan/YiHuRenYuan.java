@@ -15,7 +15,6 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import javax.persistence.Convert;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -34,7 +33,8 @@ public class YiHuRenYuan extends PPAggregate {
 
     String shenFenZheng;
 
-    Set<QuanXian> quanXianSet;
+    @Convert(converter = HashMapConverter.class)
+    Map<QuanXian, Boolean> quanXianMap;
 
     @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;
@@ -51,7 +51,7 @@ public class YiHuRenYuan extends PPAggregate {
                 cmd.getId(),
                 cmd.getXingMing(),
                 cmd.getShenFenZheng(),
-                cmd.getQuanXianSet(),
+                cmd.getQuanXianMap(),
                 cmd.getXinXiMap()
         ));
     }
@@ -61,7 +61,7 @@ public class YiHuRenYuan extends PPAggregate {
         this.id = evt.getId();
         this.xingMing = evt.getXingMing();
         this.shenFenZheng = evt.getShenFenZheng();
-        this.quanXianSet = evt.getQuanXianSet();
+        this.quanXianMap = evt.getQuanXianMap();
         this.xinXiMap = evt.getXinXiMap();
     }
 
@@ -98,12 +98,12 @@ public class YiHuRenYuan extends PPAggregate {
 
         apply(new YiHuRenYuan_SheZhiQuanXianEvt(
                 cmd.getId(),
-                cmd.getQuanXianSet()
+                cmd.getQuanXianMap()
         ));
     }
 
     @EventSourcingHandler
     public void on(YiHuRenYuan_SheZhiQuanXianEvt evt) {
-       this.quanXianSet = evt.getQuanXianSet();
+       this.quanXianMap = evt.getQuanXianMap();
     }
 }

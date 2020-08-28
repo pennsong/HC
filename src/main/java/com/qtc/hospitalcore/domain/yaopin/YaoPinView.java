@@ -19,6 +19,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class YaoPinView extends PPEntity {
     @Id
+    @Column(columnDefinition = "varchar(128) not null")
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")
     UUID id;
 
     YaoPin.ZhuangTai zhuangTai;

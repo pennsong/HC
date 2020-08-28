@@ -14,11 +14,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@SqlResultSetMapping(
-        name = "FridayEmployeeResult",
-        columns = {@ColumnResult(name = "employeeId")}
-)
-
+//@SqlResultSetMapping(
+//        name = "ZhangHaoViewExtYongHu",
+//        entities = {
+//                @EntityResult(
+//                        entityClass = ZhangHaoViewExtYongHu.class
+//                )
+//        })
+//
+//@SqlResultSetMapping(
+//        name = "ZhangHaoViewExtYiHuRenYuan",
+//        entities = {
+//                @EntityResult(
+//                        entityClass = ZhangHaoViewExtYiHuRenYuan.class
+//                )
+//        })
 
 @Entity
 @Data

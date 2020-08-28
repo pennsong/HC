@@ -19,6 +19,7 @@ data class ExtChuangJianYongHuCmd(
 data class ExtChuangJianYiHuRenYuanCmd(
         @TargetAggregateIdentifier
         var zhangHaoId: UUID,
+        var yiHuRenYuanId: UUID,
         var username: String,
         var password: String,
         var xingMing: String,

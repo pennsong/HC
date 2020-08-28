@@ -1,10 +1,8 @@
 package com.qtc.hospitalcore.domain;
 
-import com.qtc.hospitalcore.domain.paiban.PaiBan;
+import com.google.common.collect.ImmutableMap;
 import com.qtc.hospitalcore.domain.util.PPUtil;
-import com.qtc.hospitalcore.domain.yaopin.*;
 import com.qtc.hospitalcore.domain.yihurenyuan.*;
-import com.qtc.hospitalcore.domain.yonghu.*;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,14 +40,12 @@ public class YiHuRenYuanTest {
         template.setId(id);
         template.setXingMing("xm");
         template.setShenFenZheng("sf");
-        template.setQuanXianSet(
-                new HashSet<>(
-                        Arrays.asList(
-                                QuanXian.BIAN_JI_BING_LI,
-                                QuanXian.KAI_JU_CHU_FANG,
-                                QuanXian.QUE_REN_CHU_FANG,
-                                QuanXian.WEN_ZHEN
-                        )
+        template.setQuanXianMap(
+                ImmutableMap.of(
+                        QuanXian.BIAN_JI_BING_LI, true,
+                        QuanXian.KAI_JU_CHU_FANG, true,
+                        QuanXian.QUE_REN_CHU_FANG, true,
+                        QuanXian.WEN_ZHEN, true
                 )
         );
         template.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
@@ -63,14 +59,12 @@ public class YiHuRenYuanTest {
         template.setId(id);
         template.setXingMing("xm");
         template.setShenFenZheng("sf");
-        template.setQuanXianSet(
-                new HashSet<>(
-                        Arrays.asList(
-                                QuanXian.BIAN_JI_BING_LI,
-                                QuanXian.KAI_JU_CHU_FANG,
-                                QuanXian.QUE_REN_CHU_FANG,
-                                QuanXian.WEN_ZHEN
-                        )
+        template.setQuanXianMap(
+                ImmutableMap.of(
+                        QuanXian.BIAN_JI_BING_LI, true,
+                        QuanXian.KAI_JU_CHU_FANG, true,
+                        QuanXian.QUE_REN_CHU_FANG, true,
+                        QuanXian.WEN_ZHEN, true
                 )
         );
         template.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
@@ -93,13 +87,11 @@ public class YiHuRenYuanTest {
                         id,
                         "xm",
                         "sf",
-                        new HashSet<>(
-                                Arrays.asList(
-                                        QuanXian.BIAN_JI_BING_LI,
-                                        QuanXian.KAI_JU_CHU_FANG,
-                                        QuanXian.QUE_REN_CHU_FANG,
-                                        QuanXian.WEN_ZHEN
-                                )
+                        ImmutableMap.of(
+                                QuanXian.BIAN_JI_BING_LI, true,
+                                QuanXian.KAI_JU_CHU_FANG, true,
+                                QuanXian.QUE_REN_CHU_FANG, true,
+                                QuanXian.WEN_ZHEN, true
                         ),
                         PPUtil.stringToMap("A:1, B:1")
                 ))
@@ -122,13 +114,11 @@ public class YiHuRenYuanTest {
                 id,
                 "xm",
                 "sf",
-                new HashSet<>(
-                        Arrays.asList(
-                                QuanXian.BIAN_JI_BING_LI,
-                                QuanXian.KAI_JU_CHU_FANG,
-                                QuanXian.QUE_REN_CHU_FANG,
-                                QuanXian.WEN_ZHEN
-                        )
+                ImmutableMap.of(
+                        QuanXian.BIAN_JI_BING_LI, true,
+                        QuanXian.KAI_JU_CHU_FANG, true,
+                        QuanXian.QUE_REN_CHU_FANG, true,
+                        QuanXian.WEN_ZHEN, true
                 ),
                 PPUtil.stringToMap("A:1, B:1")
         );
@@ -178,7 +168,7 @@ public class YiHuRenYuanTest {
 
                     record.setXingMing("xm2");
                     record.setShenFenZheng("sf2");
-                    record.setXinXiMap( PPUtil.stringToMap("B:2, C:2"));
+                    record.setXinXiMap(PPUtil.stringToMap("B:2, C:2"));
 
                     // 时间相关assertions
                     // 时间相关assertions end
@@ -193,7 +183,7 @@ public class YiHuRenYuanTest {
 
     @Test
     public void test_YiHuRenYuan_SheZhiQuanXianCmd() {
-       
+
         fixture.givenState(() -> {
             YiHuRenYuan record = getTemplate();
 
@@ -201,25 +191,21 @@ public class YiHuRenYuanTest {
         })
                 .when(new YiHuRenYuan_SheZhiQuanXianCmd(
                         id,
-                        new HashSet<>(
-                                Arrays.asList(
-                                        QuanXian.BIAN_JI_BING_LI,
-                                        QuanXian.KAI_JU_CHU_FANG,
-                                        QuanXian.QUE_REN_CHU_FANG
-                                )
+                        ImmutableMap.of(
+                                QuanXian.BIAN_JI_BING_LI, true,
+                                QuanXian.KAI_JU_CHU_FANG, true,
+                                QuanXian.QUE_REN_CHU_FANG, true
                         )
                 ))
                 .expectSuccessfulHandlerExecution()
                 .expectState(state -> {
                     YiHuRenYuan record = getTemplate();
 
-                    record.setQuanXianSet(
-                            new HashSet<>(
-                                    Arrays.asList(
-                                            QuanXian.BIAN_JI_BING_LI,
-                                            QuanXian.KAI_JU_CHU_FANG,
-                                            QuanXian.QUE_REN_CHU_FANG
-                                    )
+                    record.setQuanXianMap(
+                            ImmutableMap.of(
+                                    QuanXian.BIAN_JI_BING_LI, true,
+                                    QuanXian.KAI_JU_CHU_FANG, true,
+                                    QuanXian.QUE_REN_CHU_FANG, true
                             )
                     );
 
@@ -236,11 +222,11 @@ public class YiHuRenYuanTest {
         // query model update
         YiHuRenYuan_SheZhiQuanXianEvt evt = new YiHuRenYuan_SheZhiQuanXianEvt(
                 id,
-                new HashSet<>(
-                        Arrays.asList(
-                                QuanXian.BIAN_JI_BING_LI,
-                                QuanXian.KAI_JU_CHU_FANG,
-                                QuanXian.QUE_REN_CHU_FANG
+                new HashMap<>(
+                        ImmutableMap.of(
+                                QuanXian.BIAN_JI_BING_LI, true,
+                                QuanXian.KAI_JU_CHU_FANG, true,
+                                QuanXian.QUE_REN_CHU_FANG, true
                         )
                 )
         );
@@ -255,13 +241,11 @@ public class YiHuRenYuanTest {
         // 修改record到预期结果
         YiHuRenYuanView record2 = getViewTemplate();
 
-        record2.setQuanXianSet(
-                new HashSet<>(
-                        Arrays.asList(
-                                QuanXian.BIAN_JI_BING_LI,
-                                QuanXian.KAI_JU_CHU_FANG,
-                                QuanXian.QUE_REN_CHU_FANG
-                        )
+        record2.setQuanXianMap(
+                ImmutableMap.of(
+                        QuanXian.BIAN_JI_BING_LI, true,
+                        QuanXian.KAI_JU_CHU_FANG, true,
+                        QuanXian.QUE_REN_CHU_FANG, true
                 )
         );
         // 修改record到预期结果 end

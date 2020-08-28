@@ -15,7 +15,7 @@ data class YiHuRenYuan_ChuangJianCmd(
         var id: UUID,
         var xingMing: String,
         var shenFenZheng: String,
-        var quanXianSet: Set<QuanXian>,
+        var quanXianMap: Map<QuanXian, Boolean>,
         var xinXiMap: Map<String, Any>
 )
 
@@ -23,7 +23,7 @@ data class YiHuRenYuan_ChuangJianEvt(
         var id: UUID,
         var xingMing: String,
         var shenFenZheng: String,
-        var quanXianSet: Set<QuanXian>,
+        var quanXianMap: Map<QuanXian, Boolean>,
         var xinXiMap: Map<String, Any>
 )
 
@@ -45,10 +45,10 @@ data class YiHuRenYuan_GengXinEvt(
 data class YiHuRenYuan_SheZhiQuanXianCmd(
         @TargetAggregateIdentifier
         var id: UUID,
-        var quanXianSet: Set<QuanXian>
+        var quanXianMap: Map<QuanXian, Boolean>
 )
 
 data class YiHuRenYuan_SheZhiQuanXianEvt(
         var id: UUID,
-        var quanXianSet: Set<QuanXian>
+        var quanXianMap: Map<QuanXian, Boolean>
 )
