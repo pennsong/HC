@@ -8,38 +8,39 @@ import java.time.OffsetDateTime
 import java.util.*
 
 enum class HuiZhenZhuangTai {
-        YI_AN_PAI,
-        YI_WAN_CHENG,
+    YI_AN_PAI,
+    YI_WAN_CHENG,
 }
 
 enum class ChuFangZhuangTai {
-        YI_KAI_JU,
-        YI_QUE_REN,
-        YI_QU_XIAO,
+    YI_KAI_JU,
+    YI_QUE_REN,
+    YI_QU_XIAO,
 }
 
 enum class JieGuo {
-        CHENG_GONG,
-        JIE_SHU,
+    CHENG_GONG,
+    JIE_SHU,
 }
 
 enum class ZhuangTai {
-        YI_CHUANG_JIAN,
-        YI_AN_PAI_YI_SHENG,
-        YI_CHENG_GONG_WAN_CHENG,
-        YI_JIE_SHU_WAN_CHENG,
+    YI_CHUANG_JIAN,
+    YI_AN_PAI_YI_SHENG,
+    YI_CHENG_GONG_WAN_CHENG,
+    YI_JIE_SHU_WAN_CHENG,
 }
 
 enum class FuFeiZhuangTai {
-        WEI_FU_FEI,
-        YI_ZHI_FU_YU_FU_FEI,
-        YI_ZHI_FU_QUAN_KUAN,
+    WEI_FU_FEI,
+    YI_ZHI_FU_YU_FU_FEI,
+    YI_ZHI_FU_QUAN_KUAN,
 }
 
 data class WenZhen_ChuangJianCmd(
         @TargetAggregateIdentifier
         var id: UUID,
         var jianKangDangAnId: UUID,
+        var xinXiMap: Map<String, Any>,
         var chanPinId: UUID,
         var paiBanId: UUID?,
         var yuFuFei: BigDecimal,
@@ -56,6 +57,7 @@ data class WenZhen_ChuangJianCmd(
 data class WenZhen_ChuangJianEvt(
         var id: UUID,
         var jianKangDangAnId: UUID,
+        var xinXiMap: Map<String, Any>,
         var chanPinId: UUID,
         var paiBanId: UUID?,
         var yuFuFei: BigDecimal,

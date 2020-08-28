@@ -52,25 +52,10 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
             return;
         }
 
-        // 产品
-        UUID id = UUID.randomUUID();
-
-        ppCommandGateway.sendAndWait(
-                new ChanPin_ChuangJianCmd(
-                        id,
-                        "产品1",
-                        "大类1",
-                        "小类1",
-                        new BigDecimal(10),
-                        new BigDecimal(100),
-                        PPUtil.stringToMap("A:1, B:1")
-                )
-        );
-
         for (int i = 0; i < 30; i++) {
             // 用户
-            UUID zhangHaoId = UUID.randomUUID();
-            UUID yongHuId = UUID.randomUUID();
+            UUID zhangHaoId = PPUtil.getZhangHaoId(i);
+            UUID yongHuId = PPUtil.getYongHuId(i);
             ppCommandGateway.sendAndWait(
                     new ExtChuangJianYongHuCmd(
                             zhangHaoId,
@@ -90,7 +75,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
             );
 
             // 健康档案
-            UUID jianKangDangAnId = UUID.randomUUID();
+            UUID jianKangDangAnId = PPUtil.getJianKangDangAnId(i);
             ppCommandGateway.sendAndWait(
                     new JianKangDangAn_ChuangJianCmd(
                             jianKangDangAnId,
@@ -103,14 +88,15 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
             );
 
             // 问诊
-            UUID wenZhenId = UUID.randomUUID();
-            UUID chanPinId = UUID.randomUUID();
-            UUID paiBanId = UUID.randomUUID();
+            UUID wenZhenId = PPUtil.getWenZhenId(i);
+            UUID chanPinId = PPUtil.getChanPinId(i);
+            UUID paiBanId = PPUtil.getPaiBanId(i);
 
             ppCommandGateway.sendAndWait(
                     new WenZhen_ChuangJianCmd(
                             wenZhenId,
                             jianKangDangAnId,
+                            PPUtil.stringToMap("A:" + i + ", B:" + i),
                             chanPinId,
                             paiBanId,
                             new BigDecimal(10),
@@ -125,8 +111,8 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         for (int i = 0; i < 30; i++) {
             // 医护人员
-            UUID zhangHaoId = UUID.randomUUID();
-            UUID yiHuRenYuanId = UUID.randomUUID();
+            UUID zhangHaoId =PPUtil.getZhangHaoId(30 + i);
+            UUID yiHuRenYuanId = PPUtil.getYiHuRenYuanId(i);
             ppCommandGateway.sendAndWait(
                     new ExtChuangJianYiHuRenYuanCmd(
                             zhangHaoId,
@@ -156,7 +142,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         // 药品
         for (int i = 0; i < 30; i++) {
-            UUID yaoPinId = UUID.randomUUID();
+            UUID yaoPinId = PPUtil.getYaoPinId(i);
 
             ppCommandGateway.sendAndWait(
                     new YaoPin_ChuangJianCmd(
@@ -171,7 +157,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         // 产品
         for (int i = 0; i < 30; i++) {
-            UUID chanPinId = UUID.randomUUID();
+            UUID chanPinId = PPUtil.getChanPinId(i);
 
             ppCommandGateway.sendAndWait(
                     new ChanPin_ChuangJianCmd(
@@ -186,7 +172,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
             );
 
             // 排班
-            UUID paiBanId = UUID.randomUUID();
+            UUID paiBanId = PPUtil.getPaiBanId(i);
             ppCommandGateway.sendAndWait(
                     new PaiBan_ChuangJianCmd(
                             paiBanId,

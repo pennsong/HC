@@ -59,6 +59,7 @@ public class WenZhen_ChuangJianCmdTest {
         record.setXiaDanShiJian(mockNow);
         record.setYuFuFei(new BigDecimal("1"));
         record.setZongJia(new BigDecimal("100"));
+        record.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
         record.setChanPinId(chanPinId);
         record.setChanPinMingCheng("cpm");
         record.setChanPinJsonString("chanPinJsonString");
@@ -91,6 +92,7 @@ public class WenZhen_ChuangJianCmdTest {
         record.setXiaDanShiJian(mockNow);
         record.setYuFuFei(new BigDecimal("1"));
         record.setZongJia(new BigDecimal("100"));
+        record.setXinXiMap(PPUtil.stringToMap("A:1, B:1"));
         record.setChanPinId(chanPinId);
         record.setChanPinMingCheng("cpm");
         record.setChanPinJsonString("chanPinJsonString");
@@ -129,6 +131,7 @@ public class WenZhen_ChuangJianCmdTest {
                 .when(new WenZhen_ChuangJianCmd(
                         id,
                         jianKangDangAnId,
+                        PPUtil.stringToMap("A:1, B:1"),
                         chanPinId,
                         paiBanId,
                         new BigDecimal("1"),
@@ -157,6 +160,7 @@ public class WenZhen_ChuangJianCmdTest {
         WenZhen_ChuangJianEvt evt = new WenZhen_ChuangJianEvt(
                 id,
                 jianKangDangAnId,
+                PPUtil.stringToMap("A:1, B:1"),
                 chanPinId,
                 paiBanId,
                 new BigDecimal("1"),

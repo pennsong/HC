@@ -13,23 +13,12 @@ import java.util.Map;
 @Data
 public class WenZhenViewExtYongHu {
     @Id
-    String Id;
+    String id;
 
     ZhuangTai zhuangTai;
     FuFeiZhuangTai fuFeiZhuangTai;
     String chanPinMingCheng;
     OffsetDateTime xiaDanShiJian;
-
-
-
-
-
-
-    String shouJiHao;
-    String xingMing;
-    String shenFenZheng;
-    String weiXinOpenId;
-
     @Convert(converter = HashMapConverter.class)
     Map<String, Object> xinXiMap;
 }

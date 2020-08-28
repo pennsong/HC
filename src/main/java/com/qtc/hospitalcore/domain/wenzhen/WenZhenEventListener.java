@@ -29,6 +29,7 @@ public class WenZhenEventListener {
 
         record.setId(evt.getId());
         record.setJianKangDangAnId(evt.getJianKangDangAnId());
+        record.setXinXiMap(evt.getXinXiMap());
         record.setChanPinId(evt.getChanPinId());
         record.setPaiBanId(evt.getPaiBanId());
         record.setYuFuFei(evt.getYuFuFei());

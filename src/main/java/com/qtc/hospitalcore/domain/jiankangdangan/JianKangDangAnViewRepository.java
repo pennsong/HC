@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,5 +36,5 @@ public interface JianKangDangAnViewRepository extends JpaRepository<JianKangDang
                     "WHERE r.deleted = false " +
                     "AND r.yongHuId = :yongHuId"
     )
-    public Page<JianKangDangAnView> findAllByYongHuId(UUID yongHuId);
+    public List<JianKangDangAnView> findAllByYongHuId(UUID yongHuId);
 }

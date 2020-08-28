@@ -41,6 +41,10 @@ public class WenZhenView extends PPEntity {
     BigDecimal yuFuFei;
     BigDecimal zongJia;
 
+    @Column(columnDefinition = "json")
+    @Convert(converter = HashMapConverter.class)
+    Map<String, Object> xinXiMap;
+
     // 产品相关
     @Column(columnDefinition = "varchar(128) not null")
     @org.hibernate.annotations.Type(type = "org.hibernate.type.UUIDCharType")

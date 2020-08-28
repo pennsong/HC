@@ -87,30 +87,6 @@ public class TestController {
         return PPResult.getPPResultOK(record);
     }
 
-    @GetMapping("/t5")
-    public PPResult<UUID> test5() {
-        UUID id = UUID.randomUUID();
-
-        commandGateway.sendAndWait(
-                GenericCommandMessage.asCommandMessage(
-                        new WenZhen_ChuangJianCmd(
-                                id,
-                                UUID.randomUUID(),
-                                UUID.randomUUID(),
-                                UUID.randomUUID(),
-                                new BigDecimal("1"),
-                                new BigDecimal(("100")),
-                                "cpm",
-                                "a",
-                                "b",
-                                PPUtil.stringToMap("A:1, B:1")
-                        )
-                ).withMetaData(PPUtil.stringToMap(""))
-        );
-
-        return PPResult.getPPResultOK(id);
-    }
-
     @GetMapping("/t8/{id}")
     public PPResult<WenZhenView> test8(@PathVariable UUID id) {
         commandGateway.sendAndWait(

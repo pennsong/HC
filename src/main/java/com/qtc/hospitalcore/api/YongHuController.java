@@ -15,6 +15,8 @@ import com.qtc.hospitalcore.domain.paiban.PaiBan_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.util.PPCommandGateway;
 import com.qtc.hospitalcore.domain.util.PPUtil;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhenView;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhenViewExtYongHu;
+import com.qtc.hospitalcore.domain.wenzhen.WenZhenViewRepository;
 import com.qtc.hospitalcore.domain.wenzhen.WenZhen_ChuangJianCmd;
 import com.qtc.hospitalcore.domain.yonghu.YongHuViewRepository;
 import com.qtc.hospitalcore.domain.yonghu.YongHu_ChuangJianJiBenXinXiCmd;
@@ -77,6 +79,9 @@ public class YongHuController {
     ChanPinViewRepository chanPinViewRepository;
 
     @Autowired
+    WenZhenViewRepository wenZhenViewRepository;
+
+    @Autowired
     JianKangDangAnViewRepository jianKangDangAnViewRepository;
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
@@ -124,87 +129,58 @@ public class YongHuController {
 
         UUID yongHuId = zhangHaoViewRepository.findById(zhangHaoId).get().getYongHuId();
 
-//        Query q = em.createNativeQuery(
-//                "" +
-//                        "SELECT " +
-//                        "   z.id zhang_hao_id," +
-//                        "   y.id yong_hu_id," +
-//                        "   y.shou_ji_hao," +
-//                        "   y.xing_ming," +
-//                        "   y.shen_fen_zheng," +
-//                        "   y.wei_xin_open_id," +
-//                        "   y.xin_xi_map " +
-//                        "FROM " +
-//                        "   wen_zhen_view w " +
-//                        "JOIN " +
-//                        "   jian_kang_dang_an_view j " +
-//                        "ON " +
-//                        "   w.jian_kang_dang_an_id = j.id " +
-//                        "JOIN " +
-//                        "   yong_hu_view y " +
-//                        "ON " +
-//                        "   j.yong_hu_id = y.id " +
-//                        "WHERE" +
-//                        "   z.deleted = false " +
-//                        "AND" +
-//                        "   y.deleted = false " +
-//                        "AND " +
-//                        "   (" +
-//                        "       y.xing_ming LIKE :keyword " +
-//                        "   OR" +
-//                        "       y.xin_xi_map LIKE :keyword" +
-//                        "   )",
-//                ZhangHaoViewExtYongHu.class
-//        );
-//        q.setParameter("keyword", "%" + queryKey + "%");
-//
-//        q
-//                .setFirstResult(new Long(pageable.getOffset()).intValue())
-//                .setMaxResults(pageable.getPageSize());
-//
-//        Query q2 = em.createNativeQuery(
-//                "" +
-//                        "SELECT " +
-//                        "   count(*)" +
-//                        "FROM " +
-//                        "   zhang_hao_view z " +
-//                        "JOIN " +
-//                        "   yong_hu_view y " +
-//                        "ON " +
-//                        "   z.yong_hu_id = y.id " +
-//                        "WHERE" +
-//                        "   z.deleted = false " +
-//                        "AND" +
-//                        "   y.deleted = false " +
-//                        "AND " +
-//                        "   (" +
-//                        "       y.xing_ming LIKE :keyword " +
-//                        "   OR" +
-//                        "       y.xin_xi_map LIKE :keyword" +
-//                        "   )"
-//        );
-//        q2.setParameter("keyword", "%" + queryKey + "%");
-//
-//        return PPResult.getPPResultOK(new PageImpl<>(
-//                q.getResultList(),
-//                pageable,
-//                Integer.valueOf(q2.getResultList().get(0).toString())
-//        ));
+        Query q = em.createNativeQuery(
+                "" +
+                        "SELECT " +
+                        "   w.id," +
+                        "   w.zhuang_tai," +
+                        "   w.fu_fei_zhuang_tai," +
+                        "   w.chan_pin_ming_cheng," +
+                        "   w.xia_dan_shi_jian," +
+                        "   w.xin_xi_map" +
+                        "FROM " +
+                        "   wen_zhen_view w " +
+                        "JOIN " +
+                        "   jian_kang_dang_an_view j " +
+                        "ON " +
+                        "   w.jian_kang_dang_an_id = j.id " +
+                        "WHERE" +
+                        "   w.deleted = false " +
+                        "AND" +
+                        "   j.deleted = false " +
+                        "AND" +
+                        "   j.yong_hu_id = '" + yongHuId + "'"
+                ,
+                WenZhenViewExtYongHu.class
+        );
 
-        return null;
+
+        return PPResult.getPPResultOK(q.getResultList());
     }
 
     @ApiOperation(value = "获取问诊")
     @GetMapping("/huoQuWenZhen/{wenZhenId}")
     public PPResult<WenZhenView> huoQuWenZhen(
-            @PathVariable UUID wenZhenDanId
+            @PathVariable UUID wenZhenId
     ) {
         // TODO: PP authentication中取得当前zhangHaoId
-        UUID zhangHaoId = PPUtil.yongHuZhangHaoId;
+        UUID zhangHaoId = PPUtil.getZhangHaoId(1);
+        UUID yongHuId = zhangHaoViewRepository.findById(zhangHaoId).get().getYongHuId();
         // TODO: PP end
 
+        WenZhenView wenZhenView = wenZhenViewRepository.findById(wenZhenId).get();
 
-        return null;
+        UUID jianKangDangAnId = wenZhenView.getJianKangDangAnId();
+
+        JianKangDangAnView jianKangDangAnView = jianKangDangAnViewRepository.findById(jianKangDangAnId).get();
+
+        // 参数相关检查
+        if (!(jianKangDangAnView.getYongHuId().equals(yongHuId))) {
+            throw new PPBusinessException("被查询问诊记录不属于此帐号");
+        }
+        // 参数相关检查 end
+
+        return PPResult.getPPResultOK(wenZhenViewRepository.findById(wenZhenId));
     }
 
     @ApiOperation(value = "下载诊疗报告")
@@ -390,6 +366,7 @@ public class YongHuController {
                 new WenZhen_ChuangJianCmd(
                         id,
                         dto.getJianKangDangAnId(),
+                        dto.getXinXiNeiRong(),
                         dto.getChanPinId(),
                         null,
                         chanPinView.getYuFuFei(),
@@ -410,6 +387,8 @@ public class YongHuController {
         UUID chanPinId;
         @NotNull
         UUID jianKangDangAnId;
+        @NotNull
+        Map<String, Object> xinXiNeiRong;
     }
 
     @ApiOperation(value = "取消问诊")

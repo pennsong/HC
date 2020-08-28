@@ -132,6 +132,9 @@ public class WenZhen extends PPAggregate {
     BigDecimal yuFuFei;
     BigDecimal zongJia;
 
+    @Convert(converter = HashMapConverter.class)
+    Map<String, Object> xinXiMap;
+
     // 产品相关
     UUID chanPinId;
     String chanPinMingCheng;
@@ -225,6 +228,7 @@ public class WenZhen extends PPAggregate {
                 new WenZhen_ChuangJianEvt(
                         cmd.getId(),
                         cmd.getJianKangDangAnId(),
+                        cmd.getXinXiMap(),
                         cmd.getChanPinId(),
                         cmd.getPaiBanId(),
                         cmd.getYuFuFei(),
@@ -243,6 +247,7 @@ public class WenZhen extends PPAggregate {
     public void on(WenZhen_ChuangJianEvt evt) {
         this.id = evt.getId();
         this.jianKangDangAnId = evt.getJianKangDangAnId();
+        this.xinXiMap = evt.getXinXiMap();
         this.chanPinId = evt.getChanPinId();
         this.paiBanId = evt.getPaiBanId();
         this.yuFuFei = evt.getYuFuFei();
